@@ -3,16 +3,16 @@
     <p>树表格，通过配置 <table-api-link prop="tree-config"/> 和指定列 <table-column-api-link prop="tree-node"/> 属性来开启树表格</p>
     <p>还可以通过 <table-api-link prop="trigger"/> 指定触发方式</p>
 
-    <vxe-table
+    <s-table
       border
       resizable
       :tree-config="{key: 'id', children: 'children'}"
       :data.sync="tableData">
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="size" title="Size"></vxe-table-column>
-      <vxe-table-column field="type" title="Type"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" tree-node></vxe-table-column>
-    </vxe-table>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="size" title="Size"></s-table-column>
+      <s-table-column field="type" title="Type"></s-table-column>
+      <s-table-column field="date" title="Date" tree-node></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -23,15 +23,15 @@
 
     <p>默认展开所有树节点，通过 <table-api-link prop="expand-config"/> 参数设置默认展开树节点</p>
 
-    <vxe-table
+    <s-table
       :data.sync="tableData"
       :tree-config="{key: 'id', children: 'children', expandAll: true}">
-      <vxe-table-column type="index" width="160" title="序号" tree-node></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="size" title="Size"></vxe-table-column>
-      <vxe-table-column field="type" title="Type"></vxe-table-column>
-      <vxe-table-column field="date" title="Date"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="160" title="序号" tree-node></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="size" title="Size"></s-table-column>
+      <s-table-column field="type" title="Type"></s-table-column>
+      <s-table-column field="date" title="Date"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -51,16 +51,16 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           resizable
           :tree-config="{key: 'id', children: 'children'}"
           :data.sync="tableData">
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="size" title="Size"></vxe-table-column>
-          <vxe-table-column field="type" title="Type"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" tree-node></vxe-table-column>
-        </vxe-table>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="size" title="Size"></s-table-column>
+          <s-table-column field="type" title="Type"></s-table-column>
+          <s-table-column field="date" title="Date" tree-node></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -75,15 +75,15 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           :data.sync="tableData"
           :tree-config="{key: 'id', children: 'children', expandAll: true}">
-          <vxe-table-column type="index" width="120" title="序号" tree-node></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="size" title="Size"></vxe-table-column>
-          <vxe-table-column field="type" title="Type"></vxe-table-column>
-          <vxe-table-column field="date" title="Date"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="120" title="序号" tree-node></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="size" title="Size"></s-table-column>
+          <s-table-column field="type" title="Type"></s-table-column>
+          <s-table-column field="date" title="Date"></s-table-column>
+        </s-table>
         `,
         `
         export default {

@@ -3,18 +3,18 @@
     <p>合并列，通过参数 <table-api-link prop="span-method"/></p>
     <p>使用 $rowIndex 获取渲染中的行索引，rowIndex 指向真实数据的行索引，可以根据不同场景使用</p>
 
-    <vxe-table
+    <s-table
       border
       show-overflow
       max-height="400"
       :span-method="colspanMethod"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="role" title="Role" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="role" title="Role" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -25,17 +25,17 @@
 
     <p>合并行</p>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       max-height="400"
       :span-method="rowspanMethod"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="key" title="Key"></vxe-table-column>
-      <vxe-table-column field="content" title="Content"></vxe-table-column>
-      <vxe-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="key" title="Key"></s-table-column>
+      <s-table-column field="content" title="Content"></s-table-column>
+      <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -55,17 +55,17 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           max-height="400"
           :span-method="colspanMethod"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="role" title="Role" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="role" title="Role" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -97,16 +97,16 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           max-height="400"
           :span-method="rowspanMethod"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="key" title="Key"></vxe-table-column>
-          <vxe-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="key" title="Key"></s-table-column>
+          <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
+        </s-table>
         `,
         `
         export default {

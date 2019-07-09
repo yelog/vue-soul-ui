@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>国际化</h3>
-    <p>目前支持的<a class="link" href="https://github.com/xuliangzhan/vxe-table/tree/master/locale/lang" target="_blank">国际化列表</a></p>
+    <p>目前支持的<a class="link" href="https://github.com/yelog/vue-soul-ui/tree/master/locale/lang" target="_blank">国际化列表</a></p>
     <p>若希望使用指定语言，则需要进行多语言设置。以中/英文为例</p>
      <pre>
       <code class="shell">
@@ -9,10 +9,10 @@
       </code>
       <code class="javascript">
         import Vue from 'vue'
-        import VueI18n from 'vxe-i18n'
-        import VXETable from 'vxe-table'
-        import zhCNLocat from 'vxe-table/lib/locale/lang/zh_CN'
-        import enLocat from 'vxe-table/lib/locale/lang/en'
+        import VueI18n from 's-i18n'
+        import VXETable from 's-table'
+        import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh_CN'
+        import enLocat from 'vue-soul-ui/lib/locale/lang/en'
 
         const messages = {
           zh_CN: {

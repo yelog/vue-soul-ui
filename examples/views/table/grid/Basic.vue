@@ -1,14 +1,14 @@
 <template>
   <div>
-    <p><grid-api-link name="vxe-grid"/> 只为解决动态表格一切需求（动态列、动态数据、动态个性化...）</p>
-    <p>继承 <table-api-link name="vxe-table"/> 的所有参数、事件、方法...，使用配置的方式渲染表格，这非常适用于动态渲染的场景，完全使用数据进行配置</p>
+    <p><grid-api-link name="s-grid"/> 只为解决动态表格一切需求（动态列、动态数据、动态个性化...）</p>
+    <p>继承 <table-api-link name="s-table"/> 的所有参数、事件、方法...，使用配置的方式渲染表格，这非常适用于动态渲染的场景，完全使用数据进行配置</p>
 
-    <vxe-grid
+    <s-grid
       border
       resizable
       height="300"
       :columns="tableColumn"
-      :data.sync="tableData"></vxe-grid>
+      :data.sync="tableData"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -19,7 +19,7 @@
 
     <p>分组表头、底部合计</p>
 
-    <vxe-grid
+    <s-grid
       border
       stripe
       resizable
@@ -27,7 +27,7 @@
       height="500"
       :footer-method="footerMethod"
       :columns="tableColumn2"
-      :data.sync="tableData"></vxe-grid>
+      :data.sync="tableData"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -72,12 +72,12 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           resizable
           height="300"
           :columns="tableColumn"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {
@@ -97,7 +97,7 @@ export default {
         }
         `,
         `
-        <vxe-grid
+        <s-grid
           border
           stripe
           resizable
@@ -105,7 +105,7 @@ export default {
           height="500"
           :footer-method="footerMethod"
           :columns="tableColumn2"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {

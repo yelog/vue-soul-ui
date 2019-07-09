@@ -6,7 +6,7 @@
     <p>数据超大情况下必须使用：<table-api-link prop="show-overflow"/>，<table-api-link prop="show-header-overflow"/> 参数以及调整好 <table-api-link prop="optimization"/> ：{scrollX,scrollY} 适合的参数可以更加流畅</p>
     <p class="red">注意：如果要启用横向虚拟滚动，所有的列宽度必须一致，否则无法兼容</p>
 
-    <vxe-grid
+    <s-grid
       border
       show-overflow
       show-header-overflow
@@ -17,7 +17,7 @@
       :loading="loading"
       :select-config="{checkField: 'checked'}"
       :optimization ="{scrollY: {gt: 500, oSize: 20, rSize: 60}}">
-    </vxe-grid>
+    </s-grid>
   </div>
 </template>
 

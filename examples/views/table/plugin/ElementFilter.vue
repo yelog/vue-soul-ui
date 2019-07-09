@@ -2,18 +2,18 @@
   <div>
     <p>具体兼容请查看 <a class="link" href="https://www.npmjs.com/package/vxe-table-plugin-element" target="_blank">vxe-table-plugin-element</a> 适配插件的 API</p>
 
-    <vxe-table
+    <s-table
       border
       resizable
       highlight-hover-row
       height="400"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="ElInput" :filters="[{data: ''}]" :filter-render="{name: 'ElInput', props: {placeholder: '请输入名称'}}"></vxe-table-column>
-      <vxe-table-column field="age" title="ElInputNumber" sortable :filters="[{data: 0}]" :filter-render="{name: 'ElInputNumber', props: {min: 0, max: 100}}"></vxe-table-column>
-      <vxe-table-column field="role" title="ElAutocomplete" :filters="[{data: ''}]" :filter-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions, placeholder: '请输入角色名称'}}"></vxe-table-column>
-      <vxe-table-column field="date3" title="ElDatePicker" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="ElInput" :filters="[{data: ''}]" :filter-render="{name: 'ElInput', props: {placeholder: '请输入名称'}}"></s-table-column>
+      <s-table-column field="age" title="ElInputNumber" sortable :filters="[{data: 0}]" :filter-render="{name: 'ElInputNumber', props: {min: 0, max: 100}}"></s-table-column>
+      <s-table-column field="role" title="ElAutocomplete" :filters="[{data: ''}]" :filter-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions, placeholder: '请输入角色名称'}}"></s-table-column>
+      <s-table-column field="date3" title="ElDatePicker" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -39,18 +39,18 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           resizable
           highlight-hover-row
           height="400"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="ElInput" :filters="[{data: ''}]" :filter-render="{name: 'ElInput', props: {placeholder: '请输入名称'}}"></vxe-table-column>
-          <vxe-table-column field="age" title="ElInputNumber" sortable :filters="[{data: 0}]" :filter-render="{name: 'ElInputNumber', props: {min: 0, max: 100}}"></vxe-table-column>
-          <vxe-table-column field="role" title="ElAutocomplete" :filters="[{data: ''}]" :filter-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions, placeholder: '请输入角色名称'}}"></vxe-table-column>
-          <vxe-table-column field="date3" title="ElDatePicker" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="ElInput" :filters="[{data: ''}]" :filter-render="{name: 'ElInput', props: {placeholder: '请输入名称'}}"></s-table-column>
+          <s-table-column field="age" title="ElInputNumber" sortable :filters="[{data: 0}]" :filter-render="{name: 'ElInputNumber', props: {min: 0, max: 100}}"></s-table-column>
+          <s-table-column field="role" title="ElAutocomplete" :filters="[{data: ''}]" :filter-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions, placeholder: '请输入角色名称'}}"></s-table-column>
+          <s-table-column field="date3" title="ElDatePicker" :filters="[{data: []}]" :filter-render="{name: 'ElDatePicker', props: {type: 'daterange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

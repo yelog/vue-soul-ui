@@ -3,7 +3,7 @@
     <p>右键快捷菜单，支持表头菜单、内容菜单、表尾菜单</p>
     <p>配置项 <table-api-link prop="context-menu"/>={header,body,footer}</p>
 
-    <vxe-table
+    <s-table
       border
       show-footer
       highlight-hover-row
@@ -11,12 +11,12 @@
       :data.sync="tableData"
       :context-menu="{header: {options: headerMenus}, body: {options: bodyMenus}, footer: {options: footerMenus}}"
       @context-menu-click="contextMenuClickEvent">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="time" title="Time"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="time" title="Time"></s-table-column>
+    </s-table>
 
     <pre>
       <code>
@@ -118,7 +118,7 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           show-footer
           highlight-hover-row
@@ -126,12 +126,12 @@ export default {
           :data.sync="tableData"
           :context-menu="{header: {options: headerMenus}, body: {options: bodyMenus}, footer: {options: footerMenus}}"
           @context-menu-click="contextMenuClickEvent">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="time" title="Time"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="time" title="Time"></s-table-column>
+        </s-table>
         `,
         `
         export default {

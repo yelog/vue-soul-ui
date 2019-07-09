@@ -13,7 +13,7 @@ Object.keys(Table.methods).forEach(name => {
 })
 
 export default {
-  name: 'VxeGrid',
+  name: 'SGrid',
   props: {
     columns: Array,
     pagerConfig: Object,
@@ -131,24 +131,24 @@ export default {
       })
     }
     return h('div', {
-      class: [ 'vxe-grid', {
+      class: [ 's-grid', {
         [`size--${vSize}`]: vSize,
         't--animat': props.optimization.animat
       }]
     }, [
-      toolbar ? h('vxe-toolbar', {
+      toolbar ? h('s-toolbar', {
         ref: 'toolbar',
         props: toolbar,
         scopedSlots: $buttons ? {
           buttons: $buttons
         } : null
       }) : null,
-      h('vxe-table', {
+      h('s-table', {
         props,
         on: tableOns,
         ref: 'xTable'
       }, $slots.default),
-      pagerConfig ? h('vxe-pager', {
+      pagerConfig ? h('s-pager', {
         props: Object.assign({
           size: vSize,
           loading: loading || tableLoading

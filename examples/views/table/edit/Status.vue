@@ -2,25 +2,25 @@
   <div>
     <p>设置 <table-api-link prop="edit-config"/>={trigger: 'click', mode: 'cell', showStatus: true} 开启编辑状态显示功能</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="getInsertEvent">获取新增</vxe-button>
-        <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-        <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
+        <s-button @click="getInsertEvent">获取新增</s-button>
+        <s-button @click="getRemoveEvent">获取删除</s-button>
+        <s-button @click="getUpdateEvent">获取修改</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       show-overflow
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'click', mode: 'cell', showStatus: true}">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -40,25 +40,25 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="getInsertEvent">获取新增</vxe-button>
-            <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-            <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
+            <s-button @click="getInsertEvent">获取新增</s-button>
+            <s-button @click="getRemoveEvent">获取删除</s-button>
+            <s-button @click="getUpdateEvent">获取修改</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           show-overflow
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'click', mode: 'cell', showStatus: true}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

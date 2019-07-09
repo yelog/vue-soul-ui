@@ -1,8 +1,8 @@
-import VxeTableLoading from './src/loading'
+import STableLoading from './src/loading'
 
-VxeTableLoading.install = function (Vue) {
-  Vue.component(VxeTableLoading.name, VxeTableLoading)
+STableLoading.install = function (Vue) {
+  Vue.component(STableLoading.name, STableLoading)
 }
 
-export const Loading = VxeTableLoading
-export default VxeTableLoading
+export const Loading = STableLoading
+export default STableLoading

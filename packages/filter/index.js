@@ -1,8 +1,8 @@
-import VxeTableFilter from './src/filter'
+import STableFilter from './src/filter'
 
-VxeTableFilter.install = function (Vue) {
-  Vue.component(VxeTableFilter.name, VxeTableFilter)
+STableFilter.install = function (Vue) {
+  Vue.component(STableFilter.name, STableFilter)
 }
 
-export const Filter = VxeTableFilter
-export default VxeTableFilter
+export const Filter = STableFilter
+export default STableFilter

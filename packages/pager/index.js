@@ -1,8 +1,8 @@
-import VxePager from './src/pager'
+import SPager from './src/pager'
 
-VxePager.install = function (Vue) {
-  Vue.component(VxePager.name, VxePager)
+SPager.install = function (Vue) {
+  Vue.component(SPager.name, SPager)
 }
 
-export const Pager = VxePager
-export default VxePager
+export const Pager = SPager
+export default SPager

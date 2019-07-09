@@ -3,17 +3,17 @@
     <p>虚拟滚动渲染，只会渲染可视区域的数据，对于海量数据的性能提升非常大</p>
     <p>相关参数说明 {seq: 序号, $rowIndex: 获取渲染中的行索引, rowIndex: 获取真实的行索引, row: 获取行数据, column: 获取列配置, columnIndex: 获取真实列索引，$columnIndex:获取渲染中的列索引}</p>
 
-    <vxe-table
+    <s-table
       border
       highlight-hover-row
       height="300"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="100"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="100"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -26,17 +26,17 @@
     <p>参数 <table-api-link prop="scrollX"/>: {gt: 16, oSize: 4, rSize: 10},<table-api-link prop="scrollY"/>: {gt: 500, oSize: 30, rSize: 80}，当数据量过大时请调整到适合的参数可以使渲染更快</p>
     <p>数据超大情况下必须使用：<table-api-link prop="show-overflow"/>，<table-api-link prop="show-header-overflow"/> 参数以及调整好 <table-api-link prop="optimization"/> ：{scrollX,scrollY} 适合的参数可以更加流畅</p>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       show-overflow
       height="300">
-      <vxe-table-column type="index" width="100"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="100"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -57,17 +57,17 @@ export default {
       tableData2: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           highlight-hover-row
           height="300"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="100"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="100"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -82,18 +82,18 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           show-overflow
           height="300"
           :data.sync="tableData2">
-          <vxe-table-column type="index" width="100"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="100"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {

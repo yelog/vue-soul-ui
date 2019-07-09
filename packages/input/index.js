@@ -1,8 +1,8 @@
-import VxeInput from './src/input'
+import SInput from './src/input'
 
-VxeInput.install = function (Vue) {
-  Vue.component(VxeInput.name, VxeInput)
+SInput.install = function (Vue) {
+  Vue.component(SInput.name, SInput)
 }
 
-export const Input = VxeInput
-export default VxeInput
+export const Input = SInput
+export default SInput

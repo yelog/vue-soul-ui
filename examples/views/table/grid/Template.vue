@@ -6,14 +6,14 @@
     <p><table-column-api-link prop="filter"/>：自定义筛选模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
     <p><table-column-api-link prop="edit"/>：自定义可编辑模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
 
-    <vxe-grid
+    <s-grid
       border
       height="400"
       :toolbar="toolbar"
       :columns="tableColumn"
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-    </vxe-grid>
+    </s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -54,7 +54,7 @@ export default {
           slots: {
             default: ({ row, column }) => {
               return [
-                <a class="link" href="https://xuliangzhan.github.io/vxe-table/">链接：{ row.sex }</a>
+                <a class="link" href="https://yelog.github.io/vue-soul-ui/">链接：{ row.sex }</a>
               ]
             },
             header: ({ column }) => {
@@ -104,8 +104,8 @@ export default {
             return [
               <button>按钮</button>,
               <input type="text"/>,
-              <vxe-button>按钮1</vxe-button>,
-              <vxe-button>按钮2</vxe-button>
+              <s-button>按钮1</s-button>,
+              <s-button>按钮2</s-button>
             ]
           }
         }
@@ -113,13 +113,13 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           height="400"
           :columns="tableColumn"
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-        </vxe-grid>
+        </s-grid>
         `,
         `
         export default {
@@ -149,7 +149,7 @@ export default {
                   slots: {
                     default: ({ row, column }) => {
                       return [
-                        <a class="link" href="https://xuliangzhan.github.io/vxe-table/">链接：{ row.sex }</a>
+                        <a class="link" href="https://yelog.github.io/vue-soul-ui/">链接：{ row.sex }</a>
                       ]
                     },
                     header: ({ column }) => {
@@ -199,8 +199,8 @@ export default {
                     return [
                       <button>按钮</button>,
                       <input type="text"/>,
-                      <vxe-button>按钮1</vxe-button>,
-                      <vxe-button>按钮2</vxe-button>
+                      <s-button>按钮1</s-button>,
+                      <s-button>按钮2</s-button>
                     ]
                   }
                 }

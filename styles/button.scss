@@ -2,33 +2,33 @@
 
 /*button*/
 button {
-  &.vxe-button {
+  &.s-button {
     padding: 0 16px;
     line-height: 30px;
-    border: 1px solid $vxe-input-border-color;
+    border: 1px solid $s-input-border-color;
     border-radius: 4px;
     &.type--primary {
       color: #fff;
-      border-color: $vxe-primary-color;
-      background-color: $vxe-primary-color;
+      border-color: $s-primary-color;
+      background-color: $s-primary-color;
       &:hover {
         color: #fff;
-        background-color: lighten($vxe-primary-color, 4%);
-        border-color: lighten($vxe-primary-color, 4%);
+        background-color: lighten($s-primary-color, 4%);
+        border-color: lighten($s-primary-color, 4%);
       }
       &:active {
         color: #fff;
-        background-color: darken($vxe-primary-color, 2%);
-        border-color: darken($vxe-primary-color, 2%);
+        background-color: darken($s-primary-color, 2%);
+        border-color: darken($s-primary-color, 2%);
       }
     }
     &:hover {
-      color: lighten($vxe-primary-color, 6%);
-      border-color: lighten($vxe-primary-color, 10%);
+      color: lighten($s-primary-color, 6%);
+      border-color: lighten($s-primary-color, 10%);
     }
     &:active {
-      color: darken($vxe-primary-color, 2%);
-      border-color: darken($vxe-primary-color, 2%);
+      color: darken($s-primary-color, 2%);
+      border-color: darken($s-primary-color, 2%);
     }
     &.size--medium {
       padding: 0 14px;
@@ -45,24 +45,24 @@ button {
   }
 }
 a {
-  &.vxe-button {
-    color: $vxe-primary-color;
+  &.s-button {
+    color: $s-primary-color;
     text-decoration: none;
     &:hover {
-      color: lighten($vxe-primary-color, 10%);
+      color: lighten($s-primary-color, 10%);
     }
   }
 }
-.vxe-button {
+.s-button {
   text-align: center;
   background-color: #fff;
   outline: 0;
-  font-size: $vxe-font-size;
-  color: $vxe-font-color;
+  font-size: $s-font-size;
+  color: $s-font-color;
   user-select: none;
   appearance: none;
   cursor: pointer;
-  &+.vxe-button {
+  &+.s-button {
     margin-left: 10px;
     &.size--medium {
       margin-left: 8px;
@@ -79,6 +79,6 @@ a {
     font-size: 12px;
   }
 }
-.vxe-button--wrapper {
+.s-button--wrapper {
   display: inline-block;
 }

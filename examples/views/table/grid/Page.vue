@@ -3,7 +3,7 @@
     <p>通过配置 <grid-api-link prop="pager-config"/> 参数开启分页功能</p>
     <p>对于分页场景下，如果要实现分页动态序号，可以通过 <table-api-link prop="start-index"/> 属性设置起始值</p>
 
-    <vxe-grid
+    <s-grid
       border
       height="530"
       :loading="loading"
@@ -12,7 +12,7 @@
       :columns="tableColumn"
       :data.sync="tableData"
       @current-page-change="handleCurrentChange"
-      @page-size-change="handleSizeChange"></vxe-grid>
+      @page-size-change="handleSizeChange"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -48,7 +48,7 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           height="530"
           :loading="loading"
@@ -56,7 +56,7 @@ export default {
           :columns="tableColumn"
           :data.sync="tableData"
           @current-page-change="handleCurrentChange"
-          @page-size-change="handleSizeChange"></vxe-grid>
+          @page-size-change="handleSizeChange"></s-grid>
         `,
         `
         export default {

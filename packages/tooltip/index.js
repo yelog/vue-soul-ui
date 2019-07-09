@@ -1,10 +1,10 @@
-import VxeTooltip from './src/tooltip'
+import STooltip from './src/tooltip'
 import GlobalConfig from '../conf'
 
-VxeTooltip.install = function (Vue) {
+STooltip.install = function (Vue) {
   GlobalConfig._tip = 1
-  Vue.component(VxeTooltip.name, VxeTooltip)
+  Vue.component(STooltip.name, STooltip)
 }
 
-export const Tooltip = VxeTooltip
-export default VxeTooltip
+export const Tooltip = STooltip
+export default STooltip

@@ -1,8 +1,8 @@
 import GlobalConfig from '../../conf'
-import { Renderer } from '../../v-x-e-table'
+import { Renderer } from '../../s-table'
 
 export default {
-  name: 'VxeTableFilter',
+  name: 'STableFilter',
   props: {
     filterStore: Object,
     optimizeOpts: Object
@@ -10,14 +10,14 @@ export default {
   render (h) {
     let { filterStore, optimizeOpts } = this
     return h('div', {
-      class: ['vxe-table--filter-wrapper', 'filter--prevent-default', {
+      class: ['s-table--filter-wrapper', 'filter--prevent-default', {
         't--animat': optimizeOpts.animat,
         'filter--active': filterStore.visible
       }],
       style: filterStore.style
     }, filterStore.visible ? [
       h('ul', {
-        class: 'vxe-table--filter-body'
+        class: 's-table--filter-body'
       }, this.renderOptions(h)),
       this.renderFooter(h)
     ] : [])
@@ -36,13 +36,13 @@ export default {
       }
       let filterRens = [
         h('li', {
-          class: ['vxe-table--filter-option', {
+          class: ['s-table--filter-option', {
             'is--active': !filterStore.options.some(item => item.checked)
           }]
         }, [
           multiple
             ? h('label', {
-              class: ['vxe-checkbox', {
+              class: ['s-checkbox', {
                 'is--indeterminate': filterStore.isIndeterminate
               }]
             }, [
@@ -67,7 +67,7 @@ export default {
               }, GlobalConfig.i18n('vxe.table.allFilter'))
             ])
             : h('span', {
-              class: 'vxe-table--filter-label',
+              class: 's-table--filter-label',
               on: {
                 click: $table.resetFilterEvent
               }
@@ -77,14 +77,14 @@ export default {
       filterStore.options.forEach((item, index) => {
         filterRens.push(
           h('li', {
-            class: ['vxe-table--filter-option', {
+            class: ['s-table--filter-option', {
               'is--active': item.checked
             }],
             key: index
           }, [
             multiple
               ? h('label', {
-                class: 'vxe-checkbox'
+                class: 's-checkbox'
               }, [
                 h('input', {
                   attrs: {
@@ -107,7 +107,7 @@ export default {
                 }, item.label)
               ])
               : h('span', {
-                class: 'vxe-table--filter-label',
+                class: 's-table--filter-label',
                 on: {
                   click (evnt) {
                     changeRadioOption(evnt, !item.checked, item)
@@ -123,7 +123,7 @@ export default {
       let { filterStore } = this
       let { multiple } = filterStore
       return multiple ? h('div', {
-        class: 'vxe-table--filter-footer'
+        class: 's-table--filter-footer'
       }, [
         h('button', {
           class: {

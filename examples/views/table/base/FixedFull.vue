@@ -2,19 +2,19 @@
   <div>
     <p>横纵内容过多时，同时固定列和表头</p>
 
-    <vxe-table
+    <s-table
       border
       height="300"
       highlight-hover-row
       show-overflow
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-      <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60" fixed="left"></s-table-column>
+      <s-table-column field="name" title="Name" width="300"></s-table-column>
+      <s-table-column field="role" title="Role" width="300"></s-table-column>
+      <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+      <s-table-column field="date" title="Date" width="300"></s-table-column>
+      <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -27,20 +27,20 @@
 
 <button></button>
     <keep-alive>
-      <vxe-table
+      <s-table
         border
         height="300"
         highlight-hover-row
         show-overflow
         v-if="visible"
         :data.sync="tableData">
-        <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-        <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-        <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-        <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-        <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-        <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-      </vxe-table>
+        <s-table-column type="index" width="60" fixed="left"></s-table-column>
+        <s-table-column field="name" title="Name" width="300"></s-table-column>
+        <s-table-column field="role" title="Role" width="300"></s-table-column>
+        <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+        <s-table-column field="date" title="Date" width="300"></s-table-column>
+        <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+      </s-table>
     </keep-alive>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
@@ -62,19 +62,19 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           height="300"
           highlight-hover-row
           show-overflow
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-          <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60" fixed="left"></s-table-column>
+          <s-table-column field="name" title="Name" width="300"></s-table-column>
+          <s-table-column field="role" title="Role" width="300"></s-table-column>
+          <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+          <s-table-column field="date" title="Date" width="300"></s-table-column>
+          <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -89,19 +89,19 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           border
           height="300"
           highlight-hover-row
           show-overflow
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-          <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60" fixed="left"></s-table-column>
+          <s-table-column field="name" title="Name" width="300"></s-table-column>
+          <s-table-column field="role" title="Role" width="300"></s-table-column>
+          <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+          <s-table-column field="date" title="Date" width="300"></s-table-column>
+          <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+        </s-table>
         `,
         `
         export default {

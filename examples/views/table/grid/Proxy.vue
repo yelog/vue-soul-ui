@@ -3,11 +3,11 @@
     <p>数据代理：通过配置 <grid-api-link prop="proxy-config"/> 参数，默认直接读取结果，响应结果应该为数组；可以通过 <grid-api-link prop="props"/> 修改默认值</p>
     <p>由 <grid-api-link prop="pager-config"/> 代理数据转换，只需要配置好数据源即可；非常简单就可以渲染一个表格，从重复写冗余的代码中解放出来</p>
 
-    <vxe-grid
+    <s-grid
       border
       height="530"
       :proxy-config="tableProxy"
-      :columns="tableColumn"></vxe-grid>
+      :columns="tableColumn"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -40,11 +40,11 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           height="530"
           :proxy-config="tableProxy"
-          :columns="tableColumn"></vxe-grid>
+          :columns="tableColumn"></s-grid>
         `,
         `
         export default {

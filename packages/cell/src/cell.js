@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
-import { Renderer } from '../../v-x-e-table'
+import { Renderer } from '../../s-table'
 import { UtilTools } from '../../tools'
 
 export const Cell = {
@@ -88,19 +88,19 @@ export const Cell = {
     }
     return [
       h('span', {
-        class: 'vxe-tree--indent',
+        class: 's-tree--indent',
         style: {
           width: `${level * (indent || 16)}px`
         }
       }),
       h('span', {
-        class: ['vxe-tree-wrapper', {
+        class: ['s-tree-wrapper', {
           'is--active': treeExpandeds.indexOf(row) > -1
         }],
         on
       }, rowChildren && rowChildren.length ? [
         h('i', {
-          class: ['vxe-tree--node-btn', icon.tree]
+          class: ['s-tree--node-btn', icon.tree]
         })
       ] : [])
     ]
@@ -151,7 +151,7 @@ export const Cell = {
     let options = {
       attrs: {
         type: 'radio',
-        name: `vxe-radio--${$table.id}`
+        name: `s-radio--${$table.id}`
       }
     }
     if (!isHidden) {
@@ -166,7 +166,7 @@ export const Cell = {
     }
     return [
       h('label', {
-        class: ['vxe-radio']
+        class: ['s-radio']
       }, [
         h('input', options),
         h('span', {
@@ -209,7 +209,7 @@ export const Cell = {
     }
     return [
       h('label', {
-        class: ['vxe-checkbox', {
+        class: ['s-checkbox', {
           'is--indeterminate': $table.isIndeterminate
         }]
       }, [
@@ -254,7 +254,7 @@ export const Cell = {
     }
     return [
       h('label', {
-        class: ['vxe-checkbox', {
+        class: ['s-checkbox', {
           'is--indeterminate': indeterminate,
           'is--disabled': isDisabled
         }]
@@ -303,7 +303,7 @@ export const Cell = {
     }
     return [
       h('label', {
-        class: ['vxe-checkbox', {
+        class: ['s-checkbox', {
           'is--indeterminate': indeterminate,
           'is--disabled': isDisabled
         }]
@@ -333,7 +333,7 @@ export const Cell = {
     }
     return [
       h('span', {
-        class: ['vxe-table--expanded', {
+        class: ['s-table--expanded', {
           'expand--active': expandActive
         }],
         on: {
@@ -343,7 +343,7 @@ export const Cell = {
         }
       }, [
         h('i', {
-          class: ['vxe-table--expand-icon']
+          class: ['s-table--expand-icon']
         })
       ])
     ]
@@ -377,10 +377,10 @@ export const Cell = {
     let { $table, column } = params
     return [
       h('span', {
-        class: ['vxe-sort-wrapper']
+        class: ['s-sort-wrapper']
       }, [
         h('i', {
-          class: ['vxe-sort--asc-btn', icon.sortAsc, {
+          class: ['s-sort--asc-btn', icon.sortAsc, {
             'sort--active': column.order === 'asc'
           }],
           on: {
@@ -390,7 +390,7 @@ export const Cell = {
           }
         }),
         h('i', {
-          class: ['vxe-sort--desc-btn', icon.sortDesc, {
+          class: ['s-sort--desc-btn', icon.sortDesc, {
             'sort--active': column.order === 'desc'
           }],
           on: {
@@ -415,12 +415,12 @@ export const Cell = {
     let { filterStore } = $table
     return [
       h('span', {
-        class: ['vxe-filter-wrapper', {
+        class: ['s-filter-wrapper', {
           'is--active': filterStore.visible && filterStore.column === column
         }]
       }, [
         h('i', {
-          class: ['vxe-filter--btn', icon.filter],
+          class: ['s-filter--btn', icon.filter],
           on: {
             click (evnt) {
               $table.triggerFilterEvent(evnt, params.column, params)
@@ -448,10 +448,10 @@ export const Cell = {
     }
     return [
       isRequired ? h('i', {
-        class: 'vxe-required-icon'
+        class: 's-required-icon'
       }) : null,
       editConfig && editConfig.showIcon === false ? null : h('i', {
-        class: ['vxe-edit-icon', icon.edit]
+        class: ['s-edit-icon', icon.edit]
       })
     ].concat(Cell.renderHeader(h, params))
       .concat(sortable || remoteSort ? Cell.renderSortIcon(h, params) : [])

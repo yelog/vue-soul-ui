@@ -3,7 +3,7 @@ import GlobalConfig from '../../conf'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
 
 export default {
-  name: 'VxeToolbar',
+  name: 'SToolbar',
   props: {
     id: String,
     setting: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.setting },
@@ -30,7 +30,7 @@ export default {
       let { $parent, data } = this
       let { $children } = $parent
       let selfIndex = $children.indexOf(this)
-      return $children.find((comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 'vxe-table'))
+      return $children.find((comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 's-table'))
     },
     vSize () {
       return this.size || this.$parent.size || this.$parent.vSize
@@ -48,7 +48,7 @@ export default {
       this.tableCustoms = customs
     }
     if (isStorage && !id) {
-      throw new Error('[vxe-table] Toolbar must have a unique primary id.')
+      throw new Error('[s-table] Toolbar must have a unique primary id.')
     }
     if (setting) {
       this.$nextTick(() => this.loadStorage())
@@ -80,43 +80,43 @@ export default {
       }
     }
     return h('div', {
-      class: ['vxe-toolbar', {
+      class: ['s-toolbar', {
         [`size--${vSize}`]: vSize
       }]
     }, [
       h('div', {
-        class: 'vxe-button--wrapper'
+        class: 's-button--wrapper'
       }, $buttons ? $buttons() : buttons.map(item => {
-        return h('vxe-button', {
+        return h('s-button', {
           on: {
             click: evnt => this.btnEvent(item, evnt)
           }
         }, XEUtils.isFunction(item.name) ? item.name() : item.name)
       })),
       setting ? h('div', {
-        class: ['vxe-custom--wrapper', {
+        class: ['s-custom--wrapper', {
           'is--active': settingStore.visible
         }],
         ref: 'customWrapper'
       }, [
         h('div', {
-          class: 'vxe-custom--setting-btn',
+          class: 's-custom--setting-btn',
           on: customBtnOns
         }, [
           h('i', {
-            class: 'vxe-icon--menu'
+            class: 's-icon--menu'
           })
         ]),
         h('div', {
-          class: 'vxe-custom--option-wrapper'
+          class: 's-custom--option-wrapper'
         }, [
           h('div', {
-            class: 'vxe-custom--option',
+            class: 's-custom--option',
             on: customWrapperOns
           }, tableCustoms.map(column => {
             let { property, visible, own } = column
             let headerTitle = own.title || own.label
-            return property && headerTitle ? h('vxe-checkbox', {
+            return property && headerTitle ? h('s-checkbox', {
               props: {
                 value: visible
               },
@@ -204,7 +204,7 @@ export default {
         ($grid || $table).refreshColumn()
         return this.saveStorageMap()
       }
-      throw new Error('[vxe-toolbar] Not found vxe-table.')
+      throw new Error('[s-toolbar] Not found s-table.')
     },
     handleGlobalMousedownEvent (evnt) {
       if (!DomTools.getEventTargetNode(evnt, this.$refs.customWrapper).flag) {

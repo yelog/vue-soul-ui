@@ -5,7 +5,7 @@ function resolve (dir) {
 }
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/vxe-table/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/s-table/' : '/',
   outputDir: 'docs',
   assetsDir: 'static',
   productionSourceMap: false,
@@ -19,7 +19,7 @@ module.exports = {
       entry: 'examples/main.js',
       template: 'public/index.html',
       filename: 'index.html',
-      title: 'vxe-table 表格'
+      title: 's-table 表格'
     }
   },
   chainWebpack (config) {

@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 import { UtilTools } from '../../tools'
 
 export default {
-  name: 'VxeTableFooter',
+  name: 'STableFooter',
   props: {
     footerData: Array,
     tableColumn: Array,
@@ -40,17 +40,17 @@ export default {
       }
     }
     return h('div', {
-      class: ['vxe-table--footer-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
+      class: ['s-table--footer-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
       on: {
         scroll: this.scrollEvent
       }
     }, [
       fixedType ? _e() : h('div', {
-        class: 'vxe-body--x-space',
+        class: 's-body--x-space',
         ref: 'xSpace'
       }),
       h('table', {
-        class: 'vxe-table--footer',
+        class: 's-table--footer',
         attrs: {
           cellspacing: 0,
           cellpadding: 0,
@@ -81,7 +81,7 @@ export default {
           ref: 'tfoot'
         }, footerData.map((list, $rowIndex) => {
           return h('tr', {
-            class: ['vxe-footer--row', footerRowClassName ? XEUtils.isFunction(footerRowClassName) ? footerRowClassName({ $rowIndex, fixed: fixedType }) : footerRowClassName : '']
+            class: ['s-footer--row', footerRowClassName ? XEUtils.isFunction(footerRowClassName) ? footerRowClassName({ $rowIndex, fixed: fixedType }) : footerRowClassName : '']
           }, tableColumn.map((column, $columnIndex) => {
             let isGroup = column.children && column.children.length
             let fixedHiddenColumn = fixedType && column.fixed !== fixedType && !isGroup
@@ -99,7 +99,7 @@ export default {
               }
             }
             return h('td', {
-              class: ['vxe-footer--column', column.id, {
+              class: ['s-footer--column', column.id, {
                 [`col--${column.headerAlign}`]: column.headerAlign,
                 'fixed--hidden': fixedHiddenColumn,
                 'filter--active': column.filters.some(item => item.checked)
@@ -111,7 +111,7 @@ export default {
               key: columnIndex
             }, [
               h('div', {
-                class: 'vxe-cell'
+                class: 's-cell'
               }, list[columnIndex] || '　')
             ])
           }).concat([

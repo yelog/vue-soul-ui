@@ -2,7 +2,7 @@
   <div>
     <p>事件绑定</p>
 
-    <vxe-table
+    <s-table
       border
       height="500"
       highlight-hover-row
@@ -16,13 +16,13 @@
       @cell-mouseenter="cellMouseenterEvent"
       @cell-mouseleave="cellMouseleaveEvent"
       @body-scroll="bodyScrollEvent">
-      <vxe-table-column type="index" title="序号" width="60" fixed="left"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-      <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" title="序号" width="60" fixed="left"></s-table-column>
+      <s-table-column field="name" title="Name" width="300"></s-table-column>
+      <s-table-column field="role" title="Role" width="300"></s-table-column>
+      <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+      <s-table-column field="date" title="Date" width="300"></s-table-column>
+      <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -42,7 +42,7 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           height="500"
           highlight-hover-row
@@ -56,13 +56,13 @@ export default {
           @cell-mouseenter="cellMouseenterEvent"
           @cell-mouseleave="cellMouseleaveEvent"
           @body-scroll="bodyScrollEvent">
-          <vxe-table-column type="index" title="序号" width="60" fixed="left"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" width="300"></vxe-table-column>
-          <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" fixed="right" width="300"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" title="序号" width="60" fixed="left"></s-table-column>
+          <s-table-column field="name" title="Name" width="300"></s-table-column>
+          <s-table-column field="role" title="Role" width="300"></s-table-column>
+          <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+          <s-table-column field="date" title="Date" width="300"></s-table-column>
+          <s-table-column field="address" title="Address" fixed="right" width="300"></s-table-column>
+        </s-table>
         `,
         `
         export default {

@@ -2,23 +2,23 @@
   <div>
     <p>当数据结构比较复杂的时候，可以使用多级表头显示更加直观</p>
 
-    <vxe-table
+    <s-table
       border
       height="400"
       :data.sync="tableData">
-      <vxe-table-column title="基本信息">
-        <vxe-table-column type="index" width="60"></vxe-table-column>
-        <vxe-table-column field="name" title="Name"></vxe-table-column>
-      </vxe-table-column>
-      <vxe-table-column title="更多信息">
-        <vxe-table-column field="role" title="Role"></vxe-table-column>
-        <vxe-table-column title="详细信息">
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-        </vxe-table-column>
-      </vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column title="基本信息">
+        <s-table-column type="index" width="60"></s-table-column>
+        <s-table-column field="name" title="Name"></s-table-column>
+      </s-table-column>
+      <s-table-column title="更多信息">
+        <s-table-column field="role" title="Role"></s-table-column>
+        <s-table-column title="详细信息">
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+        </s-table-column>
+      </s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -29,24 +29,24 @@
 
     <p>如果使用了分组表头情，则需要按组来设置固定列</p>
 
-    <vxe-table
+    <s-table
       border
       height="400"
       :data.sync="tableData">
-      <vxe-table-column title="基本信息">
-        <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-        <vxe-table-column field="name" title="Name" fixed="left" width="100"></vxe-table-column>
-      </vxe-table-column>
-      <vxe-table-column title="更多信息">
-        <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-        <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-        <vxe-table-column title="详细信息">
-          <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-        </vxe-table-column>
-      </vxe-table-column>
-      <vxe-table-column field="address" title="Address" width="300" fixed="right" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column title="基本信息">
+        <s-table-column type="index" width="60" fixed="left"></s-table-column>
+        <s-table-column field="name" title="Name" fixed="left" width="100"></s-table-column>
+      </s-table-column>
+      <s-table-column title="更多信息">
+        <s-table-column field="role" title="Role" width="300"></s-table-column>
+        <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+        <s-table-column title="详细信息">
+          <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+          <s-table-column field="date" title="Date" width="300"></s-table-column>
+        </s-table-column>
+      </s-table-column>
+      <s-table-column field="address" title="Address" width="300" fixed="right" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -66,23 +66,23 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           height="400"
           :data.sync="tableData">
-          <vxe-table-column title="基本信息">
-            <vxe-table-column type="index" width="60"></vxe-table-column>
-            <vxe-table-column field="name" title="Name"></vxe-table-column>
-          </vxe-table-column>
-          <vxe-table-column title="更多信息">
-            <vxe-table-column field="role" title="Role"></vxe-table-column>
-            <vxe-table-column title="详细信息">
-              <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-              <vxe-table-column field="age" title="Age"></vxe-table-column>
-            </vxe-table-column>
-          </vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column title="基本信息">
+            <s-table-column type="index" width="60"></s-table-column>
+            <s-table-column field="name" title="Name"></s-table-column>
+          </s-table-column>
+          <s-table-column title="更多信息">
+            <s-table-column field="role" title="Role"></s-table-column>
+            <s-table-column title="详细信息">
+              <s-table-column field="sex" title="Sex"></s-table-column>
+              <s-table-column field="age" title="Age"></s-table-column>
+            </s-table-column>
+          </s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -97,24 +97,24 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           border
           height="400"
           :data.sync="tableData">
-          <vxe-table-column title="基本信息">
-            <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-            <vxe-table-column field="name" title="Name" fixed="left" width="100"></vxe-table-column>
-          </vxe-table-column>
-          <vxe-table-column title="更多信息">
-            <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
-            <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-            <vxe-table-column title="详细信息">
-              <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
-              <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
-            </vxe-table-column>
-          </vxe-table-column>
-          <vxe-table-column field="address" title="Address" width="300" fixed="right" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column title="基本信息">
+            <s-table-column type="index" width="60" fixed="left"></s-table-column>
+            <s-table-column field="name" title="Name" fixed="left" width="100"></s-table-column>
+          </s-table-column>
+          <s-table-column title="更多信息">
+            <s-table-column field="role" title="Role" width="300"></s-table-column>
+            <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+            <s-table-column title="详细信息">
+              <s-table-column field="sex" title="Sex" width="300"></s-table-column>
+              <s-table-column field="date" title="Date" width="300"></s-table-column>
+            </s-table-column>
+          </s-table-column>
+          <s-table-column field="address" title="Address" width="300" fixed="right" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {

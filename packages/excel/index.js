@@ -1,8 +1,8 @@
-import VxeExcel from './src/excel'
+import SExcel from './src/excel'
 
-VxeExcel.install = function (Vue) {
-  Vue.component(VxeExcel.name, VxeExcel)
+SExcel.install = function (Vue) {
+  Vue.component(SExcel.name, SExcel)
 }
 
-export const Excel = VxeExcel
-export default VxeExcel
+export const Excel = SExcel
+export default SExcel

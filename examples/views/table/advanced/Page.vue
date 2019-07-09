@@ -1,11 +1,11 @@
 <template>
   <div>
-    <p>使用自带的分页 <pager-api-link name="vxe-pager"/></p>
+    <p>使用自带的分页 <pager-api-link name="s-pager"/></p>
     <p>如果要支持动态序号，可以通过 <table-api-link prop="start-index"/> 属性设置起始值</p>
     <p>如果要支持保留选中状态，可以通过设置 <table-api-link prop="select-config"/> 的 <table-api-link prop="reserve"/> 属性</p>
     <p class="red">设置 reserve 需要指定 <table-api-link prop="row-key"/> 或者 ( <table-api-link prop="select-config"/>、<table-api-link prop="tree-config"/>、<table-api-link prop="expand-config"/>、<table-api-link prop="edit-config"/> ) 中的 key 任意配置一个即可</p>
 
-    <vxe-table
+    <s-table
       border
       show-overflow
       ref="xTable"
@@ -14,22 +14,22 @@
       :start-index="(tablePage.currentPage - 1) * tablePage.pageSize"
       :select-config="{key: 'id', reserve: true}"
       :data.sync="tableData">
-      <vxe-table-column type="selection" width="60"></vxe-table-column>
-      <vxe-table-column type="index" title="序号" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="60"></s-table-column>
+      <s-table-column type="index" title="序号" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="rate" title="Rate"></s-table-column>
+    </s-table>
 
-    <vxe-pager
+    <s-pager
       :loading="loading"
       :current-page="tablePage.currentPage"
       :page-size="tablePage.pageSize"
       :total="tablePage.totalResult"
       :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
       @page-change="handlePageChange">
-    </vxe-pager>
+    </s-pager>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -56,7 +56,7 @@ export default {
       },
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           show-overflow
           ref="xTable"
@@ -65,22 +65,22 @@ export default {
           :start-index="(tablePage.currentPage - 1) * tablePage.pageSize"
           :select-config="{key: 'id', reserve: true}"
           :data.sync="tableData">
-          <vxe-table-column type="selection" width="60"></vxe-table-column>
-          <vxe-table-column type="index" title="序号" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" width="60"></s-table-column>
+          <s-table-column type="index" title="序号" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="rate" title="Rate"></s-table-column>
+        </s-table>
 
-        <vxe-pager
+        <s-pager
           :loading="loading"
           :current-page="tablePage.currentPage"
           :page-size="tablePage.pageSize"
           :total="tablePage.totalResult"
           :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
           @page-change="handlePageChange">
-        </vxe-pager>
+        </s-pager>
         `,
         `
         export default {

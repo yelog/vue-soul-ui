@@ -7,21 +7,21 @@
     <p><table-column-api-link prop="filter"/>：自定义筛选模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
     <p><table-column-api-link prop="edit"/>：自定义可编辑模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
 
-    <vxe-table
+    <s-table
       border
       :data.sync="tableData">
-      <vxe-table-column type="index" width="80">
+      <s-table-column type="index" width="80">
         <template v-slot="{ seq }">
           <span>seq= {{ seq }}</span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable>
+      </s-table-column>
+      <s-table-column field="name" title="Name" sortable>
         <template v-slot="{ rowIndex, columnIndex }">
           <span>rowIndex= {{ rowIndex }}</span>
           <span>columnIndex= {{ columnIndex }}</span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :filters="[{data: ''}]" :filter-method="filterSexMethod">
+      </s-table-column>
+      <s-table-column field="sex" title="Sex" :filters="[{data: ''}]" :filter-method="filterSexMethod">
         <template v-slot:header="{ column }">
           <span style="color: red;">这样玩也行</span>
         </template>
@@ -32,27 +32,27 @@
         </template>
         <template v-slot="{ row }">
           <span>{{ row.sex }} </span>
-          <vxe-button type="text">编辑</vxe-button>
-          <vxe-button type="text">删除</vxe-button>
+          <s-button type="text">编辑</s-button>
+          <s-button type="text">删除</s-button>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="time" title="Time">
+      </s-table-column>
+      <s-table-column field="time" title="Time">
         <template v-slot:header="{ column }">
-          <vxe-input placeholder="这样也行" size="mini"></vxe-input>
+          <s-input placeholder="这样也行" size="mini"></s-input>
         </template>
         <template v-slot="{ row }">
           <span>{{ formatDate(row.time) }}</span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow>
+      </s-table-column>
+      <s-table-column field="address" title="Address" show-overflow>
         <template v-slot="{ row, rowIndex }">
           <select v-if="rowIndex === 1">
             <option value="1">还可以这样</option>
           </select>
-          <a href="https://github.com/xuliangzhan/vxe-table">{{ row.name }}</a>
+          <a href="https://github.com/yelog/vue-soul-ui">{{ row.name }}</a>
         </template>
-      </vxe-table-column>
-    </vxe-table>
+      </s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -73,21 +73,21 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           :data.sync="tableData">
-          <vxe-table-column type="index" width="80">
+          <s-table-column type="index" width="80">
             <template v-slot="{ seq }">
               <span>seq= {{ seq }}</span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable>
+          </s-table-column>
+          <s-table-column field="name" title="Name" sortable>
             <template v-slot="{ rowIndex, columnIndex }">
               <span>rowIndex= {{ rowIndex }}</span>
               <span>columnIndex= {{ columnIndex }}</span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :filters="[{data: ''}]" :filter-method="filterSexMethod">
+          </s-table-column>
+          <s-table-column field="sex" title="Sex" :filters="[{data: ''}]" :filter-method="filterSexMethod">
             <template v-slot:header="{ column }">
               <span style="color: red;">这样玩也行</span>
             </template>
@@ -98,27 +98,27 @@ export default {
             </template>
             <template v-slot="{ row }">
               <span>{{ row.sex }} </span>
-              <vxe-button type="text">编辑</vxe-button>
-              <vxe-button type="text">删除</vxe-button>
+              <s-button type="text">编辑</s-button>
+              <s-button type="text">删除</s-button>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="time" title="Time">
+          </s-table-column>
+          <s-table-column field="time" title="Time">
             <template v-slot:header="{ column }">
-              <vxe-input placeholder="这样也行" size="mini"></vxe-input>
+              <s-input placeholder="这样也行" size="mini"></s-input>
             </template>
             <template v-slot="{ row }">
               <span>{{ formatDate(row.time) }}</span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow>
+          </s-table-column>
+          <s-table-column field="address" title="Address" show-overflow>
             <template v-slot="{ row, rowIndex }">
               <select v-if="rowIndex === 1">
                 <option value="1">还可以这样</option>
               </select>
-              <a href="https://github.com/xuliangzhan/vxe-table">{{ row.name }}</a>
+              <a href="https://github.com/yelog/vue-soul-ui">{{ row.name }}</a>
             </template>
-          </vxe-table-column>
-        </vxe-table>
+          </s-table-column>
+        </s-table>
         `,
         `
         export default {

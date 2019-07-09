@@ -2,29 +2,29 @@
   <div>
     <p>设置 <table-api-link prop="edit-config"/>={key: 'id', trigger: 'manual', mode: 'row', autoClear: false}，还可以通过设置 <table-api-link prop="autoClear"/> 关闭默认的单元格清除激活行为</p>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       show-overflow
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'manual', mode: 'row', autoClear: false}">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column title="操作">
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="address" title="Address" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column title="操作">
         <template v-slot="{ row }">
           <template v-if="$refs.xTable.hasActiveRow(row)">
-            <vxe-button @click="saveRowEvent(row)">保存</vxe-button>
-            <vxe-button @click="cancelRowEvent(row)">取消</vxe-button>
+            <s-button @click="saveRowEvent(row)">保存</s-button>
+            <s-button @click="cancelRowEvent(row)">取消</s-button>
           </template>
           <template v-else>
-            <vxe-button @click="editRowEvent(row)">编辑</vxe-button>
+            <s-button @click="editRowEvent(row)">编辑</s-button>
           </template>
         </template>
-      </vxe-table-column>
-    </vxe-table>
+      </s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -44,29 +44,29 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           show-overflow
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'manual', mode: 'row', autoClear: false}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column title="操作">
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="address" title="Address" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column title="操作">
             <template v-slot="{ row }">
               <template v-if="$refs.xTable.hasActiveRow(row)">
-                <vxe-button @click="saveRowEvent(row)">保存</vxe-button>
-                <vxe-button @click="cancelRowEvent(row)">取消</vxe-button>
+                <s-button @click="saveRowEvent(row)">保存</s-button>
+                <s-button @click="cancelRowEvent(row)">取消</s-button>
               </template>
               <template v-else>
-                <vxe-button @click="editRowEvent(row)">编辑</vxe-button>
+                <s-button @click="editRowEvent(row)">编辑</s-button>
               </template>
             </template>
-          </vxe-table-column>
-        </vxe-table>
+          </s-table-column>
+        </s-table>
         `,
         `
         export default {

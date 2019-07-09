@@ -120,18 +120,18 @@ module.exports = {
         optimizeEdit: '编辑渲染优化',
 
         api: 'API',
-        vxeTable: 'vxe-table',
-        vxeTableColumn: 'vxe-table-column',
-        vxeGrid: 'vxe-grid',
-        vxeExcel: 'vxe-excel',
-        vxeToolbar: 'vxe-toolbar',
-        vxePager: 'vxe-pager',
-        vxeRadio: 'vxe-radio',
-        vxeCheckbox: 'vxe-checkbox',
-        vxeInput: 'vxe-input',
-        vxeButton: 'vxe-button',
-        vxeTooltip: 'vxe-tooltip',
-        vxeMessageBox: 'vxe-message'
+        vxeTable: 's-table',
+        vxeTableColumn: 's-table-column',
+        vxeGrid: 's-grid',
+        vxeExcel: 's-excel',
+        vxeToolbar: 's-toolbar',
+        vxePager: 's-pager',
+        vxeRadio: 's-radio',
+        vxeCheckbox: 's-checkbox',
+        vxeInput: 's-input',
+        vxeButton: 's-button',
+        vxeTooltip: 's-tooltip',
+        vxeMessageBox: 's-message'
       }
     },
     body: {

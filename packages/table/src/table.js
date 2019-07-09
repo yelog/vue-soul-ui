@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
 import Cell from '../../cell'
-import { Interceptor, Renderer } from '../../v-x-e-table'
+import { Interceptor, Renderer } from '../../s-table'
 import { UtilTools, DomTools, ExportTools, ResizeEvent, GlobalEvent } from '../../tools'
 
 var rowUniqueId = 0
@@ -33,10 +33,10 @@ function renderFixed (h, $table, fixedType) {
   let customHeight = height === 'auto' ? parentHeight : XEUtils.toNumber(height)
   let fixedColumn = columnStore[`${fixedType}List`]
   return h('div', {
-    class: `vxe-table--fixed-${fixedType}-wrapper`,
+    class: `s-table--fixed-${fixedType}-wrapper`,
     ref: `${fixedType}Container`
   }, [
-    showHeader ? h('vxe-table-header', {
+    showHeader ? h('s-table-header', {
       props: {
         fixedType,
         tableData,
@@ -49,7 +49,7 @@ function renderFixed (h, $table, fixedType) {
       },
       ref: `${fixedType}Header`
     }) : null,
-    h('vxe-table-body', {
+    h('s-table-body', {
       style: {
         top: `${headerHeight}px`
       },
@@ -65,7 +65,7 @@ function renderFixed (h, $table, fixedType) {
       },
       ref: `${fixedType}Body`
     }),
-    showFooter ? h('vxe-table-footer', {
+    showFooter ? h('s-table-footer', {
       style: {
         top: `${customHeight ? customHeight - footerHeight : tableHeight}px`
       },
@@ -83,7 +83,7 @@ function renderFixed (h, $table, fixedType) {
 }
 
 export default {
-  name: 'VxeTable',
+  name: 'STable',
   props: {
     /** 基本属性 */
     // 数据
@@ -365,10 +365,10 @@ export default {
       if (tableFullColumn.length) {
         let cIndex = Math.floor((tableFullColumn.length - 1) / 2)
         if (tableFullColumn[cIndex].prop) {
-          console.warn('[vxe-table] The property prop is deprecated, please use field')
+          console.warn('[s-table] The property prop is deprecated, please use field')
         }
         if (tableFullColumn[cIndex].label) {
-          console.warn('[vxe-table] The property label is deprecated, please use title')
+          console.warn('[s-table] The property label is deprecated, please use title')
         }
       }
     },
@@ -433,11 +433,11 @@ export default {
     }
     let rowKey = UtilTools.getRowKey(this)
     if (selectConfig && selectConfig.reserve && !rowKey) {
-      throw new Error('[vxe-table] Checkbox status reserve must have a unique primary key.')
+      throw new Error('[s-table] Checkbox status reserve must have a unique primary key.')
     } else if (treeConfig && !rowKey) {
-      throw new Error('[vxe-table] Tree table must have a unique primary key.')
+      throw new Error('[s-table] Tree table must have a unique primary key.')
     } else if (editConfig && !rowKey) {
-      throw new Error('[vxe-table] Editable must have a unique primary key.')
+      throw new Error('[s-table] Editable must have a unique primary key.')
     }
     this.loadData(data, true).then(() => {
       let { customs, collectColumn } = this
@@ -538,9 +538,9 @@ export default {
     let { leftList, rightList } = columnStore
     return h('div', {
       class: {
-        'vxe-table': 1,
+        's-table': 1,
         [`size--${vSize}`]: vSize,
-        'vxe-editable': editConfig,
+        's-editable': editConfig,
         'show--head': showHeader,
         'show--foot': showFooter,
         'scroll--y': overflowY,
@@ -561,13 +561,13 @@ export default {
        * 隐藏列
        */
       h('div', {
-        class: 'vxe-table-hidden-column',
+        class: 's-table-hidden-column',
         ref: 'hideColumn'
       }, this.$slots.default),
       /**
        * 主头部
        */
-      showHeader ? h('vxe-table-header', {
+      showHeader ? h('s-table-header', {
         ref: 'tableHeader',
         props: {
           tableData,
@@ -581,7 +581,7 @@ export default {
       /**
        * 主内容
        */
-      h('vxe-table-body', {
+      h('s-table-body', {
         ref: 'tableBody',
         props: {
           tableData,
@@ -595,7 +595,7 @@ export default {
       /**
        * 底部汇总
        */
-      showFooter ? h('vxe-table-footer', {
+      showFooter ? h('s-table-footer', {
         props: {
           footerData,
           footerMethod,
@@ -617,7 +617,7 @@ export default {
        * 列宽线
        */
       isResizable ? h('div', {
-        class: 'vxe-table--resizable-bar',
+        class: 's-table--resizable-bar',
         style: overflowX ? {
           'padding-bottom': `${scrollXHeight}px`
         } : null,
@@ -626,19 +626,19 @@ export default {
       /**
        * 加载中
        */
-      _isLoading ? h('vxe-table-loading', {
+      _isLoading ? h('s-table-loading', {
         props: {
           visible: loading
         }
       }) : _e(),
       h('div', {
-        class: `vxe-table${id}-wrapper`,
+        class: `s-table${id}-wrapper`,
         ref: 'tableWrapper'
       }, [
         /**
          * 筛选
          */
-        hasFilter ? h('vxe-table-filter', {
+        hasFilter ? h('s-table-filter', {
           props: {
             optimizeOpts,
             filterStore
@@ -648,7 +648,7 @@ export default {
         /**
          * 快捷菜单
          */
-        isCtxMenu ? h('vxe-table-context-menu', {
+        isCtxMenu ? h('s-table-context-menu', {
           props: {
             ctxMenuStore
           },
@@ -657,14 +657,14 @@ export default {
         /**
          * Ellipsis tooltip
          */
-        hasTip ? h('vxe-tooltip', {
+        hasTip ? h('s-tooltip', {
           ref: 'tooltip'
         }) : _e(),
         /**
          * valid error tooltip
          */
-        hasTip && editRules && validConfig.message !== 'none' ? h('vxe-tooltip', {
-          class: 'vxe-table--valid-error',
+        hasTip && editRules && validConfig.message !== 'none' ? h('s-tooltip', {
+          class: 's-table--valid-error',
           props: validConfig.message === 'tooltip' || tableData.length === 1 ? Object.assign({}, validStore, tooltipConfig) : null,
           ref: 'validTip'
         }) : _e()
@@ -700,7 +700,7 @@ export default {
       this.tableFullData = tableFullData
       this.scrollYLoad = scrollYLoad
       if (scrollYLoad && !(height || maxHeight)) {
-        throw new Error('[vxe-table] The height/max-height must be set for the scroll load.')
+        throw new Error('[s-table] The height/max-height must be set for the scroll load.')
       }
       this.tableData = this.getTableData(true).tableData
       this.cacheDataMap()
@@ -792,7 +792,7 @@ export default {
           }
         } else {
           if (scrollYLoad) {
-            throw new Error('[vxe-table] Virtual scroller does not support this operation.')
+            throw new Error('[s-table] Virtual scroller does not support this operation.')
           }
           if (row === -1) {
             tableData.push.apply(tableData, newRecords)
@@ -1192,7 +1192,7 @@ export default {
       let scrollXLoad = scrollX && scrollX.gt && scrollX.gt < tableFullColumn.length
       Object.assign(columnStore, { leftList, centerList, rightList })
       if ((isColspan && isGroup) || (rightIndex && rightIndex !== visibleColumn.length)) {
-        throw new Error('[vxe-table] Fixed column must to the left and right sides.')
+        throw new Error('[s-table] Fixed column must to the left and right sides.')
       }
       if (scrollXLoad) {
         Object.assign(scrollXStore, {
@@ -1486,7 +1486,7 @@ export default {
                   let listElem = elemStore[`${name}-${layout}-list`]
                   if (listElem && hasEllipsis) {
                     XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), thElem => {
-                      let cellElem = thElem.querySelector('.vxe-cell')
+                      let cellElem = thElem.querySelector('.s-cell')
                       if (cellElem) {
                         cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
                       }
@@ -1504,7 +1504,7 @@ export default {
                   let listElem = elemStore[`${name}-${layout}-list`]
                   if (listElem && hasEllipsis) {
                     XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), tdElem => {
-                      let cellElem = tdElem.querySelector('.vxe-cell')
+                      let cellElem = tdElem.querySelector('.s-cell')
                       if (cellElem) {
                         cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
                       }
@@ -1547,7 +1547,7 @@ export default {
       let { actived } = editStore
       let { filterWrapper, validTip } = $refs
       if (filterWrapper) {
-        if (this.getEventTargetNode(evnt, this.$el, 'vxe-filter-wrapper').flag) {
+        if (this.getEventTargetNode(evnt, this.$el, 's-filter-wrapper').flag) {
           // 如果点击了筛选按钮
         } else if (this.getEventTargetNode(evnt, filterWrapper.$el).flag) {
           // 如果点击筛选容器
@@ -1567,7 +1567,7 @@ export default {
               let isReadonlyCol = !this.getEventTargetNode(evnt, this.$el, 'col--edit').flag
               // row 方式
               if (editConfig.mode === 'row') {
-                let rowNode = this.getEventTargetNode(evnt, this.$el, 'vxe-body--row')
+                let rowNode = this.getEventTargetNode(evnt, this.$el, 's-body--row')
                 let isOtherRow = rowNode.flag ? rowNode.targetElem !== actived.args.cell.parentNode : 0
                 if (editConfig.trigger === 'manual') {
                   // manual 触发，如果点击了不同行
@@ -1820,19 +1820,19 @@ export default {
           }
         }
         // 右键头部
-        let headeWrapperNode = this.getEventTargetNode(evnt, this.$el, 'vxe-table--header-wrapper')
+        let headeWrapperNode = this.getEventTargetNode(evnt, this.$el, 's-table--header-wrapper')
         if (headeWrapperNode.flag) {
           this.openContextMenu(evnt, 'header', {})
           return
         }
         // 右键内容
-        let bodyWrapperNode = this.getEventTargetNode(evnt, this.$el, 'vxe-table--body-wrapper')
+        let bodyWrapperNode = this.getEventTargetNode(evnt, this.$el, 's-table--body-wrapper')
         if (bodyWrapperNode.flag) {
           this.openContextMenu(evnt, 'body', {})
           return
         }
         // 右键表尾
-        let footerWrapperNode = this.getEventTargetNode(evnt, this.$el, 'vxe-table--footer-wrapper')
+        let footerWrapperNode = this.getEventTargetNode(evnt, this.$el, 's-table--footer-wrapper')
         if (footerWrapperNode.flag) {
           this.openContextMenu(evnt, 'footer', {})
           return
@@ -1855,7 +1855,7 @@ export default {
           if (!visibleMethod || visibleMethod(params, evnt)) {
             evnt.preventDefault()
             let { scrollTop, scrollLeft, visibleHeight, visibleWidth } = DomTools.getDomNode()
-            let { targetElem, flag } = this.getEventTargetNode(evnt, this.$el, `vxe-${type}--column`)
+            let { targetElem, flag } = this.getEventTargetNode(evnt, this.$el, `s-${type}--column`)
             let args = { type, $table: this }
             if (flag) {
               let { rowId, rowIndex, colIndex, columnIndex } = DomTools.getCellIndexs(targetElem)
@@ -2008,7 +2008,7 @@ export default {
       } else if (checkRowKeys) {
         let property = rowKey
         if (!property) {
-          throw new Error('[vxe-table] Checked rows must have a unique primary key.')
+          throw new Error('[s-table] Checked rows must have a unique primary key.')
         }
         this.setSelection(checkRowKeys.map(checkKey => tableFullData.find(item => checkKey === item[property])), true)
       }
@@ -2277,9 +2277,9 @@ export default {
           let startCell = bodyList[0].querySelector(`.${column.id}`)
           let updateEvent = XEUtils.throttle(function (evnt) {
             evnt.preventDefault()
-            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-header--column')
+            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-header--column')
             if (!flag) {
-              let a = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+              let a = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
               flag = a.flag
               targetElem = a.targetElem
             }
@@ -2364,7 +2364,7 @@ export default {
           let headStart = headerList[0].children[colIndex]
           let updateEvent = XEUtils.throttle(function (evnt) {
             evnt.preventDefault()
-            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
             if (flag) {
               if (isIndex) {
                 let firstCell = targetElem.parentNode.firstElementChild
@@ -2392,7 +2392,7 @@ export default {
             params.cell = cell.nextElementSibling
             this.handleSelected(params, evnt)
             handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
-            handleHeaderChecked([headerList[0].querySelectorAll('.vxe-header--column:not(.col--index)')])
+            handleHeaderChecked([headerList[0].querySelectorAll('.s-header--column:not(.col--index)')])
             handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
           } else {
             this.handleSelected(params, evnt)
@@ -2431,7 +2431,7 @@ export default {
     //       }
     //       let updateEvent = XEUtils.throttle(function (evnt) {
     //         evnt.preventDefault()
-    //         let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+    //         let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
     //         if (flag) {
     //           handleTempChecked(start, DomTools.getCellIndexs(targetElem), evnt)
     //         }
@@ -2478,12 +2478,12 @@ export default {
       let { actived } = editStore
       let { row, column, columnIndex, cell } = params
       if (highlightCurrentRow) {
-        if (!this.getEventTargetNode(evnt, $el, 'vxe-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 'vxe-checkbox').flag) {
+        if (!this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 's-checkbox').flag) {
           this.setCurrentRow(params.row)
         }
       }
       // 如果是多选
-      if (selectConfig && (selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, params.cell, 'vxe-checkbox').flag) {
+      if (selectConfig && (selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, params.cell, 's-checkbox').flag) {
         this.toggleRowSelection(params.row, evnt)
       }
       // 如果是树形表格
@@ -2649,7 +2649,7 @@ export default {
     getActiveRow () {
       let { $el, editStore, tableData } = this
       let { args, row } = editStore.actived
-      if (args && tableData.indexOf(row) > -1 && $el.querySelectorAll('.vxe-body--column.col--actived').length) {
+      if (args && tableData.indexOf(row) > -1 && $el.querySelectorAll('.s-body--column.col--actived').length) {
         return Object.assign({}, args)
       }
       return null
@@ -3189,7 +3189,7 @@ export default {
       } else if (expandRowKeys) {
         let property = rowKey
         if (!property) {
-          throw new Error('[vxe-table] Expand rows must have a unique primary key.')
+          throw new Error('[s-table] Expand rows must have a unique primary key.')
         }
         this.expandeds = expandRowKeys.map(expandKey => tableFullData.find(item => expandKey === item[property]))
       }
@@ -3499,9 +3499,9 @@ export default {
     updateScrollXSpace () {
       let { $refs, elemStore, visibleColumn, scrollXStore, tableWidth, scrollYWidth } = this
       let { tableHeader, tableBody, tableFooter } = $refs
-      let headerElem = tableHeader ? tableHeader.$el.querySelector('.vxe-table--header') : null
-      let bodyElem = tableBody.$el.querySelector('.vxe-table--body')
-      let footerElem = tableFooter ? tableFooter.$el.querySelector('.vxe-table--footer') : null
+      let headerElem = tableHeader ? tableHeader.$el.querySelector('.s-table--header') : null
+      let bodyElem = tableBody.$el.querySelector('.s-table--body')
+      let footerElem = tableFooter ? tableFooter.$el.querySelector('.s-table--footer') : null
       this.tableColumn = visibleColumn.slice(scrollXStore.startIndex, scrollXStore.startIndex + scrollXStore.renderSize)
       let leftSpaceWidth = visibleColumn.slice(0, scrollXStore.startIndex).reduce((previous, column) => previous + column.renderWidth, 0)
       if (headerElem) {

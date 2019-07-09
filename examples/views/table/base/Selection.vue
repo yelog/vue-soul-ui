@@ -2,26 +2,26 @@
   <div>
     <p>多选表格，基础方式；更多参数具体看文档 <table-api-link prop="select-config"/></p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable1.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-        <vxe-button @click="$refs.xTable1.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-        <vxe-button @click="$refs.xTable1.setAllSelection(true)">设置所有行选中</vxe-button>
-        <vxe-button @click="$refs.xTable1.clearSelection()">清除所有行选中</vxe-button>
+        <s-button @click="$refs.xTable1.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+        <s-button @click="$refs.xTable1.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+        <s-button @click="$refs.xTable1.setAllSelection(true)">设置所有行选中</s-button>
+        <s-button @click="$refs.xTable1.clearSelection()">清除所有行选中</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable1"
       border
       height="300"
       :data.sync="tableData">
-      <vxe-table-column type="selection" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -32,26 +32,26 @@
 
     <p>还可以通过 <table-api-link prop="checkMethod"/> 方法控制是否允许点击 CheckBox 勾选，还可以配置 <table-api-link prop="labelField"/> 列显示属性</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable2.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-        <vxe-button @click="$refs.xTable2.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-        <vxe-button @click="$refs.xTable2.setAllSelection(true)">设置所有行选中</vxe-button>
-        <vxe-button @click="$refs.xTable2.clearSelection()">清除所有行选中</vxe-button>
+        <s-button @click="$refs.xTable2.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+        <s-button @click="$refs.xTable2.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+        <s-button @click="$refs.xTable2.setAllSelection(true)">设置所有行选中</s-button>
+        <s-button @click="$refs.xTable2.clearSelection()">清除所有行选中</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable2"
       border
       height="300"
       :data.sync="tableData"
       :select-config="{labelField: 'name', checkMethod}">
-      <vxe-table-column type="selection" title="All"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" title="All"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -62,28 +62,28 @@
 
     <p>多选表格，通过配置 <table-api-link prop="trigger"/> 设置触发源，使用渲染最快的 <table-api-link prop="checkField"/> 属性绑定方式</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable3.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-        <vxe-button @click="$refs.xTable3.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-        <vxe-button @click="$refs.xTable3.setAllSelection(true)">设置所有行选中</vxe-button>
-        <vxe-button @click="$refs.xTable3.clearSelection()">清除所有行选中</vxe-button>
+        <s-button @click="$refs.xTable3.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+        <s-button @click="$refs.xTable3.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+        <s-button @click="$refs.xTable3.setAllSelection(true)">设置所有行选中</s-button>
+        <s-button @click="$refs.xTable3.clearSelection()">清除所有行选中</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       highlight-hover-row
       ref="xTable3"
       height="300"
       :data.sync="tableData"
       :select-config="{checkField: 'checked', trigger: 'row'}">
-      <vxe-table-column type="selection" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -94,19 +94,19 @@
 
     <p>多选可单选同时使用</p>
 
-    <vxe-table
+    <s-table
       border
       ref="xTable4"
       height="300"
       :data.sync="tableData"
       :select-config="{checkField: 'checked'}"
       :radio-config="{labelField: 'name'}">
-      <vxe-table-column type="selection" width="60"></vxe-table-column>
-      <vxe-table-column type="radio" width="200" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="60"></s-table-column>
+      <s-table-column type="radio" width="200" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -126,26 +126,26 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable1.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-            <vxe-button @click="$refs.xTable1.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-            <vxe-button @click="$refs.xTable1.setAllSelection(true)">设置所有行选中</vxe-button>
-            <vxe-button @click="$refs.xTable1.clearSelection()">清除所有行选中</vxe-button>
+            <s-button @click="$refs.xTable1.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+            <s-button @click="$refs.xTable1.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+            <s-button @click="$refs.xTable1.setAllSelection(true)">设置所有行选中</s-button>
+            <s-button @click="$refs.xTable1.clearSelection()">清除所有行选中</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable1"
           border
           height="300"
           :data.sync="tableData">
-          <vxe-table-column type="selection" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -160,26 +160,26 @@ export default {
         }
         `,
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable2.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-            <vxe-button @click="$refs.xTable2.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-            <vxe-button @click="$refs.xTable2.setAllSelection(true)">设置所有行选中</vxe-button>
-            <vxe-button @click="$refs.xTable2.clearSelection()">清除所有行选中</vxe-button>
+            <s-button @click="$refs.xTable2.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+            <s-button @click="$refs.xTable2.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+            <s-button @click="$refs.xTable2.setAllSelection(true)">设置所有行选中</s-button>
+            <s-button @click="$refs.xTable2.clearSelection()">清除所有行选中</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable2"
           border
           height="300"
           :data.sync="tableData"
           :select-config="{labelField: 'name', checkMethod}">
-          <vxe-table-column type="selection" title="All"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" title="All"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -199,28 +199,28 @@ export default {
         }
         `,
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable3.toggleRowSelection(tableData[1])">切换第二行选中</vxe-button>
-            <vxe-button @click="$refs.xTable3.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</vxe-button>
-            <vxe-button @click="$refs.xTable3.setAllSelection(true)">设置所有行选中</vxe-button>
-            <vxe-button @click="$refs.xTable3.clearSelection()">清除所有行选中</vxe-button>
+            <s-button @click="$refs.xTable3.toggleRowSelection(tableData[1])">切换第二行选中</s-button>
+            <s-button @click="$refs.xTable3.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
+            <s-button @click="$refs.xTable3.setAllSelection(true)">设置所有行选中</s-button>
+            <s-button @click="$refs.xTable3.clearSelection()">清除所有行选中</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           border
           highlight-hover-row
           ref="xTable3"
           height="300"
           :data.sync="tableData"
           :select-config="{checkField: 'checked', trigger: 'row'}">
-          <vxe-table-column type="selection" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -235,19 +235,19 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           border
           ref="xTable4"
           height="300"
           :data.sync="tableData"
           :select-config="{checkField: 'checked'}"
           :radio-config="{labelField: 'name'}">
-          <vxe-table-column type="selection" width="60"></vxe-table-column>
-          <vxe-table-column type="radio" width="200" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" width="60"></s-table-column>
+          <s-table-column type="radio" width="200" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {

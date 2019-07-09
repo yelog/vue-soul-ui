@@ -2,27 +2,27 @@
   <div>
     <p>调用 <table-api-link prop="insert"/>、<table-api-link prop="insertAt"/> 函数插入数据</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable.insert({name: Date.now()})">在第1行插入</vxe-button>
-        <vxe-button @click="insertEvent">在第3行插入并激活 Sex 单元格</vxe-button>
-        <vxe-button @click="$refs.xTable.insertAt({name: Date.now()}, -1)">在最后行插入</vxe-button>
-        <vxe-button @click="getInsertEvent">获取新增</vxe-button>
+        <s-button @click="$refs.xTable.insert({name: Date.now()})">在第1行插入</s-button>
+        <s-button @click="insertEvent">在第3行插入并激活 Sex 单元格</s-button>
+        <s-button @click="$refs.xTable.insertAt({name: Date.now()}, -1)">在最后行插入</s-button>
+        <s-button @click="getInsertEvent">获取新增</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       show-overflow
       ref="xTable"
       height="400"
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -42,27 +42,27 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable.insert({name: Date.now()})">在第1行插入</vxe-button>
-            <vxe-button @click="insertEvent">在第3行插入并激活 Sex 单元格</vxe-button>
-            <vxe-button @click="$refs.xTable.insertAt({name: Date.now()}, -1)">在最后行插入</vxe-button>
-            <vxe-button @click="getInsertEvent">获取新增</vxe-button>
+            <s-button @click="$refs.xTable.insert({name: Date.now()})">在第1行插入</s-button>
+            <s-button @click="insertEvent">在第3行插入并激活 Sex 单元格</s-button>
+            <s-button @click="$refs.xTable.insertAt({name: Date.now()}, -1)">在最后行插入</s-button>
+            <s-button @click="getInsertEvent">获取新增</s-button>
           </template>
-        </vxe-toolbar>
-        
-        <vxe-table
+        </s-toolbar>
+
+        <s-table
           border
           show-overflow
           ref="xTable"
           height="400"
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

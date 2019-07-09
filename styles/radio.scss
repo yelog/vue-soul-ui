@@ -1,7 +1,7 @@
 /**Variable**/
 
 /*radio*/
-.vxe-radio {
+.s-radio {
   display: inline-block;
   user-select: none;
   cursor: pointer;
@@ -16,7 +16,7 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: 1px solid $vxe-input-border-color;
+      border: 1px solid $s-input-border-color;
       background-color: #fff;
       vertical-align: middle;
       border-radius: 50%;
@@ -36,10 +36,10 @@
       }
     }
     &:checked+.radio--icon {
-      background-color: $vxe-primary-color;
-      border-color: $vxe-primary-color;
+      background-color: $s-primary-color;
+      border-color: $s-primary-color;
       &+.radio--label {
-        color: $vxe-primary-color;
+        color: $s-primary-color;
       }
     }
   }
@@ -47,18 +47,18 @@
     cursor: not-allowed;
     > input {
       &+.radio--icon {
-        border-color: $vxe-input-border-color;
-        background-color: $vxe-input-disabled-color;
+        border-color: $s-input-border-color;
+        background-color: $s-input-disabled-color;
         &:before {
           border-color: #c0c4cc;
         }
       }
       &:checked+.radio--icon {
-        border-color: $vxe-input-border-color;
-        background-color: $vxe-input-disabled-color;
+        border-color: $s-input-border-color;
+        background-color: $s-input-disabled-color;
         &+.radio--label,
         &+.checkbox--label {
-          color: $vxe-input-border-color;
+          color: $s-input-border-color;
         }
       }
     }
@@ -68,7 +68,7 @@
     vertical-align: middle;
     display: inline-block;
   }
-  &+.vxe-radio {
+  &+.s-radio {
     margin-left: 10px;
   }
 }

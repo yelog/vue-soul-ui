@@ -2,28 +2,28 @@
   <div>
     <p>可编辑树表格，还可以通过手动调用展开收起</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTree.toggleTreeExpansion(tableData[0], true)">切换第一个</vxe-button>
-        <vxe-button @click="$refs.xTree.setTreeExpansion(tableData[2], true)">展开第三个</vxe-button>
-        <vxe-button @click="$refs.xTree.setAllTreeExpansion(true)">展开所有</vxe-button>
-        <vxe-button @click="$refs.xTree.clearTreeExpand()">关闭所有</vxe-button>
+        <s-button @click="$refs.xTree.toggleTreeExpansion(tableData[0], true)">切换第一个</s-button>
+        <s-button @click="$refs.xTree.setTreeExpansion(tableData[2], true)">展开第三个</s-button>
+        <s-button @click="$refs.xTree.setAllTreeExpansion(true)">展开所有</s-button>
+        <s-button @click="$refs.xTree.clearTreeExpand()">关闭所有</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       resizable
       ref="xTree"
       :tree-config="{key: 'id', children: 'children'}"
       :edit-config="{trigger: 'click', mode: 'row'}"
       :select-config="{labelField: 'id'}"
       :data.sync="tableData">
-      <vxe-table-column type="selection" title="ID" tree-node></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="size" title="Size" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="type" title="Type" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" title="ID" tree-node></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="size" title="Size" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="type" title="Type" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -43,28 +43,28 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTree.toggleTreeExpansion(tableData[0], true)">切换第一个</vxe-button>
-            <vxe-button @click="$refs.xTree.setTreeExpansion(tableData[2], true)">展开第三个</vxe-button>
-            <vxe-button @click="$refs.xTree.setAllTreeExpansion(true)">展开所有</vxe-button>
-            <vxe-button @click="$refs.xTree.clearTreeExpand()">关闭所有</vxe-button>
+            <s-button @click="$refs.xTree.toggleTreeExpansion(tableData[0], true)">切换第一个</s-button>
+            <s-button @click="$refs.xTree.setTreeExpansion(tableData[2], true)">展开第三个</s-button>
+            <s-button @click="$refs.xTree.setAllTreeExpansion(true)">展开所有</s-button>
+            <s-button @click="$refs.xTree.clearTreeExpand()">关闭所有</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           resizable
           ref="xTree"
           :tree-config="{key: 'id', children: 'children'}"
           :edit-config="{trigger: 'click', mode: 'row'}"
           :select-config="{labelField: 'id'}"
           :data.sync="tableData">
-          <vxe-table-column type="selection" title="ID" tree-node></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="size" title="Size" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="type" title="Type" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" title="ID" tree-node></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="size" title="Size" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="type" title="Type" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

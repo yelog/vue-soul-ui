@@ -1,49 +1,49 @@
 /**Variable**/
 
 /*excel*/
-.vxe-table {
-  &.vxe-excel {
+.s-table {
+  &.s-excel {
     &.c--checked {
       cursor: default;
-      .vxe-header--column {
-        .vxe-resizable {
+      .s-header--column {
+        .s-resizable {
           cursor: default;
         }
       }
     }
-    .vxe-header--column {
+    .s-header--column {
       padding: 4px 0;
       font-size: 12px;
       transition: none;
       cursor: default;
     }
-    .vxe-body--column {
+    .s-body--column {
       padding: 0;
       transition: none;
       height: inherit;
       line-height: 24px;
       cursor: cell;
       &.col--actived {
-        .vxe-cell {
+        .s-cell {
           padding: 0;
         }
       }
-      .vxe-cell {
+      .s-cell {
         padding: 0 2px;
         word-break: break-all;
-        .vxe-input--wrapper {
+        .s-input--wrapper {
           height: inherit;
           position: relative;
-          .vxe-textarea {
+          .s-textarea {
             position: absolute;
             overflow: hidden;
             padding: 0 2px;
           }
-          .vxe-textarea,
-          .vxe-textarea:focus {
+          .s-textarea,
+          .s-textarea:focus {
             border-radius: 0;
             border: 0;
-            outline: $vxe-table-column-checked-border-width solid $vxe-primary-color;
+            outline: $s-table-column-checked-border-width solid $s-primary-color;
           }
         }
       }

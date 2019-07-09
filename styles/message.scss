@@ -1,7 +1,7 @@
 /**Variable**/
 @import './helpers/mixin.scss';
 
-.vxe-msg--wrapper {
+.s-msg--wrapper {
   display: none;
   position: fixed;
   top: 0;
@@ -10,9 +10,9 @@
   height: 100%;
   text-align: center;
   z-index: 999;
-  font-size: $vxe-font-size;
-  color: $vxe-font-color;
-  font-family: $vxe-font-family;
+  font-size: $s-font-size;
+  color: $s-font-color;
+  font-family: $s-font-family;
   pointer-events: none;
   transition: top .4s;
   &.active {
@@ -24,7 +24,7 @@
         background-color: rgba(0, 0, 0, 0.5);
       }
     }
-    .vxe-msg--box {
+    .s-msg--box {
       opacity: 1;
       transform: translate(0, 0);
       visibility: visible;
@@ -54,34 +54,34 @@
         @include animatTransition(background-color, .2s);
       }
     }
-    .vxe-msg--box {
+    .s-msg--box {
       @include animatTransition(all, .2s, ease-out);
     }
   }
   &.size--small,
   &.size--mini {
     font-size: 12px;
-    .vxe-msg--box {
+    .s-msg--box {
       padding: 6px 0;
     }
-    .vxe-msg--body,
-    .vxe-msg--footer {
+    .s-msg--body,
+    .s-msg--footer {
       padding: 6px 14px;
     }
-    .vxe-msg--header {
+    .s-msg--header {
       font-size: 14px;
       padding: 6px 30px 6px 14px;
     }
-    .vxe-msg--close-btn {
+    .s-msg--close-btn {
       font-size: 16px;
     }
   }
   &.type--message {
-    .vxe-msg--box {
+    .s-msg--box {
       padding: 2px 0;
       margin-top: 0;
       width: auto;
-      .vxe-msg--body {
+      .s-msg--body {
         &:after {
           content: '';
           display: block;
@@ -91,13 +91,13 @@
           visibility: hidden;
         }
       }
-      .vxe-msg--content {
+      .s-msg--content {
         max-width: 800px;
         float: left;
       }
     }
   }
-  .vxe-msg--box {
+  .s-msg--box {
     display: inline-block;
     visibility: hidden;
     width: 420px;
@@ -114,63 +114,63 @@
     transform: translate(0, -10%);
   }
   &.msg--info {
-    .vxe-msg--status-wrapper {
+    .s-msg--status-wrapper {
       color: #2998FF;
     }
   }
   &.msg--warning {
-    .vxe-msg--status-wrapper {
+    .s-msg--status-wrapper {
       color: #FAAD14;
     }
   }
   &.msg--success {
-    .vxe-msg--status-wrapper {
+    .s-msg--status-wrapper {
       color: #52C41A;
     }
   }
   &.msg--error {
-    .vxe-msg--status-wrapper {
+    .s-msg--status-wrapper {
       color: #F5222D;
     }
   }
   &.msg--loading {
-    .vxe-msg--status-wrapper {
+    .s-msg--status-wrapper {
       color: #78B1EB;
     }
   }
-  .vxe-msg--status-wrapper {
+  .s-msg--status-wrapper {
     font-size: 16px;
     padding-top: 2px;
     margin-right: 10px;
     float: left;
-    .vxe-msg--status-icon {
+    .s-msg--status-icon {
       display: block;
     }
   }
-  .vxe-msg--body,
-  .vxe-msg--footer {
+  .s-msg--body,
+  .s-msg--footer {
     padding: 8px 16px;
   }
-  .vxe-msg--header {
+  .s-msg--header {
     position: relative;
     font-size: 16px;
     font-weight: 700;
     padding: 8px 40px 8px 16px;
     user-select: none;
   }
-  .vxe-msg--close-btn {
+  .s-msg--close-btn {
     font-size: 18px;
     position: absolute;
     right: 14px;
     top: 10px;
     z-index: 1;
-    color: $vxe-table-column-icon-border-color;
+    color: $s-table-column-icon-border-color;
     cursor: pointer;
     &:hover {
-      color: $vxe-font-color;
+      color: $s-font-color;
     }
   }
-  .vxe-msg--footer {
+  .s-msg--footer {
     text-align: right;
   }
 }

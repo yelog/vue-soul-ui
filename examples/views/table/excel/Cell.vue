@@ -1,25 +1,25 @@
 <template>
   <div>
-    <p>使用 vxe-excel 渲染 Excel 表格</p>
+    <p>使用 s-excel 渲染 Excel 表格</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="getValidEvent">获取有效数据</vxe-button>
-        <vxe-button  @click="getInsertEvent">获取新增</vxe-button>
-        <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-        <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
-        <vxe-button @click="exportCsvEvent">导出.csv</vxe-button>
+        <s-button @click="getValidEvent">获取有效数据</s-button>
+        <s-button  @click="getInsertEvent">获取新增</s-button>
+        <s-button @click="getRemoveEvent">获取删除</s-button>
+        <s-button @click="getUpdateEvent">获取修改</s-button>
+        <s-button @click="exportCsvEvent">导出.csv</s-button>
         <input type="file" @change="fileChangeEvent" accept=".csv,.xls,.xlsx">
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-excel
+    <s-excel
       ref="xExcel"
       max-height="600"
       :columns="columns"
       :data.sync="tableData"
       :edit-config="{key: 'id'}">
-    </vxe-excel>
+    </s-excel>
 
     <pre>
       <code>
@@ -85,20 +85,20 @@ export default {
       }),
       demoCodes: [
         `
-        <vxe-button @click="getValidEvent">获取有效数据</vxe-button>
-        <vxe-button  @click="getInsertEvent">获取新增</vxe-button>
-        <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-        <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
-        <vxe-button @click="exportCsvEvent">导出.csv</vxe-button>
+        <s-button @click="getValidEvent">获取有效数据</s-button>
+        <s-button  @click="getInsertEvent">获取新增</s-button>
+        <s-button @click="getRemoveEvent">获取删除</s-button>
+        <s-button @click="getUpdateEvent">获取修改</s-button>
+        <s-button @click="exportCsvEvent">导出.csv</s-button>
         <input type="file" @change="fileChangeEvent" accept=".csv,.xls,.xlsx">
 
-        <vxe-excel
+        <s-excel
           ref="xExcel"
           max-height="600"
           :columns="columns"
           :data.sync="tableData"
           :edit-config="{key: 'id'}">
-        </vxe-excel>
+        </s-excel>
         `,
         `
         export default {

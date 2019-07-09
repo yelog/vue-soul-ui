@@ -2,38 +2,38 @@
   <div>
     <p>表格搜索功能，非常简单就可以实现表格内容搜索</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-input v-model="filterName1" type="search" placeholder="试试全表搜索"></vxe-input>
+        <s-input v-model="filterName1" type="search" placeholder="试试全表搜索"></s-input>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       height="300"
       :data="list1">
-      <vxe-table-column type="index" width="80"></vxe-table-column>
-      <vxe-table-column field="name" title="Name">
+      <s-table-column type="index" width="80"></s-table-column>
+      <s-table-column field="name" title="Name">
         <template v-slot="{ row }">
           <span v-html="row.name"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="role" title="Role">
+      </s-table-column>
+      <s-table-column field="role" title="Role">
         <template v-slot="{ row }">
           <span v-html="row.role"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="age" title="Age">
+      </s-table-column>
+      <s-table-column field="age" title="Age">
         <template v-slot="{ row }">
           <span v-html="row.age"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="address" title="Address">
+      </s-table-column>
+      <s-table-column field="address" title="Address">
         <template v-slot="{ row }">
           <span v-html="row.address"></span>
         </template>
-      </vxe-table-column>
-    </vxe-table>
+      </s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -45,37 +45,37 @@
 
     <p>树表格搜索功能，非常简单就可以实现树表格内容搜索</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-input v-model="filterName2" type="search" placeholder="试试全表搜索"></vxe-input>
+        <s-input v-model="filterName2" type="search" placeholder="试试全表搜索"></s-input>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       :data.sync="list2"
       :tree-config="{key: 'id', children: 'children', expandAll: !!filterName2}">
-      <vxe-table-column type="index" width="120" title="序号" tree-node></vxe-table-column>
-      <vxe-table-column field="name" title="Name">
+      <s-table-column type="index" width="120" title="序号" tree-node></s-table-column>
+      <s-table-column field="name" title="Name">
         <template v-slot="{ row }">
           <span v-html="row.name"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="size" title="Size">
+      </s-table-column>
+      <s-table-column field="size" title="Size">
         <template v-slot="{ row }">
           <span v-html="row.size"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="type" title="Type">
+      </s-table-column>
+      <s-table-column field="type" title="Type">
         <template v-slot="{ row }">
           <span v-html="row.type"></span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="date" title="Date">
+      </s-table-column>
+      <s-table-column field="date" title="Date">
         <template v-slot="{ row }">
           <span v-html="row.date"></span>
         </template>
-      </vxe-table-column>
-    </vxe-table>
+      </s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -100,38 +100,38 @@ export default {
       tableData2: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-input v-model="filterName" type="search" placeholder="试试全表搜索"></vxe-input>
+            <s-input v-model="filterName" type="search" placeholder="试试全表搜索"></s-input>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           border
           height="300"
           :data="list">
-          <vxe-table-column type="index" width="80"></vxe-table-column>
-          <vxe-table-column field="name" title="Name">
+          <s-table-column type="index" width="80"></s-table-column>
+          <s-table-column field="name" title="Name">
             <template v-slot="{ row }">
               <span v-html="row.name"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="role" title="Role">
+          </s-table-column>
+          <s-table-column field="role" title="Role">
             <template v-slot="{ row }">
               <span v-html="row.role"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="age" title="Age">
+          </s-table-column>
+          <s-table-column field="age" title="Age">
             <template v-slot="{ row }">
               <span v-html="row.age"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="address" title="Address">
+          </s-table-column>
+          <s-table-column field="address" title="Address">
             <template v-slot="{ row }">
               <span v-html="row.address"></span>
             </template>
-          </vxe-table-column>
-        </vxe-table>
+          </s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -171,37 +171,37 @@ export default {
         }
         `,
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-input v-model="filterName2" type="search" placeholder="试试全表搜索"></vxe-input>
+            <s-input v-model="filterName2" type="search" placeholder="试试全表搜索"></s-input>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           :data.sync="list"
           :tree-config="{key: 'id', children: 'children', expandAll: !!filterName2}">
-          <vxe-table-column type="index" width="120" title="序号" tree-node></vxe-table-column>
-          <vxe-table-column field="name" title="Name">
+          <s-table-column type="index" width="120" title="序号" tree-node></s-table-column>
+          <s-table-column field="name" title="Name">
             <template v-slot="{ row }">
               <span v-html="row.name"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="size" title="Size">
+          </s-table-column>
+          <s-table-column field="size" title="Size">
             <template v-slot="{ row }">
               <span v-html="row.size"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="type" title="Type">
+          </s-table-column>
+          <s-table-column field="type" title="Type">
             <template v-slot="{ row }">
               <span v-html="row.type"></span>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="date" title="Date">
+          </s-table-column>
+          <s-table-column field="date" title="Date">
             <template v-slot="{ row }">
               <span v-html="row.date"></span>
             </template>
-          </vxe-table-column>
-        </vxe-table>
+          </s-table-column>
+        </s-table>
         `,
         `
         export default {

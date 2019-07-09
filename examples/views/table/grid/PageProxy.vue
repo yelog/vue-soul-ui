@@ -3,13 +3,13 @@
     <p>数据代理：通过配置 <grid-api-link prop="proxy-config"/> 参数，如果配置了 <grid-api-link prop="pager-config"/> 分页，则默认读取响应结果中 page.total 和 result 属性，可以通过 <grid-api-link prop="props"/> 修改</p>
     <p>由 <grid-api-link prop="pager-config"/> 代理数据转换，只需要配置好数据源即可；非常简单就可以渲染一个表格</p>
 
-    <vxe-grid
+    <s-grid
       border
       height="530"
       :pager-config="{pageSize: 10}"
       :proxy-config="tableProxy"
       :select-config="{key: 'id', reserve: true}"
-      :columns="tableColumn"></vxe-grid>
+      :columns="tableColumn"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -47,12 +47,12 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           height="530"
           :pager-config="{pageSize: 10}"
           :proxy-config="tableProxy"
-          :columns="tableColumn"></vxe-grid>
+          :columns="tableColumn"></s-grid>
         `,
         `
         export default {

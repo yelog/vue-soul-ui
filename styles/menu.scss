@@ -1,7 +1,7 @@
 /**Variable**/
 
 /*快捷菜单*/
-.vxe-table--ctxmenu-wrapper {
+.s-table--ctxmenu-wrapper {
   display: none;
   position: absolute;
   top: 0;
@@ -9,16 +9,16 @@
   z-index: 88;
   font-size: 12px;
   background-color: #FFF;
-  border: 1px solid $vxe-table-popup-border-color;
+  border: 1px solid $s-table-popup-border-color;
   box-shadow: 2px 2px 4px -2px rgba(0,0,0,.2);
   padding: 0 1px;
   user-select: none;
-  color: $vxe-font-color;
-  font-family: $vxe-font-family;
+  color: $s-font-color;
+  font-family: $s-font-family;
   &.show {
     display: block;
   }
-  .vxe-ctxmenu--option-wrapper {
+  .s-ctxmenu--option-wrapper {
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -36,8 +36,8 @@
         border-color:#C5C5C5;
       }
       &.link--disabled {
-        .vxe-ctxmenu--link {
-          color: $vxe-disabled-color;
+        .s-ctxmenu--link {
+          color: $s-disabled-color;
         }
         &.link--active {
           border-color:#C0C1C2;
@@ -48,24 +48,24 @@
         }
       }
     }
-    .vxe-ctxmenu--link {
+    .s-ctxmenu--link {
       display: block;
       padding: 0 30px;
       min-width: 120px;
       max-width: 180px;
       line-height: 26px;
-      color: $vxe-font-color;
-      .vxe-ctxmenu--link-prefix,
-      .vxe-ctxmenu--link-suffix {
+      color: $s-font-color;
+      .s-ctxmenu--link-prefix,
+      .s-ctxmenu--link-suffix {
         position: absolute;
         top: 5px;
         margin-right: 5px;
         font-size: 16px;
       }
-      .vxe-ctxmenu--link-prefix {
+      .s-ctxmenu--link-prefix {
         left: 5px;
       }
-      .vxe-ctxmenu--link-suffix {
+      .s-ctxmenu--link-suffix {
         right: 5px;
         &.suffix--haschild {
           top: 8px;
@@ -77,23 +77,23 @@
           }
         }
       }
-      .vxe-ctxmenu--link-content {
+      .s-ctxmenu--link-content {
         display: block;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
     }
-    .vxe-table--ctxmenu-clild-wrapper {
-      .vxe-ctxmenu--link {
+    .s-table--ctxmenu-clild-wrapper {
+      .s-ctxmenu--link {
         max-width: 180px;
         padding: 0 20px 0 30px;
       }
     }
   }
 }
-.vxe-table--ctxmenu-clild-wrapper {
-  @extend .vxe-table--ctxmenu-wrapper, .vxe-ctxmenu--option-wrapper;
+.s-table--ctxmenu-clild-wrapper {
+  @extend .s-table--ctxmenu-wrapper, .s-ctxmenu--option-wrapper;
   display: none;
   z-index: 99;
   top: 0;

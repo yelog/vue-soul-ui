@@ -1,12 +1,12 @@
 /**Variable**/
 @import './helpers/mixin.scss';
 
-[class*="vxe-icon--"] {
+[class*="s-icon--"] {
   display: inline-block;
   vertical-align: middle;
   position: relative;
   direction: ltr;
-  font-family: $vxe-font-family;
+  font-family: $s-font-family;
 }
 
 %DefaultWidthHeight {
@@ -14,7 +14,7 @@
   height: 1em;
 }
 
-.vxe-icon--menu {
+.s-icon--menu {
   width: 0.22em;
   height: 0.22em;
   box-shadow: 0 -0.4em 0, -0.4em -0.4em 0, 0.4em -0.4em 0, 0 0 0 1em inset, -0.4em 0 0, 0.4em 0 0, 0 0.4em 0, -0.4em 0.4em 0, 0.4em 0.4em 0;
@@ -22,7 +22,7 @@
   @include animatTransition(all, .2s);
 }
 
-.vxe-icon--caret-top {
+.s-icon--caret-top {
   @extend %DefaultWidthHeight;
   &:before {
     content: "";
@@ -39,18 +39,18 @@
   }
 }
 
-.vxe-icon--caret-bottom {
-  @extend .vxe-icon--caret-top;
+.s-icon--caret-bottom {
+  @extend .s-icon--caret-top;
   transform: rotate(180deg);
 }
 
-.vxe-icon--caret-left {
-  @extend .vxe-icon--caret-top;
+.s-icon--caret-left {
+  @extend .s-icon--caret-top;
   transform: rotate(-90deg);
 }
 
-.vxe-icon--caret-right {
-  @extend .vxe-icon--caret-top;
+.s-icon--caret-right {
+  @extend .s-icon--caret-top;
   transform: rotate(90deg);
 }
 
@@ -71,22 +71,22 @@
   }
 }
 
-.vxe-icon--arrow-top {
+.s-icon--arrow-top {
   @extend %DefaultWidthHeight, %BeforeArrowTop;
   transform: rotate(-45deg);
 }
 
-.vxe-icon--arrow-bottom {
+.s-icon--arrow-bottom {
   @extend %DefaultWidthHeight, %BeforeArrowTop;
   transform: rotate(135deg);
 }
 
-.vxe-icon--arrow-left {
+.s-icon--arrow-left {
   @extend %DefaultWidthHeight, %BeforeArrowTop;
   transform: rotate(-135deg);
 }
 
-.vxe-icon--arrow-right {
+.s-icon--arrow-right {
   @extend %DefaultWidthHeight, %BeforeArrowTop;
   transform: rotate(45deg);
 }
@@ -125,27 +125,27 @@
   }
 }
 
-.vxe-icon--d-arrow-top {
+.s-icon--d-arrow-top {
   @extend %DefaultWidthHeight, %BeforeDArrowTop, %AfterDArrowTop;
   transform: rotate(-45deg);
 }
 
-.vxe-icon--d-arrow-bottom {
+.s-icon--d-arrow-bottom {
   @extend %DefaultWidthHeight, %BeforeDArrowTop, %AfterDArrowTop;
   transform: rotate(135deg);
 }
 
-.vxe-icon--d-arrow-left {
+.s-icon--d-arrow-left {
   @extend %DefaultWidthHeight, %BeforeDArrowTop, %AfterDArrowTop;
   transform: rotate(-135deg);
 }
 
-.vxe-icon--d-arrow-right {
+.s-icon--d-arrow-right {
   @extend %DefaultWidthHeight, %BeforeDArrowTop, %AfterDArrowTop;
   transform: rotate(45deg);
 }
 
-.vxe-icon--funnel {
+.s-icon--funnel {
   @extend %DefaultWidthHeight;
   &:before {
     content: "";
@@ -172,7 +172,7 @@
   }
 }
 
-.vxe-icon--edit-outline {
+.s-icon--edit-outline {
   @extend %DefaultWidthHeight;
   border-radius: 0.2em;
   border-width: 0.1em;
@@ -202,7 +202,7 @@
   }
 }
 
-.vxe-icon--more {
+.s-icon--more {
   @extend %DefaultWidthHeight;
   &:before {
     content: "...";
@@ -214,7 +214,7 @@
   }
 }
 
-.vxe-icon--close {
+.s-icon--close {
   @extend %DefaultWidthHeight;
   &:before,
   &:after {
@@ -238,7 +238,7 @@
   }
 }
 
-.vxe-icon--refresh {
+.s-icon--refresh {
   @extend %DefaultWidthHeight;
   border-width: 0.1em;
   border-style: solid;
@@ -273,14 +273,14 @@
 }
 
 @keyframes rollCircle {
-  0% { 
+  0% {
     transform: rotate(0deg);
   }
-  100% { 
+  100% {
     transform: rotate(360deg);
   }
 }
- 
+
 
 %BeforeSolidRadius {
   content: "";
@@ -306,7 +306,7 @@
   font-weight: 700;
 }
 
-.vxe-icon--question {
+.s-icon--question {
   @extend %DefaultWidthHeight;
   &:before {
     @extend %BeforeSolidRadius;
@@ -317,7 +317,7 @@
   }
 }
 
-.vxe-icon--info {
+.s-icon--info {
   @extend %DefaultWidthHeight;
   &:before {
     @extend %BeforeSolidRadius;
@@ -330,7 +330,7 @@
   }
 }
 
-.vxe-icon--warning {
+.s-icon--warning {
   @extend %DefaultWidthHeight;
   &:before {
     @extend %BeforeSolidRadius;
@@ -341,7 +341,7 @@
   }
 }
 
-.vxe-icon--success {
+.s-icon--success {
   @extend %DefaultWidthHeight;
   &:before {
     @extend %BeforeSolidRadius;
@@ -362,7 +362,7 @@
   }
 }
 
-.vxe-icon--error {
+.s-icon--error {
   @extend %DefaultWidthHeight;
   &:before {
     @extend %BeforeSolidRadius;

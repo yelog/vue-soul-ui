@@ -2,7 +2,7 @@ import Cell from '../../cell'
 import { UtilTools } from '../../tools'
 
 export default {
-  name: 'VxeTableColumn',
+  name: 'STableColumn',
   props: {
     // 渲染类型 index,radio,selection,expand
     type: String,

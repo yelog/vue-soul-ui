@@ -2,18 +2,18 @@
   <div>
     <p>使用 <a class="link" href="https://www.npmjs.com/package/xlsx" target="_blank">xlsx</a> 和 <a class="link" href="https://www.npmjs.com/package/file-saver" target="_blank">file-saver</a> 实现导出 xlsx 文件</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="exportEvent">导出选中.xlsx</vxe-button>
+        <s-button @click="exportEvent">导出选中.xlsx</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-grid
+    <s-grid
       border
       ref="xGrid"
       height="500"
       :columns="tableColumn"
-      :data.sync="tableData"></vxe-grid>
+      :data.sync="tableData"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -43,18 +43,18 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="exportEvent">导出选中.xlsx</vxe-button>
+            <s-button @click="exportEvent">导出选中.xlsx</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-grid
+        <s-grid
           border
           ref="xGrid"
           height="500"
           :columns="tableColumn"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {
@@ -85,7 +85,7 @@ export default {
               XLSX.utils.book_append_sheet(wb, ws)
               let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: false, type: 'binary' })
               let blob = new Blob([this.toBuffer(wbout)], { type: 'application/octet-stream' })
-              
+
               // 保存导出
               FileSaver.saveAs(blob, '数据导出.xlsx')
             },

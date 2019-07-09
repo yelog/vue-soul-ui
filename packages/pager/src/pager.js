@@ -3,7 +3,7 @@ import GlobalConfig from '../../conf'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
 
 export default {
-  name: 'VxePager',
+  name: 'SPager',
   props: {
     size: String,
     // 自定义布局
@@ -60,7 +60,7 @@ export default {
   render (h) {
     let { layouts, loading, vSize, background } = this
     return h('div', {
-      class: ['vxe-pager', {
+      class: ['s-pager', {
         [`size--${vSize}`]: vSize,
         'p--background': background,
         'is--loading': loading
@@ -72,7 +72,7 @@ export default {
     renderPrevPage (h) {
       let { currentPage } = this
       return h('span', {
-        class: ['vxe-pager--prev-btn', {
+        class: ['s-pager--prev-btn', {
           'is--disabled': currentPage <= 1
         }],
         on: {
@@ -80,7 +80,7 @@ export default {
         }
       }, [
         h('i', {
-          class: ['vxe-icon--page-icon', GlobalConfig.icon.prevPage]
+          class: ['s-icon--page-icon', GlobalConfig.icon.prevPage]
         })
       ])
     },
@@ -88,7 +88,7 @@ export default {
     renderPrevJump (h, tagName) {
       let { numList, currentPage } = this
       return h(tagName || 'span', {
-        class: ['vxe-pager--jump-prev', {
+        class: ['s-pager--jump-prev', {
           'is--fixed': !tagName,
           'is--disabled': currentPage <= 1
         }],
@@ -97,30 +97,30 @@ export default {
         }
       }, [
         tagName ? h('i', {
-          class: 'vxe-pager--jump-more vxe-icon--more'
+          class: 's-pager--jump-more s-icon--more'
         }) : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', GlobalConfig.icon.jumpPrev]
+          class: ['s-pager--jump-icon', GlobalConfig.icon.jumpPrev]
         })
       ])
     },
     // number
     renderNumber (h) {
       return h('ul', {
-        class: 'vxe-pager--btn-wrapper'
+        class: 's-pager--btn-wrapper'
       }, this.renderPageBtn(h))
     },
     // jumpNumber
     renderJumpNumber (h) {
       return h('ul', {
-        class: 'vxe-pager--btn-wrapper'
+        class: 's-pager--btn-wrapper'
       }, this.renderPageBtn(h, true))
     },
     // nextJump
     renderNextJump (h, tagName) {
       let { numList, currentPage, pageCount } = this
       return h(tagName || 'span', {
-        class: ['vxe-pager--jump-next', {
+        class: ['s-pager--jump-next', {
           'is--fixed': !tagName,
           'is--disabled': currentPage >= pageCount
         }],
@@ -129,10 +129,10 @@ export default {
         }
       }, [
         tagName ? h('i', {
-          class: 'vxe-pager--jump-more vxe-icon--more'
+          class: 's-pager--jump-more s-icon--more'
         }) : null,
         h('i', {
-          class: ['vxe-pager--jump-icon', GlobalConfig.icon.jumpNext]
+          class: ['s-pager--jump-icon', GlobalConfig.icon.jumpNext]
         })
       ])
     },
@@ -140,7 +140,7 @@ export default {
     renderNextPage (h) {
       let { currentPage, pageCount } = this
       return h('span', {
-        class: ['vxe-pager--next-btn', {
+        class: ['s-pager--next-btn', {
           'is--disabled': currentPage >= pageCount
         }],
         on: {
@@ -148,7 +148,7 @@ export default {
         }
       }, [
         h('i', {
-          class: ['vxe-icon--page-icon', GlobalConfig.icon.nextPage]
+          class: ['s-icon--page-icon', GlobalConfig.icon.nextPage]
         })
       ])
     },
@@ -156,7 +156,7 @@ export default {
     renderSizes (h) {
       let { pageSizes, showSizes, pageSize, panelStyle } = this
       return h('span', {
-        class: ['vxe-pager--sizes', {
+        class: ['s-pager--sizes', {
           'is--active': showSizes
         }],
         ref: 'sizeBtn'
@@ -169,16 +169,16 @@ export default {
         }, [
           h('span', `${pageSize}${GlobalConfig.i18n('vxe.pager.pagesize')}`),
           h('i', {
-            class: 'vxe-pager--sizes-arrow vxe-icon--caret-bottom'
+            class: 's-pager--sizes-arrow s-icon--caret-bottom'
           })
         ]),
         h('div', {
-          class: 'vxe-pager-size--select-wrapper',
+          class: 's-pager-size--select-wrapper',
           style: panelStyle,
           ref: 'sizePanel'
         }, [
           h('ul', {
-            class: 'vxe-pager-size--select'
+            class: 's-pager-size--select'
           }, pageSizes.map(num => {
             return h('li', {
               class: ['size--option', {
@@ -200,13 +200,13 @@ export default {
     renderJump (h, isFull) {
       let { currentPage, pageCount } = this
       return h('span', {
-        class: 'vxe-pager--jump'
+        class: 's-pager--jump'
       }, [
         isFull ? h('span', {
-          class: 'vxe-pager--goto-text'
+          class: 's-pager--goto-text'
         }, GlobalConfig.i18n('vxe.pager.goto')) : null,
         h('input', {
-          class: 'vxe-pager--goto',
+          class: 's-pager--goto',
           domProps: {
             value: currentPage
           },
@@ -232,7 +232,7 @@ export default {
           }
         }),
         isFull ? h('span', {
-          class: 'vxe-pager--classifier-text'
+          class: 's-pager--classifier-text'
         }, GlobalConfig.i18n('vxe.pager.pageClassifier')) : null
       ])
     },
@@ -240,10 +240,10 @@ export default {
     renderPageCount (h) {
       let { pageCount } = this
       return h('span', {
-        class: 'vxe-pager--count'
+        class: 's-pager--count'
       }, [
         h('span', {
-          class: 'vxe-pager--separator'
+          class: 's-pager--separator'
         }, '/'),
         h('span', pageCount)
       ])
@@ -252,7 +252,7 @@ export default {
     renderTotal (h) {
       let { total } = this
       return h('span', {
-        class: 'vxe-pager--total'
+        class: 's-pager--total'
       }, XEUtils.template(GlobalConfig.i18n('vxe.pager.total'), { total }))
     },
     // number
@@ -273,7 +273,7 @@ export default {
       if (showJump && isLt) {
         nums.push(
           h('li', {
-            class: 'vxe-pager--num-btn',
+            class: 's-pager--num-btn',
             on: {
               click: () => this.jumpPageEvent(1)
             }
@@ -286,7 +286,7 @@ export default {
         if (number <= pageCount) {
           nums.push(
             h('li', {
-              class: ['vxe-pager--num-btn', {
+              class: ['s-pager--num-btn', {
                 'is--active': currentPage === number
               }],
               on: {
@@ -301,7 +301,7 @@ export default {
         nums.push(
           this.renderNextJump(h, 'li'),
           h('li', {
-            class: 'vxe-pager--num-btn',
+            class: 's-pager--num-btn',
             on: {
               click: () => this.jumpPageEvent(pageCount)
             }

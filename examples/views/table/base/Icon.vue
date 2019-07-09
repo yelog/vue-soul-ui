@@ -26,81 +26,81 @@ export default {
     return {
       list: [
         {
-          icon: 'vxe-icon--caret-top'
+          icon: 's-icon--caret-top'
         },
         {
-          icon: 'vxe-icon--caret-bottom'
+          icon: 's-icon--caret-bottom'
         },
         {
-          icon: 'vxe-icon--caret-left'
+          icon: 's-icon--caret-left'
         },
         {
-          icon: 'vxe-icon--caret-right'
+          icon: 's-icon--caret-right'
         },
         {
-          icon: 'vxe-icon--arrow-top'
+          icon: 's-icon--arrow-top'
         },
         {
-          icon: 'vxe-icon--arrow-bottom'
+          icon: 's-icon--arrow-bottom'
         },
         {
-          icon: 'vxe-icon--arrow-left'
+          icon: 's-icon--arrow-left'
         },
         {
-          icon: 'vxe-icon--arrow-right'
+          icon: 's-icon--arrow-right'
         },
         {
-          icon: 'vxe-icon--d-arrow-top'
+          icon: 's-icon--d-arrow-top'
         },
         {
-          icon: 'vxe-icon--d-arrow-bottom'
+          icon: 's-icon--d-arrow-bottom'
         },
         {
-          icon: 'vxe-icon--d-arrow-left'
+          icon: 's-icon--d-arrow-left'
         },
         {
-          icon: 'vxe-icon--d-arrow-right'
+          icon: 's-icon--d-arrow-right'
         },
         {
-          icon: 'vxe-icon--menu'
+          icon: 's-icon--menu'
         },
         {
-          icon: 'vxe-icon--edit-outline'
+          icon: 's-icon--edit-outline'
         },
         {
-          icon: 'vxe-icon--more'
+          icon: 's-icon--more'
         },
         {
-          icon: 'vxe-icon--close'
+          icon: 's-icon--close'
         },
         {
-          icon: 'vxe-icon--refresh'
+          icon: 's-icon--refresh'
         },
         {
-          icon: 'vxe-icon--refresh roll'
+          icon: 's-icon--refresh roll'
         },
         {
-          icon: 'vxe-icon--funnel'
+          icon: 's-icon--funnel'
         },
         {
-          icon: 'vxe-icon--question'
+          icon: 's-icon--question'
         },
         {
-          icon: 'vxe-icon--info'
+          icon: 's-icon--info'
         },
         {
-          icon: 'vxe-icon--warning'
+          icon: 's-icon--warning'
         },
         {
-          icon: 'vxe-icon--success'
+          icon: 's-icon--success'
         },
         {
-          icon: 'vxe-icon--error'
+          icon: 's-icon--error'
         }
       ],
       demoCodes: [
         `
-        <i class="vxe-icon--caret-top"></i>
+        <i class="s-icon--caret-top"></i>
         `
       ]
     }

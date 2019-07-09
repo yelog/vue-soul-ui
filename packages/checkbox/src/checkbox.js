@@ -1,5 +1,5 @@
 export default {
-  name: 'VxeCheckbox',
+  name: 'SCheckbox',
   props: {
     value: Boolean,
     indeterminate: Boolean,
@@ -15,7 +15,7 @@ export default {
   render (h) {
     let { disabled, vSize, indeterminate, value } = this
     return h('label', {
-      class: ['vxe-checkbox', {
+      class: ['s-checkbox', {
         [`size--${vSize}`]: vSize,
         'is--indeterminate': indeterminate,
         'is--disabled': disabled

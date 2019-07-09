@@ -1,61 +1,61 @@
 /*font-family*/
-$vxe-font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
-$vxe-font-color: #606266;
-$vxe-font-size: 14px;
-$vxe-zindex: 99;
+$s-font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+$s-font-color: #606266;
+$s-font-size: 14px;
+$s-zindex: 99;
 
 /*primary color*/
-$vxe-primary-color: #409eff;
-$vxe-disabled-color: #B1B1B1;
+$s-primary-color: #409eff;
+$s-disabled-color: #B1B1B1;
 
 /*input/radio/checkbox color*/
-$vxe-input-border-color: #dcdfe6;
-$vxe-input-disabled-color: #f3f3f3;;
+$s-input-border-color: #dcdfe6;
+$s-input-disabled-color: #f3f3f3;;
 
 /*popup*/
-$vxe-table-popup-border-color: #ebeef5;
+$s-table-popup-border-color: #ebeef5;
 
 /*table color*/
-$vxe-table-header-background-color: #f8f8f9;
-$vxe-table-border-color: #e8eaec;
-$vxe-table-resizable-color: #D9DDDF;
-$vxe-table-background-color: #ffffff;
+$s-table-header-background-color: #f8f8f9;
+$s-table-border-color: #e8eaec;
+$s-table-resizable-color: #D9DDDF;
+$s-table-background-color: #ffffff;
 
 /*table row*/
-$vxe-table-row-striped-background-color: #fafafa;
-$vxe-table-row-hover-background-color: #f5f7fa;
-$vxe-table-row-current-background-color: #e6f7ff;
+$s-table-row-striped-background-color: #fafafa;
+$s-table-row-hover-background-color: #f5f7fa;
+$s-table-row-current-background-color: #e6f7ff;
 
 /*table column*/
-$vxe-table-column-hover-background-color: #d7effb;
-$vxe-table-column-current-background-color: #e6f7ff;
-$vxe-table-column-icon-border-color: #c0c4cc;
-$vxe-table-column-icon-border-hover-color: #515A6E;
+$s-table-column-hover-background-color: #d7effb;
+$s-table-column-current-background-color: #e6f7ff;
+$s-table-column-icon-border-color: #c0c4cc;
+$s-table-column-icon-border-hover-color: #515A6E;
 
 /*table cell*/
-$vxe-table-cell-dirty-width: 5px;
-$vxe-table-cell-dirty-color: #f56c6c;
+$s-table-cell-dirty-width: 5px;
+$s-table-cell-dirty-color: #f56c6c;
 
 /*table checked*/
-$vxe-table-column-checked-border-width: 2px;
-$vxe-table-column-checked-border-color: #D4D4D4;
-$vxe-table-column-header-checked-background-color: #DCDCDC;
-$vxe-table-column-checked-background-color: #e6f7ff;
+$s-table-column-checked-border-width: 2px;
+$s-table-column-checked-border-color: #D4D4D4;
+$s-table-column-header-checked-background-color: #DCDCDC;
+$s-table-column-checked-background-color: #e6f7ff;
 
 /*loading*/
-$vxe-loading-background-color: rgba(0, 0, 0, 0.2);
+$s-loading-background-color: rgba(0, 0, 0, 0.2);
 
 /*excel*/
-$vxe-excel-font-color: #333;
-$vxe-excel-header-background-color: #E6E6E6;
-$vxe-excel-header-selected-background-color: #D2D2D2;
-$vxe-excel-column-border-width: 2px;
-$vxe-excel-column-border-color: #D4D4D4;
-$vxe-excel-primary-color: #217346;
+$s-excel-font-color: #333;
+$s-excel-header-background-color: #E6E6E6;
+$s-excel-header-selected-background-color: #D2D2D2;
+$s-excel-column-border-width: 2px;
+$s-excel-column-border-color: #D4D4D4;
+$s-excel-primary-color: #217346;
 
 /*validate*/
-$vxe-table-validate-error-color: #f56c6c;
+$s-table-validate-error-color: #f56c6c;
 
 /*tooltip*/
-$vxe-tooltip-dark-background-color: #303133;
-$vxe-tooltip-light-background-color: #fff;
+$s-tooltip-dark-background-color: #303133;
+$s-tooltip-light-background-color: #fff;

@@ -1,8 +1,8 @@
-import VxeTableBody from './src/body'
+import STableBody from './src/body'
 
-VxeTableBody.install = function (Vue) {
-  Vue.component(VxeTableBody.name, VxeTableBody)
+STableBody.install = function (Vue) {
+  Vue.component(STableBody.name, STableBody)
 }
 
-export const Body = VxeTableBody
-export default VxeTableBody
+export const Body = STableBody
+export default STableBody

@@ -1,7 +1,7 @@
 /**Variable**/
 
 /*checkbox*/
-.vxe-checkbox {
+.s-checkbox {
   display: inline-block;
   user-select: none;
   cursor: pointer;
@@ -16,7 +16,7 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: 1px solid $vxe-input-border-color;
+      border: 1px solid $s-input-border-color;
       background-color: #fff;
       vertical-align: middle;
       border-radius: 2px;
@@ -26,8 +26,8 @@
       }
     }
     &:checked+.checkbox--icon {
-      background-color: $vxe-primary-color;
-      border-color: $vxe-primary-color;
+      background-color: $s-primary-color;
+      border-color: $s-primary-color;
       &:before {
         height: 8px;
         width: 4px;
@@ -41,15 +41,15 @@
         transform: rotate(45deg);
       }
       &+.checkbox--label {
-        color: $vxe-primary-color;
+        color: $s-primary-color;
       }
     }
   }
   &.is--indeterminate {
     > input {
       &+.checkbox--icon {
-        background-color: $vxe-primary-color;
-        border-color: $vxe-primary-color;
+        background-color: $s-primary-color;
+        border-color: $s-primary-color;
         &:before {
           top: 50%;
           height: 0;
@@ -66,17 +66,17 @@
     cursor: not-allowed;
     > input {
       &+.checkbox--icon {
-        border-color: $vxe-input-border-color;
-        background-color: $vxe-input-disabled-color;
+        border-color: $s-input-border-color;
+        background-color: $s-input-disabled-color;
         &:before {
           border-color: #c0c4cc;
         }
       }
       &:checked+.checkbox--icon {
-        border-color: $vxe-input-border-color;
-        background-color: $vxe-input-disabled-color;
+        border-color: $s-input-border-color;
+        background-color: $s-input-disabled-color;
         &+.checkbox--label {
-          color: $vxe-input-border-color;
+          color: $s-input-border-color;
         }
       }
     }

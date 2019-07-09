@@ -137,7 +137,7 @@ export const DomTools = {
   },
   getCell ($table, { row, rowIndex, column }) {
     let rowId = UtilTools.getRowId($table, row, rowIndex)
-    return $table.$refs.tableBody.$el.querySelector(`.vxe-body--row[data-rowid="${rowId}"] .${column.id}`)
+    return $table.$refs.tableBody.$el.querySelector(`.s-body--row[data-rowid="${rowId}"] .${column.id}`)
   },
   getCursorPosition (textarea) {
     let rangeData = { text: '', start: 0, end: 0 }

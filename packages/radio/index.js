@@ -1,8 +1,8 @@
-import VxeRadio from './src/radio'
+import SRadio from './src/radio'
 
-VxeRadio.install = function (Vue) {
-  Vue.component(VxeRadio.name, VxeRadio)
+SRadio.install = function (Vue) {
+  Vue.component(SRadio.name, SRadio)
 }
 
-export const Radio = VxeRadio
-export default VxeRadio
+export const Radio = SRadio
+export default SRadio

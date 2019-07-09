@@ -2,16 +2,16 @@
   <div>
     <p>使用 <table-api-link prop="highlight-current-row"/> 方式；选项改变触发事件 <table-api-link prop="select-change"/></p>
 
-    <vxe-table
+    <s-table
       border
       highlight-current-row
       height="300"
       :data.sync="tableData">
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -22,16 +22,16 @@
 
     <p>使用 radio 方式</p>
 
-    <vxe-table
+    <s-table
       border
       height="300"
       :radio-config="{labelField: 'name'}"
       :data.sync="tableData">
-      <vxe-table-column type="radio" title="这样也行"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="radio" title="这样也行"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -42,25 +42,25 @@
 
     <p>当然也可以两种方式同时使用</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable.setCurrentRow(tableData[1])">设置第二行选中</vxe-button>
+        <s-button @click="$refs.xTable.setCurrentRow(tableData[1])">设置第二行选中</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       highlight-current-row
       height="300"
       :radio-config="{labelField: 'name'}"
       :data.sync="tableData">
-      <vxe-table-column type="radio" title="还可以这样" width="120"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="radio" title="还可以这样" width="120"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -80,16 +80,16 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           highlight-current-row
           height="300"
           :data.sync="tableData">
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -104,16 +104,16 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           border
           height="300"
           :radio-config="{labelField: 'name'}"
           :data.sync="tableData">
-          <vxe-table-column type="radio" title="这样也行"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="radio" title="这样也行"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -128,25 +128,25 @@ export default {
         }
         `,
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable.setCurrentRow(tableData[1])">设置第二行选中</vxe-button>
+            <s-button @click="$refs.xTable.setCurrentRow(tableData[1])">设置第二行选中</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           highlight-current-row
           height="300"
           :radio-config="{labelField: 'name'}"
           :data.sync="tableData">
-          <vxe-table-column type="radio" title="还可以这样" width="120"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="radio" title="还可以这样" width="120"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {

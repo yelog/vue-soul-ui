@@ -4,7 +4,7 @@
     <p>大数据不建议使用双向绑定的 <table-api-link name="data"/> 属性（vue 监听会大数据会短暂的卡顿），建议使用 <table-api-link prop="loadData"/>/<table-api-link prop="loadColumn"/> 函数</p>
     <p class="red">注意：如果要启用横向虚拟滚动，所有的列宽度必须一致，否则无法兼容</p>
 
-    <vxe-grid
+    <s-grid
       border
       show-overflow
       show-header-overflow
@@ -13,7 +13,7 @@
       :loading="loading"
       :select-config="{checkField: 'checked'}"
       :optimization ="{scrollY: {gt: 500, oSize: 10, rSize: 30}}">
-    </vxe-grid>
+    </s-grid>
   </div>
 </template>
 

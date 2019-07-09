@@ -3,7 +3,7 @@
     <p>设置 <table-api-link prop="edit-config"/>={key: 'id', trigger: 'dblclick', mode: 'cell'} 启用单元格双击编辑的功能</p>
     <p class="red">必须指定 <table-api-link prop="row-key"/> 或者 ( <table-api-link prop="select-config"/>、<table-api-link prop="tree-config"/>、<table-api-link prop="expand-config"/>、<table-api-link prop="edit-config"/> ) 中的 key 任意配置一个即可</p>
 
-    <vxe-table
+    <s-table
       border
       resizable
       show-overflow
@@ -12,11 +12,11 @@
       :edit-config="{key: 'id', trigger: 'dblclick', mode: 'cell'}"
       @edit-actived="editActivedEvent"
       @edit-closed="editClosedEvent">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -28,19 +28,19 @@
     <p>设置 <table-api-link prop="edit-config"/>={key: 'id', trigger: 'dblclick', mode: 'row'} 启用行双击编辑的功能</p>
     <p>需要注意的 mode=row 时，事件中的 column 相关参数是不确定性的（会保留 column 相关参数，但不一定是准确的）</p>
 
-    <vxe-table
+    <s-table
       border
       resizable
       show-overflow
       height="500"
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'dblclick', mode: 'row'}">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="address" title="Address" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -60,18 +60,18 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           resizable
           show-overflow
           height="500"
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'dblclick', mode: 'cell'}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -94,19 +94,19 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           border
           resizable
           show-overflow
           height="500"
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'dblclick', mode: 'row'}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

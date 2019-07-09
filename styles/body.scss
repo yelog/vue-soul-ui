@@ -1,53 +1,53 @@
 /**Variable**/
 
-.vxe-table--body-wrapper,
-.vxe-table--fixed-left-body-wrapper,
-.vxe-table--fixed-right-body-wrapper {
+.s-table--body-wrapper,
+.s-table--fixed-left-body-wrapper,
+.s-table--fixed-right-body-wrapper {
   overflow-y: auto;
   overflow-x: auto;
 }
 
-.vxe-table--borders {
-  .vxe-table-border-top,
-  .vxe-table-border-right,
-  .vxe-table-border-bottom,
-  .vxe-table-border-left {
+.s-table--borders {
+  .s-table-border-top,
+  .s-table-border-right,
+  .s-table-border-bottom,
+  .s-table-border-left {
     position: absolute;
-    background-color: $vxe-primary-color;
+    background-color: $s-primary-color;
   }
-  .vxe-table-checked-borders {
-    .vxe-table-border-top,
-    .vxe-table-border-bottom {
-      height: $vxe-table-column-checked-border-width;
+  .s-table-checked-borders {
+    .s-table-border-top,
+    .s-table-border-bottom {
+      height: $s-table-column-checked-border-width;
     }
-    .vxe-table-border-right,
-    .vxe-table-border-left {
-      width: $vxe-table-column-checked-border-width;
+    .s-table-border-right,
+    .s-table-border-left {
+      width: $s-table-column-checked-border-width;
     }
   }
-  .vxe-table-copyed-borders {
-    .vxe-table-border-top,
-    .vxe-table-border-bottom {
-      height: #{$vxe-table-column-checked-border-width + 1};
+  .s-table-copyed-borders {
+    .s-table-border-top,
+    .s-table-border-bottom {
+      height: #{$s-table-column-checked-border-width + 1};
     }
-    .vxe-table-border-right,
-    .vxe-table-border-left {
-      width: #{$vxe-table-column-checked-border-width + 1};
+    .s-table-border-right,
+    .s-table-border-left {
+      width: #{$s-table-column-checked-border-width + 1};
     }
     & > span {
-      background: repeating-linear-gradient(135deg, transparent, transparent 3px, $vxe-primary-color 3px, $vxe-primary-color 9px);
+      background: repeating-linear-gradient(135deg, transparent, transparent 3px, $s-primary-color 3px, $s-primary-color 9px);
       animation: shine 1s infinite linear;
     }
   }
 }
 
-.vxe-body--row {
-  .vxe-body--column {
+.s-body--row {
+  .s-body--column {
     &.col--checked {
       position: relative;
-      background-color: $vxe-table-column-checked-background-color;
-      border-right-color: $vxe-table-column-checked-border-color;
-      border-bottom-color: $vxe-table-column-checked-border-color;
+      background-color: $s-table-column-checked-background-color;
+      border-right-color: $s-table-column-checked-border-color;
+      border-bottom-color: $s-table-column-checked-border-color;
     }
     &.col--selected {
       background-color: #fff;

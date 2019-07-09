@@ -1,8 +1,8 @@
-import VxeToolbar from './src/toolbar'
+import SToolbar from './src/toolbar'
 
-VxeToolbar.install = function (Vue) {
-  Vue.component(VxeToolbar.name, VxeToolbar)
+SToolbar.install = function (Vue) {
+  Vue.component(SToolbar.name, SToolbar)
 }
 
-export const Toolbar = VxeToolbar
-export default VxeToolbar
+export const Toolbar = SToolbar
+export default SToolbar

@@ -2,11 +2,11 @@
   <div>
     <p>树表格、数据代理</p>
 
-    <vxe-grid
+    <s-grid
       border
       :proxy-config="tableProxy"
       :columns="tableColumn"
-      :tree-config="{key: 'id', children: 'children'}"></vxe-grid>
+      :tree-config="{key: 'id', children: 'children'}"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -40,11 +40,11 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           :proxy-config="tableProxy"
           :columns="tableColumn"
-          :tree-config="{key: 'id', children: 'children'}"></vxe-grid>
+          :tree-config="{key: 'id', children: 'children'}"></s-grid>
         `,
         `
         export default {

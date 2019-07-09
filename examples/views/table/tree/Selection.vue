@@ -2,17 +2,17 @@
   <div>
     <p>多选树表格</p>
 
-    <vxe-table
+    <s-table
       resizable
       :tree-config="{key: 'id', children: 'children'}"
       :data.sync="tableData"
       @select-change="selectChangeEvent">
-      <vxe-table-column type="selection" prop="checked" width="120" tree-node></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="size" title="Size"></vxe-table-column>
-      <vxe-table-column field="type" title="Type"></vxe-table-column>
-      <vxe-table-column field="date" title="Date"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" prop="checked" width="120" tree-node></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="size" title="Size"></s-table-column>
+      <s-table-column field="type" title="Type"></s-table-column>
+      <s-table-column field="date" title="Date"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -32,17 +32,17 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           resizable
           :tree-config="{key: 'id', children: 'children'}"
           :data.sync="tableData"
           @select-change="selectChangeEvent">
-          <vxe-table-column type="selection" tree-node></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="size" title="Size"></vxe-table-column>
-          <vxe-table-column field="type" title="Type"></vxe-table-column>
-          <vxe-table-column field="date" title="Date"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" tree-node></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="size" title="Size"></s-table-column>
+          <s-table-column field="type" title="Type"></s-table-column>
+          <s-table-column field="date" title="Date"></s-table-column>
+        </s-table>
         `,
         `
         export default {

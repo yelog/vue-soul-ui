@@ -2,15 +2,15 @@
   <div>
     <p>使用 <table-column-api-link prop="formatter"/> 格式化内容（建议是提前转换好数据，<table-column-api-link prop="formatter"/> 一般用于动态的数据，跟随数据的变化而执行）</p>
 
-    <vxe-table
+    <s-table
       border
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="time" title="Time" :formatter="formatTime"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="time" title="Time" :formatter="formatTime"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -31,15 +31,15 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="time" title="Time" :formatter="formatTime"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="time" title="Time" :formatter="formatTime"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {

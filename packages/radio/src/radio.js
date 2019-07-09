@@ -1,5 +1,5 @@
 export default {
-  name: 'VxeRadio',
+  name: 'SRadio',
   props: {
     value: [String, Number],
     label: [String, Number],
@@ -15,7 +15,7 @@ export default {
   render (h) {
     let { $slots, disabled, vSize, value, label, name } = this
     return h('label', {
-      class: ['vxe-radio', {
+      class: ['s-radio', {
         [`size--${vSize}`]: vSize,
         'is--disabled': disabled
       }]

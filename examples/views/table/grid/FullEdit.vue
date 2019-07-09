@@ -2,9 +2,9 @@
   <div>
     <p>查询代理、服务端排序代理、服务端筛选代理、分页代理、增删改查</p>
     <p>对于分页场景下，如果想要保留选中状态，可以通过设置 <table-api-link prop="select-config"/> 的 <table-api-link prop="reserve"/> 属性</p>
-    <p>由 <grid-api-link name="vxe-grid"/> 代理数据转换，只需要配置好数据源即可；非常简单就可以渲染一个表格，从重复写冗余的代码中解放出来</p>
+    <p>由 <grid-api-link name="s-grid"/> 代理数据转换，只需要配置好数据源即可；非常简单就可以渲染一个表格，从重复写冗余的代码中解放出来</p>
 
-    <vxe-grid
+    <s-grid
       border
       resizable
       highlight-hover-row
@@ -17,7 +17,7 @@
       :select-config="{reserve: true}"
       :edit-rules="validRules"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}">
-    </vxe-grid>
+    </s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -97,7 +97,7 @@ export default {
       ],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           resizable
           highlight-hover-row
@@ -107,7 +107,7 @@ export default {
           :toolbar="toolbar"
           :proxy-config="tableProxy"
           :columns="tableColumn"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
+          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
         `,
         `
         export default {

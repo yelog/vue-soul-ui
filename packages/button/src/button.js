@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 
 export default {
-  name: 'VxeButton',
+  name: 'SButton',
   props: {
     type: String,
     size: String
@@ -18,7 +18,7 @@ export default {
       on = XEUtils.objectMap($listeners, (cb, type) => evnt => this.$emit(type, evnt))
     }
     return h(type === 'text' ? 'a' : 'button', {
-      class: ['vxe-button', {
+      class: ['s-button', {
         [`size--${vSize}`]: vSize,
         [`type--${type}`]: type
       }],

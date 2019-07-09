@@ -2,17 +2,17 @@
   <div>
     <p>可编辑树表格</p>
 
-    <vxe-table
+    <s-table
       resizable
       :tree-config="{key: 'id', children: 'children'}"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
       :data.sync="tableData">
-      <vxe-table-column type="selection" width="120" tree-node></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="size" title="Size" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="type" title="Type" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="120" tree-node></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="size" title="Size" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="type" title="Type" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -32,17 +32,17 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           resizable
           :tree-config="{key: 'id', children: 'children'}"
           :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
           :data.sync="tableData">
-          <vxe-table-column type="selection" prop="checked" width="120" tree-node></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="size" title="Size" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="type" title="Type" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="selection" prop="checked" width="120" tree-node></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="size" title="Size" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="type" title="Type" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {

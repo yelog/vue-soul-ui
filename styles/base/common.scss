@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-[class*="vxe-"] {
+[class*="s-"] {
   @extend %boxSizing;
   *:after, *:before {
     @extend %boxSizing;
@@ -11,32 +11,32 @@
 
 /*animat*/
 .t--animat {
-  .vxe-sort--asc-btn,
-  .vxe-sort--desc-btn,
-  .vxe-filter--btn {
+  .s-sort--asc-btn,
+  .s-sort--desc-btn,
+  .s-filter--btn {
     &:before,
     &:after {
       @include animatTransition(border);
     }
   }
-  .vxe-table--expand-icon{
+  .s-table--expand-icon{
     @include animatTransition(all);
   }
-  .vxe-header--column,
-  .vxe-body--column,
-  .vxe-body--row {
+  .s-header--column,
+  .s-body--column,
+  .s-body--row {
     @include animatTransition(background-color);
   }
-  .vxe-input--wrapper {
-    .vxe-input {
+  .s-input--wrapper {
+    .s-input {
       @include animatTransition(border);
     }
   }
-  .vxe-tree--node-btn {
+  .s-tree--node-btn {
     @include animatTransition(transform);
   }
-  .vxe-checkbox,
-  .vxe-radio {
+  .s-checkbox,
+  .s-radio {
     > input {
       &:checked+span {
         @include animatTransition(background-color);

@@ -2,11 +2,11 @@
   <div>
     <p>使用 <a class="link" href="https://www.npmjs.com/package/sortablejs" target="_blank">sortablejs</a> 实现列移动，由于操作了 Dom 节点所以需要指定 <table-column-api-link prop="column-key"/></p>
 
-    <vxe-grid
+    <s-grid
       border
       class="sortable-column-demo"
       :columns="tableColumn"
-      :data.sync="tableData"></vxe-grid>
+      :data.sync="tableData"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -35,10 +35,10 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           :columns="tableColumn"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {
@@ -65,8 +65,8 @@ export default {
           methods: {
             columnDrop () {
               this.$nextTick(() => {
-                this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'), {
-                  handle: '.vxe-header--column',
+                this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.s-table--header .s-header--row'), {
+                  handle: '.s-header--column',
                   onEnd: ({ newIndex, oldIndex }) => {
                     let currRow = this.tableColumn.splice(oldIndex, 1)[0]
                     this.tableColumn.splice(newIndex, 0, currRow)
@@ -78,8 +78,8 @@ export default {
         }
         `,
         `
-        .sortable-column-demo .vxe-header--row .vxe-header--column.sortable-ghost,
-        .sortable-column-demo .vxe-header--row .vxe-header--column.sortable-chosen {
+        .sortable-column-demo .s-header--row .s-header--column.sortable-ghost,
+        .sortable-column-demo .s-header--row .s-header--column.sortable-chosen {
           background-color: #dfecfb;
         }
         `
@@ -98,8 +98,8 @@ export default {
   methods: {
     columnDrop () {
       this.$nextTick(() => {
-        this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'), {
-          handle: '.vxe-header--column',
+        this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.s-table--header .s-header--row'), {
+          handle: '.s-header--column',
           onEnd: ({ newIndex, oldIndex }) => {
             let currRow = this.tableColumn.splice(oldIndex, 1)[0]
             this.tableColumn.splice(newIndex, 0, currRow)
@@ -112,8 +112,8 @@ export default {
 </script>
 
 <style lang="scss">
-.sortable-column-demo .vxe-header--row .vxe-header--column.sortable-ghost,
-.sortable-column-demo .vxe-header--row .vxe-header--column.sortable-chosen {
+.sortable-column-demo .s-header--row .s-header--column.sortable-ghost,
+.sortable-column-demo .s-header--row .s-header--column.sortable-chosen {
   background-color: #dfecfb;
 }
 </style>

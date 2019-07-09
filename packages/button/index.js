@@ -1,8 +1,8 @@
-import VxeButton from './src/button'
+import SButton from './src/button'
 
-VxeButton.install = function (Vue) {
-  Vue.component(VxeButton.name, VxeButton)
+SButton.install = function (Vue) {
+  Vue.component(SButton.name, SButton)
 }
 
-export const Button = VxeButton
-export default VxeButton
+export const Button = SButton
+export default SButton

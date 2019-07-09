@@ -64,7 +64,7 @@ const convertToRows = (originColumns) => {
 }
 
 export default {
-  name: 'VxeTableHeader',
+  name: 'STableHeader',
   props: {
     tableData: Array,
     tableColumn: Array,
@@ -128,14 +128,14 @@ export default {
       }
     }
     return h('div', {
-      class: ['vxe-table--header-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper']
+      class: ['s-table--header-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper']
     }, [
       fixedType ? _e() : h('div', {
-        class: 'vxe-body--x-space',
+        class: 's-body--x-space',
         ref: 'xSpace'
       }),
       h('table', {
-        class: 'vxe-table--header',
+        class: 's-table--header',
         attrs: {
           cellspacing: 0,
           cellpadding: 0,
@@ -169,7 +169,7 @@ export default {
           ref: 'thead'
         }, headerColumn.map((cols, $rowIndex) => {
           return h('tr', {
-            class: ['vxe-header--row', headerRowClassName ? XEUtils.isFunction(headerRowClassName) ? headerRowClassName({ $table, $rowIndex, fixed: fixedType }) : headerRowClassName : '']
+            class: ['s-header--row', headerRowClassName ? XEUtils.isFunction(headerRowClassName) ? headerRowClassName({ $table, $rowIndex, fixed: fixedType }) : headerRowClassName : '']
           }, cols.map((column, $columnIndex) => {
             let {
               columnKey,
@@ -220,7 +220,7 @@ export default {
               }
             }
             return h('th', {
-              class: ['vxe-header--column', column.id, {
+              class: ['s-header--column', column.id, {
                 [`col--${headerAlign}`]: headerAlign,
                 'col--index': column.type === 'index',
                 'col--ellipsis': hasEllipsis,
@@ -236,7 +236,7 @@ export default {
               key: columnKey || (isGroup ? column.id : columnIndex)
             }, [
               h('div', {
-                class: ['vxe-cell', {
+                class: ['s-cell', {
                   'c--title': showTitle,
                   'c--tooltip': showTooltip,
                   'c--ellipsis': showEllipsis
@@ -246,7 +246,7 @@ export default {
                 }
               }, column.renderHeader(h, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn })),
               (XEUtils.isBoolean(column.resizable) ? column.resizable : resizable) && !fixedType && !isGroup ? h('div', {
-                class: ['vxe-resizable', {
+                class: ['s-resizable', {
                   'is--line': !border
                 }],
                 on: {
@@ -267,7 +267,7 @@ export default {
        * 其他
        */
       h('div', {
-        class: 'vxe-table--repair',
+        class: 's-table--repair',
         ref: 'repair'
       })
     ])

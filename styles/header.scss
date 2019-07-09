@@ -1,24 +1,24 @@
 /**Variable**/
 
-.vxe-table--header-wrapper {
-  background-color: $vxe-table-header-background-color;
-  .vxe-table--repair {
+.s-table--header-wrapper {
+  background-color: $s-table-header-background-color;
+  .s-table--repair {
     position: absolute;
     left: 0;
     bottom: 0;
     height: 1px;
-    background-color: $vxe-table-border-color;
+    background-color: $s-table-border-color;
   }
 }
 
-.vxe-header--column {
+.s-header--column {
   position: relative;
   &.col--title-checked {
-    background-color: $vxe-table-column-header-checked-background-color;
+    background-color: $s-table-column-header-checked-background-color;
   }
-  .vxe-required-icon {
+  .s-required-icon {
     display: inline-block;
-    color: $vxe-table-validate-error-color;
+    color: $s-table-validate-error-color;
     line-height: 16px;
     font-size: 16px;
     vertical-align: middle;
@@ -29,11 +29,11 @@
       display: block;
     }
   }
-  .vxe-edit-icon {
+  .s-edit-icon {
     font-size: 12px;
     margin: 1px 2px 2px 2px;
   }
-  .vxe-resizable {
+  .s-resizable {
     position: absolute;
     right: -7px;
     top: 0;
@@ -53,7 +53,7 @@
       &:before {
         width: 1px;
         height: 50%;
-        background-color: $vxe-table-resizable-color;
+        background-color: $s-table-resizable-color;
       }
       &:after {
         width: 0;

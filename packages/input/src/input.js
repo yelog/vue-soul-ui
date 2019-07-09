@@ -1,5 +1,5 @@
 export default {
-  name: 'VxeInput',
+  name: 'SInput',
   props: {
     value: [String, Number],
     type: { type: String, default: 'text' },
@@ -21,13 +21,13 @@ export default {
       on.change = evnt => this.$emit('change', evnt.target.value, evnt)
     }
     return h('div', {
-      class: ['vxe-input--wrapper', {
+      class: ['s-input--wrapper', {
         [`size--${vSize}`]: vSize,
         'is--disabled': this.disabled
       }]
     }, [
       h('input', {
-        class: `vxe-input`,
+        class: `s-input`,
         domProps: {
           value
         },

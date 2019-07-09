@@ -32,7 +32,7 @@ const components = [
   'icon',
   'export',
   'resize',
-  'v-x-e-table'
+  's-table'
 ]
 
 gulp.task('build_modules', () => {

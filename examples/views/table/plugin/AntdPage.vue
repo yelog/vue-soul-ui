@@ -17,7 +17,7 @@
       </a-form-item>
     </a-form>
 
-    <vxe-toolbar setting>
+    <s-toolbar setting>
       <template v-slot:buttons>
         <a-button @click="insertEvent">新增</a-button>
         <a-button @click="saveEvent">保存</a-button>
@@ -34,31 +34,31 @@
           </a-menu>
         </a-dropdown>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable"
       border
       resizable
       show-overflow
       highlight-hover-row
-      class="vxe-table-antd"
+      class="s-table-antd"
       height="460"
       :loading="loading"
       :data.sync="tableData"
       :edit-rules="validRules"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-      <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
-      <vxe-table-column type="index" title="Number" width="80" fixed="left"></vxe-table-column>
-      <vxe-table-column field="name" title="AInput" min-width="140" :edit-render="{name: 'AInput'}"></vxe-table-column>
-      <vxe-table-column field="role" title="AAutoComplete" width="160" :edit-render="{name: 'AAutoComplete', props: ACProps, events: {search: roleSearchEvent}}"></vxe-table-column>
-      <vxe-table-column field="age" title="AInputNumber" width="160" :edit-render="{name: 'AInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
-      <vxe-table-column field="sex" title="ASelect" width="140" :edit-render="{name: 'ASelect', options: sexList}"></vxe-table-column>
-      <vxe-table-column field="region" title="ACascader" width="200" :edit-render="{name: 'ACascader', props: {options: regionList}}"></vxe-table-column>
-      <vxe-table-column field="date7" title="ADatePicker" width="200" :edit-render="{name: 'ADatePicker', props: {type: 'date', format: 'YYYY/MM/DD'}}"></vxe-table-column>
-      <vxe-table-column field="flag" title="ASwitch" width="100" :edit-render="{name: 'ASwitch', type: 'visible'}"></vxe-table-column>
-      <vxe-table-column field="rate" title="ARate" width="200" fixed="right" :edit-render="{name: 'ARate', type: 'visible'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="selection" width="60" fixed="left"></s-table-column>
+      <s-table-column type="index" title="Number" width="80" fixed="left"></s-table-column>
+      <s-table-column field="name" title="AInput" min-width="140" :edit-render="{name: 'AInput'}"></s-table-column>
+      <s-table-column field="role" title="AAutoComplete" width="160" :edit-render="{name: 'AAutoComplete', props: ACProps, events: {search: roleSearchEvent}}"></s-table-column>
+      <s-table-column field="age" title="AInputNumber" width="160" :edit-render="{name: 'AInputNumber', props: {max: 35, min: 18}}"></s-table-column>
+      <s-table-column field="sex" title="ASelect" width="140" :edit-render="{name: 'ASelect', options: sexList}"></s-table-column>
+      <s-table-column field="region" title="ACascader" width="200" :edit-render="{name: 'ACascader', props: {options: regionList}}"></s-table-column>
+      <s-table-column field="date7" title="ADatePicker" width="200" :edit-render="{name: 'ADatePicker', props: {type: 'date', format: 'YYYY/MM/DD'}}"></s-table-column>
+      <s-table-column field="flag" title="ASwitch" width="100" :edit-render="{name: 'ASwitch', type: 'visible'}"></s-table-column>
+      <s-table-column field="rate" title="ARate" width="200" fixed="right" :edit-render="{name: 'ARate', type: 'visible'}"></s-table-column>
+    </s-table>
 
     <a-pagination
       @showSizeChange="handleSizeChange"
@@ -147,7 +147,7 @@ export default {
             </a-form-item>
           </a-form>
 
-          <vxe-toolbar setting>
+          <s-toolbar setting>
             <template v-slot:buttons>
               <a-button @click="insertEvent">新增</a-button>
               <a-button @click="saveEvent">保存</a-button>
@@ -164,31 +164,31 @@ export default {
                 </a-menu>
               </a-dropdown>
             </template>
-          </vxe-toolbar>
+          </s-toolbar>
 
-          <vxe-table
+          <s-table
             ref="xTable"
             border
             resizable
             show-overflow
             highlight-hover-row
-            class="vxe-table-antd"
+            class="s-table-antd"
             height="460"
             :loading="loading"
             :data.sync="tableData"
             :edit-rules="validRules"
             :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-            <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
-            <vxe-table-column type="index" title="Number" width="80" fixed="left"></vxe-table-column>
-            <vxe-table-column field="name" title="AInput" min-width="140" :edit-render="{name: 'AInput'}"></vxe-table-column>
-            <vxe-table-column field="role" title="AAutoComplete" width="160" :edit-render="{name: 'AAutoComplete', props: ACProps, events: {search: roleSearchEvent}}"></vxe-table-column>
-            <vxe-table-column field="age" title="AInputNumber" width="160" :edit-render="{name: 'AInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
-            <vxe-table-column field="sex" title="ASelect" width="140" :edit-render="{name: 'ASelect', options: sexList}"></vxe-table-column>
-            <vxe-table-column field="region" title="ACascader" width="200" :edit-render="{name: 'ACascader', props: {options: regionList}}"></vxe-table-column>
-            <vxe-table-column field="date7" title="ADatePicker" width="200" :edit-render="{name: 'ADatePicker', props: {type: 'date', format: 'YYYY/MM/DD'}}"></vxe-table-column>
-            <vxe-table-column field="flag" title="ASwitch" width="100" :edit-render="{name: 'ASwitch', type: 'visible'}"></vxe-table-column>
-            <vxe-table-column field="rate" title="ARate" width="200" fixed="right" :edit-render="{name: 'ARate', type: 'visible'}"></vxe-table-column>
-          </vxe-table>
+            <s-table-column type="selection" width="60" fixed="left"></s-table-column>
+            <s-table-column type="index" title="Number" width="80" fixed="left"></s-table-column>
+            <s-table-column field="name" title="AInput" min-width="140" :edit-render="{name: 'AInput'}"></s-table-column>
+            <s-table-column field="role" title="AAutoComplete" width="160" :edit-render="{name: 'AAutoComplete', props: ACProps, events: {search: roleSearchEvent}}"></s-table-column>
+            <s-table-column field="age" title="AInputNumber" width="160" :edit-render="{name: 'AInputNumber', props: {max: 35, min: 18}}"></s-table-column>
+            <s-table-column field="sex" title="ASelect" width="140" :edit-render="{name: 'ASelect', options: sexList}"></s-table-column>
+            <s-table-column field="region" title="ACascader" width="200" :edit-render="{name: 'ACascader', props: {options: regionList}}"></s-table-column>
+            <s-table-column field="date7" title="ADatePicker" width="200" :edit-render="{name: 'ADatePicker', props: {type: 'date', format: 'YYYY/MM/DD'}}"></s-table-column>
+            <s-table-column field="flag" title="ASwitch" width="100" :edit-render="{name: 'ASwitch', type: 'visible'}"></s-table-column>
+            <s-table-column field="rate" title="ARate" width="200" fixed="right" :edit-render="{name: 'ARate', type: 'visible'}"></s-table-column>
+          </s-table>
 
           <a-pagination
             @showSizeChange="handleSizeChange"

@@ -20,7 +20,7 @@ import Tooltip from './packages/tooltip'
 
 import Export from './packages/export'
 import Resize from './packages/resize'
-import VXETable from './packages/v-x-e-table'
+import VXETable from './packages/s-table'
 import zhCNLocat from './locale/lang/zh-CN'
 
 // 默认主题
@@ -90,5 +90,5 @@ export * from './packages/message'
 export * from './packages/tooltip'
 export * from './packages/export'
 export * from './packages/resize'
-export * from './packages/v-x-e-table'
+export * from './packages/s-table'
 export default VXETable

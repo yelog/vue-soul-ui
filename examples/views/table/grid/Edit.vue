@@ -2,7 +2,7 @@
   <div>
     <p>可编辑表格</p>
 
-    <vxe-grid
+    <s-grid
       border
       height="530"
       :loading="loading"
@@ -11,7 +11,7 @@
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
       @current-page-change="handleCurrentChange"
-      @page-size-change="handleSizeChange"></vxe-grid>
+      @page-size-change="handleSizeChange"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -47,7 +47,7 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           height="530"
           :loading="loading"
@@ -56,7 +56,7 @@ export default {
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
           @current-page-change="handleCurrentChange"
-          @page-size-change="handleSizeChange"></vxe-grid>
+          @page-size-change="handleSizeChange"></s-grid>
         `,
         `
         export default {

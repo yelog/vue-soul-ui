@@ -48,7 +48,7 @@ export default {
 }
 
 function getCsvLabelData (columns, oData, tableElem) {
-  let trElemList = tableElem.querySelectorAll('.vxe-table--body-wrapper.body--wrapper .vxe-body--row')
+  let trElemList = tableElem.querySelectorAll('.s-table--body-wrapper.body--wrapper .s-body--row')
   return Array.from(trElemList).map(trElem => {
     let item = {}
     columns.forEach(column => {

@@ -1,8 +1,8 @@
-import VxeTableColumn from './src/column'
+import STableColumn from './src/column'
 
-VxeTableColumn.install = function (Vue) {
-  Vue.component(VxeTableColumn.name, VxeTableColumn)
+STableColumn.install = function (Vue) {
+  Vue.component(STableColumn.name, STableColumn)
 }
 
-export const Column = VxeTableColumn
-export default VxeTableColumn
+export const Column = STableColumn
+export default STableColumn

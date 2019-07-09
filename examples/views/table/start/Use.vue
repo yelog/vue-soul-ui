@@ -3,12 +3,12 @@
     <h3>完整引入</h3>
     <pre>
       <code class="shell">
-        npm install xe-utils vxe-table
+        npm install xe-utils s-table
       </code>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 'vxe-table'
-        import 'vxe-table/lib/index.css'
+        import VXETable from 's-table'
+        import 'vue-soul-ui/lib/index.css'
 
         Vue.use(VXETable)
       </code>
@@ -25,7 +25,7 @@
             [
               "import",
               {
-                "libraryName": "vxe-table",
+                "libraryName": "s-table",
                 "style": true // 样式是否也按需加载
               }
             ]
@@ -60,8 +60,8 @@
           Message,
           Export,
           Resize
-        } from 'vxe-table'
-        import zhCNLocat from 'vxe-table/lib/locale/lang/zh-CN'
+        } from 's-table'
+        import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh-CN'
 
         Vue.use(Table)
         Vue.use(Column)
@@ -102,8 +102,8 @@
     <pre>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 'vxe-table'
-        import 'vxe-table/lib/index.css'
+        import VXETable from 's-table'
+        import 'vue-soul-ui/lib/index.css'
 
         Vue.use(VXETable, {
           size: 'small',
@@ -118,8 +118,8 @@
     <pre>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 'vxe-table'
-        import 'vxe-table/lib/index.css'
+        import VXETable from 's-table'
+        import 'vue-soul-ui/lib/index.css'
 
         VXETable.setup({
           // 默认表格参数
@@ -135,21 +135,21 @@
           version: 0,
           // 自定义图标配置（如果全部图标都使用自定义，就不需要引入 Icon 模块了，减少体积）
           icon: {
-            sortAsc: 'vxe-icon--caret-top',
-            sortDesc: 'vxe-icon--caret-bottom',
-            filter: 'vxe-icon--funnel',
-            edit: 'vxe-icon--edit-outline',
-            tree: 'vxe-icon--caret-right',
-            jumpPrev: 'vxe-icon--d-arrow-left',
-            jumpNext: 'vxe-icon--d-arrow-right',
-            prevPage: 'vxe-icon--arrow-left',
-            nextPage: 'vxe-icon--arrow-right',
-            msgClose: 'vxe-icon--close',
-            msgInfo: 'vxe-icon--info',
-            msgSuccess: 'vxe-icon--success',
-            msgWarning: 'vxe-icon--warning',
-            msgError: 'vxe-icon--error',
-            msgLoading: 'vxe-icon--refresh roll'
+            sortAsc: 's-icon--caret-top',
+            sortDesc: 's-icon--caret-bottom',
+            filter: 's-icon--funnel',
+            edit: 's-icon--edit-outline',
+            tree: 's-icon--caret-right',
+            jumpPrev: 's-icon--d-arrow-left',
+            jumpNext: 's-icon--d-arrow-right',
+            prevPage: 's-icon--arrow-left',
+            nextPage: 's-icon--arrow-right',
+            msgClose: 's-icon--close',
+            msgInfo: 's-icon--info',
+            msgSuccess: 's-icon--success',
+            msgWarning: 's-icon--warning',
+            msgError: 's-icon--error',
+            msgLoading: 's-icon--refresh roll'
           },
           // 高级表格默认配置
           grid: {

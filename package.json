@@ -1,6 +1,6 @@
 {
-  "name": "vxe-table",
-  "version": "2.0.0-beta.5",
+  "name": "vue-soul-ui",
+  "version": "1.0.1",
   "description": "A powerful table component.",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -84,27 +84,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xuliangzhan/vxe-table.git"
+    "url": "git+https://github.com/yelog/vue-soul-ui.git"
   },
   "keywords": [
-    "vxe-table",
-    "vxe-editable",
+    "s-table",
+    "s-editable",
     "vue table",
     "vue editable",
     "vue excel"
   ],
-  "author": {
-    "name": "Xu Liangzhan",
-    "email": "xu_liangzhan@163.com"
-  },
+  "author": "Xu Liangzhan <xu_liangzhan@163.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xuliangzhan/vxe-table/issues"
+    "url": "https://github.com/yelog/vue-soul-ui/issues"
   },
-  "homepage": "https://github.com/xuliangzhan/vxe-table#readme",
+  "homepage": "https://github.com/yelog/vue-soul-ui#readme",
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  }
 }

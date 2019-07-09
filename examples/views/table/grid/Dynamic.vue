@@ -2,7 +2,7 @@
   <div>
     <p>实现可配置动态列、数据代理、工具栏、增删改查</p>
 
-    <vxe-grid
+    <s-grid
       border
       show-overflow
       height="306"
@@ -10,7 +10,7 @@
       :proxy-config="tableProxy"
       :columns="tableColumn"
       :toolbar="toolbar"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
+      :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -21,7 +21,7 @@
 
     <p>级联动态列渲染，可以非常简单的实现功能复杂的可配置动态列</p>
 
-    <vxe-grid
+    <s-grid
       border
       show-overflow
       height="290"
@@ -32,7 +32,7 @@
       :toolbar="toolbar2"
       :edit-rules="validRules2"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"
-      @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
+      @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -122,7 +122,7 @@ export default {
       tableColumn2: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           show-overflow
           height="306"
@@ -130,7 +130,7 @@ export default {
           :proxy-config="tableProxy"
           :columns="tableColumn"
           :toolbar="toolbar"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
+          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
         `,
         `
         export default {
@@ -187,7 +187,7 @@ export default {
         }
         `,
         `
-        <vxe-grid
+        <s-grid
           border
           show-overflow
           height="530"
@@ -197,7 +197,7 @@ export default {
           :columns="tableColumn"
           :toolbar="toolbar"
           :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"
-          @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
+          @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
         `,
         `
         export default {

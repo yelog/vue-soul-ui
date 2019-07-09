@@ -3,23 +3,23 @@
     <p>显示/隐藏列功能，通过设置 <toolbar-api-link prop="id"/> 和 <toolbar-api-link prop="setting"/>={storage: true} 参数开启将列个性化 localStorage 保存功能</p>
     <p>也可以通过配合 <table-api-link prop="reloadCustoms"/> 函数实现服务端保存</p>
 
-    <vxe-toolbar id="toolbar_demo3" :setting="{storage: true}">
+    <s-toolbar id="toolbar_demo3" :setting="{storage: true}">
       <template v-slot:buttons>
-        <vxe-button>按钮1</vxe-button>
-        <vxe-button>按钮2</vxe-button>
+        <s-button>按钮1</s-button>
+        <s-button>按钮2</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       height="400"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="role" title="Role"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="role" title="Role"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -39,23 +39,23 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar id="toolbar_demo3" :setting="{storage: true}">
+        <s-toolbar id="toolbar_demo3" :setting="{storage: true}">
           <template v-slot:buttons>
-            <vxe-button>按钮1</vxe-button>
-            <vxe-button>按钮2</vxe-button>
+            <s-button>按钮1</s-button>
+            <s-button>按钮2</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           border
           height="400"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="role" title="Role"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="role" title="Role"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+        </s-table>
         `,
         `
         export default {

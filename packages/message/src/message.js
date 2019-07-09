@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import MsgQueue from './msgQueue'
 
 export default {
-  name: 'VxeMessage',
+  name: 'SMessage',
   props: {
     value: Boolean,
     id: String,
@@ -56,7 +56,7 @@ export default {
   render (h) {
     let { vSize, type, animat, zIndex, status, msgTop, contentVisible, visible, title, message, lockView, mask, isMsg } = this
     return h('div', {
-      class: ['vxe-msg--wrapper', `type--${type}`, {
+      class: ['s-msg--wrapper', `type--${type}`, {
         [`size--${vSize}`]: vSize,
         [`msg--${status}`]: status,
         'is--animat': animat,
@@ -74,45 +74,45 @@ export default {
       }
     }, [
       h('div', {
-        class: 'vxe-msg--box',
+        class: 's-msg--box',
         ref: 'msgBox'
       }, [
         !isMsg ? h('div', {
-          class: 'vxe-msg--header'
+          class: 's-msg--header'
         }, [
           h('span', {
-            class: 'vxe-msg--title'
+            class: 's-msg--title'
           }, title || GlobalConfig.i18n('vxe.alert.title')),
           h('i', {
-            class: ['vxe-msg--close-btn', GlobalConfig.icon.msgClose],
+            class: ['s-msg--close-btn', GlobalConfig.icon.msgClose],
             on: {
               click: this.closeEvent
             }
           })
         ]) : null,
         h('div', {
-          class: 'vxe-msg--body'
+          class: 's-msg--body'
         }, [
           status ? h('div', {
-            class: 'vxe-msg--status-wrapper'
+            class: 's-msg--status-wrapper'
           }, [
             h('i', {
-              class: ['vxe-msg--status-icon', GlobalConfig.icon[`msg${status.replace(/\b(\w)/, word => word.toUpperCase())}`]]
+              class: ['s-msg--status-icon', GlobalConfig.icon[`msg${status.replace(/\b(\w)/, word => word.toUpperCase())}`]]
             })
           ]) : null,
           h('div', {
-            class: 'vxe-msg--content'
+            class: 's-msg--content'
           }, this.$slots.default || (XEUtils.isFunction(message) ? message.call(this, h) : message))
         ]),
         !isMsg ? h('div', {
-          class: 'vxe-msg--footer'
+          class: 's-msg--footer'
         }, [
-          type === 'confirm' ? h('vxe-button', {
+          type === 'confirm' ? h('s-button', {
             on: {
               click: this.cancelEvent
             }
           }, GlobalConfig.i18n('vxe.button.cancel')) : null,
-          h('vxe-button', {
+          h('s-button', {
             props: {
               type: 'primary'
             },

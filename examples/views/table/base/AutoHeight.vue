@@ -5,16 +5,16 @@
     <p>还可以根据不同场景添加 <table-api-link prop="auto-resize"/> 属性启用自动监听（<table-api-link prop="auto-resize"/> 会有额外的损耗，根据需要的场景添加），这样就只需要通过样式控制父容器高度就可以实现响应式表格</p>
 
     <div style="height: 800px">
-      <vxe-table
+      <s-table
         border
         height="auto"
         :data.sync="tableData">
-        <vxe-table-column type="index" width="60"></vxe-table-column>
-        <vxe-table-column field="name" title="Name"></vxe-table-column>
-        <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-        <vxe-table-column field="age" title="Age"></vxe-table-column>
-        <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-      </vxe-table>
+        <s-table-column type="index" width="60"></s-table-column>
+        <s-table-column field="name" title="Name"></s-table-column>
+        <s-table-column field="sex" title="Sex"></s-table-column>
+        <s-table-column field="age" title="Age"></s-table-column>
+        <s-table-column field="address" title="Address" show-overflow></s-table-column>
+      </s-table>
     </div>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
@@ -36,16 +36,16 @@ export default {
       demoCodes: [
         `
         <div style="height: 800px">
-          <vxe-table
+          <s-table
             border
             height="auto"
             :data.sync="tableData">
-            <vxe-table-column type="index" width="60"></vxe-table-column>
-            <vxe-table-column field="name" title="Name"></vxe-table-column>
-            <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-            <vxe-table-column field="age" title="Age"></vxe-table-column>
-            <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-          </vxe-table>
+            <s-table-column type="index" width="60"></s-table-column>
+            <s-table-column field="name" title="Name"></s-table-column>
+            <s-table-column field="sex" title="Sex"></s-table-column>
+            <s-table-column field="age" title="Age"></s-table-column>
+            <s-table-column field="address" title="Address" show-overflow></s-table-column>
+          </s-table>
         </div>
         `,
         `

@@ -3,14 +3,14 @@
     <p>统计编辑列的表尾合计</p>
     <p>对于某些场景下如果需要频繁计算的可以手动调用 <table-api-link prop="updateFooter"/> 函数</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="insertEvent">新增</vxe-button>
-        <vxe-button @click="getInsertEvent">获取新增</vxe-button>
+        <s-button @click="insertEvent">新增</s-button>
+        <s-button @click="getInsertEvent">获取新增</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       show-footer
       show-overflow
@@ -22,12 +22,12 @@
       :footer-cell-class-name="footerCellClassName"
       :data.sync="tableData"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" :edit-render="{name: 'input'}"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="address" title="Address" :edit-render="{name: 'input'}"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -48,14 +48,14 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="insertEvent">新增</vxe-button>
-            <vxe-button @click="getInsertEvent">获取新增</vxe-button>
+            <s-button @click="insertEvent">新增</s-button>
+            <s-button @click="getInsertEvent">获取新增</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           border
           show-footer
           show-overflow
@@ -67,12 +67,12 @@ export default {
           :footer-cell-class-name="footerCellClassName"
           :data.sync="tableData"
           :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" :edit-render="{name: 'input'}"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="address" title="Address" :edit-render="{name: 'input'}"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -188,11 +188,11 @@ export default {
 </script>
 
 <style>
-.editable-footer .vxe-footer--column.col-blue {
+.editable-footer .s-footer--column.col-blue {
   background-color: #2db7f5;
   color: #fff;
 }
-.editable-footer .vxe-footer--column.col-red {
+.editable-footer .s-footer--column.col-red {
   background-color: red;
   color: #fff;
 }

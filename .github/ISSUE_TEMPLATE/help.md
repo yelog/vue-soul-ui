@@ -16,4 +16,4 @@ assignees: ''
 **请填写以下版本信息 please complete the following information**
  - browser: ?
  - vue: ?
- - vxe-table: ?
+ - s-table: ?

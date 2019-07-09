@@ -113,7 +113,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     isDirty = $table.hasRowChange(row, column.property)
   }
   return h('td', {
-    class: ['vxe-body--column', column.id, {
+    class: ['s-body--column', column.id, {
       [`col--${align}`]: align,
       'col--edit': editRender,
       'col--index': column.type === 'index',
@@ -129,7 +129,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     on: tdOns
   }, allColumnOverflow && fixedHiddenColumn ? [] : [
     h('div', {
-      class: ['vxe-cell', {
+      class: ['s-cell', {
         'c--title': showTitle,
         'c--tooltip': showTooltip,
         'c--ellipsis': showEllipsis
@@ -139,13 +139,13 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
       }
     }, column.renderCell(h, params)),
     hasDefaultTip ? validError && tableData.length >= 2 ? h('div', {
-      class: 'vxe-cell--valid',
+      class: 's-cell--valid',
       style: validStore.rule && validStore.rule.width ? {
         width: `${validStore.rule.width}px`
       } : null
     }, [
       h('span', {
-        class: 'vxe-cell--valid-msg'
+        class: 's-cell--valid-msg'
       }, validStore.content)
     ]) : _e() : null
   ])
@@ -182,7 +182,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
     let rowId = UtilTools.getRowId($table, row, rowIndex)
     rows.push(
       h('tr', {
-        class: ['vxe-body--row', {
+        class: ['s-body--row', {
           [`row--level-${rowLevel}`]: treeConfig,
           'row--new': editStore.insertList.indexOf(row) > -1
         }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, seq, row, rowIndex }) : rowClassName : ''],
@@ -210,18 +210,18 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         if (column) {
           rows.push(
             h('tr', {
-              class: ['vxe-body--expanded-row'],
+              class: ['s-body--expanded-row'],
               key: `expand_${rowIndex}`,
               on: trOn
             }, [
               h('td', {
-                class: ['vxe-body--expanded-column'],
+                class: ['s-body--expanded-column'],
                 attrs: {
                   colspan: tableColumn.length
                 }
               }, [
                 h('div', {
-                  class: ['vxe-body--expanded-cell']
+                  class: ['s-body--expanded-cell']
                 }, [
                   column.renderData(h, { $table, seq, row, rowIndex, column, columnIndex, fixed: fixedType, level: rowLevel })
                 ])
@@ -264,7 +264,7 @@ function syncBodyScroll (scrollTop, elem1, elem2) {
 }
 
 export default {
-  name: 'VxeTableBody',
+  name: 'STableBody',
   props: {
     tableData: Array,
     tableColumn: Array,
@@ -316,7 +316,7 @@ export default {
       }
     }
     return h('div', {
-      class: ['vxe-table--body-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
+      class: ['s-table--body-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
       attrs: {
         fixed: fixedType
       },
@@ -325,15 +325,15 @@ export default {
       }
     }, [
       fixedType ? _e() : h('div', {
-        class: 'vxe-body--x-space',
+        class: 's-body--x-space',
         ref: 'xSpace'
       }),
       h('div', {
-        class: 'vxe-body--y-space',
+        class: 's-body--y-space',
         ref: 'ySpace'
       }),
       h('table', {
-        class: 'vxe-table--body',
+        class: 's-table--body',
         attrs: {
           cellspacing: 0,
           cellpadding: 0,
@@ -365,56 +365,56 @@ export default {
        * 选中边框线
        */
       !fixedType ? h('div', {
-        class: 'vxe-table--borders'
+        class: 's-table--borders'
       }, [
         mouseConfig.checked ? h('div', {
-          class: 'vxe-table-checked-borders',
+          class: 's-table-checked-borders',
           ref: 'checkBorders'
         }, [
           h('span', {
-            class: 'vxe-table-border-top',
+            class: 's-table-border-top',
             ref: 'checkTop'
           }),
           h('span', {
-            class: 'vxe-table-border-right',
+            class: 's-table-border-right',
             ref: 'checkRight'
           }),
           h('span', {
-            class: 'vxe-table-border-bottom',
+            class: 's-table-border-bottom',
             ref: 'checkBottom'
           }),
           h('span', {
-            class: 'vxe-table-border-left',
+            class: 's-table-border-left',
             ref: 'checkLeft'
           })
         ]) : null,
         keyboardConfig.isCut ? h('div', {
-          class: 'vxe-table-copyed-borders',
+          class: 's-table-copyed-borders',
           ref: 'copyBorders'
         }, [
           h('span', {
-            class: 'vxe-table-border-top',
+            class: 's-table-border-top',
             ref: 'copyTop'
           }),
           h('span', {
-            class: 'vxe-table-border-right',
+            class: 's-table-border-right',
             ref: 'copyRight'
           }),
           h('span', {
-            class: 'vxe-table-border-bottom',
+            class: 's-table-border-bottom',
             ref: 'copyBottom'
           }),
           h('span', {
-            class: 'vxe-table-border-left',
+            class: 's-table-border-left',
             ref: 'copyLeft'
           })
         ]) : null
       ]) : null,
       !fixedType && !tableData.length ? h('div', {
-        class: 'vxe-table--empty-block'
+        class: 's-table--empty-block'
       }, [
         h('span', {
-          class: 'vxe-table--empty-text'
+          class: 's-table--empty-text'
         }, $table.$slots.empty || GlobalConfig.i18n('vxe.table.emptyText'))
       ]) : null
     ])

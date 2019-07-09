@@ -2,18 +2,18 @@
   <div id="app" @click="clickEvent">
     <header class="page-header">
       <h1 class="title">
-        <a href="https://github.com/xuliangzhan/vxe-table">
-          <span>vxe-table</span>
-          <img src="https://img.shields.io/npm/dm/vxe-table.svg?style=social&logo=github">
-          <img src="https://img.shields.io/github/watchers/xuliangzhan/vxe-table.svg?style=social">
-          <img src="https://img.shields.io/github/stars/xuliangzhan/vxe-table.svg?style=social">
-          <img src="https://img.shields.io/github/forks/xuliangzhan/vxe-table.svg?style=social">
+        <a href="https://github.com/yelog/vue-soul-ui">
+          <span>s-table</span>
+          <img src="https://img.shields.io/npm/dm/vue-soul-ui.svg?style=social&logo=github">
+          <img src="https://img.shields.io/github/watchers/yelog/vue-soul-ui.svg?style=social">
+          <img src="https://img.shields.io/github/stars/yelog/vue-soul-ui.svg?style=social">
+          <img src="https://img.shields.io/github/forks/yelog/vue-soul-ui.svg?style=social">
         </a>
       </h1>
       <div class="right">
         <div class="langs">
-          <vxe-radio v-model="$i18n.locale" name="lang" label="zh-CN">中文</vxe-radio>
-          <vxe-radio v-model="$i18n.locale" name="lang" label="en">English</vxe-radio>
+          <s-radio v-model="$i18n.locale" name="lang" label="zh-CN">中文</s-radio>
+          <s-radio v-model="$i18n.locale" name="lang" label="en">English</s-radio>
           <select class="version-switch" v-model="version" @change="vChangeEvent">
             <option value="1">V1</option>
             <option value="2">V2</option>
@@ -37,13 +37,13 @@
         </ul>
       </div>
       <div class="body">
-        <a class="link tosrc" :href="`https://github.com/xuliangzhan/vxe-table/tree/master/examples/views/table/${pageKey}`" target="_blank">{{ $t('app.body.button.viewCode') }}</a>
+        <a class="link tosrc" :href="`https://github.com/yelog/vue-soul-ui/tree/master/examples/views/table/${pageKey}`" target="_blank">{{ $t('app.body.button.viewCode') }}</a>
         <a v-if="demoLink" class="link todemo" :href="demoLink" target="_blank">{{ $t('app.body.button.runDemo') }}</a>
         <router-view/>
       </div>
     </div>
     <footer class="page-footer">
-      <p class="copyright">github <a class="link" href="https://github.com/xuliangzhan/vxe-table">vxe-table</a> Copyright (c) 2019-present, Xu Liangzhan<a class="donation" href="https://github.com/xuliangzhan/vxe-table#donation" :title="$t('app.footer.donationDesc')" target="_blank">☕{{ $t('app.footer.donation') }}</a></p>
+      <p class="copyright">github <a class="link" href="https://github.com/yelog/vue-soul-ui">vue-soul-ui</a> Copyright (c) 2019-present, Xu Liangzhan<a class="donation" href="https://github.com/yelog/vue-soul-ui#donation" :title="$t('app.footer.donationDesc')" target="_blank">☕{{ $t('app.footer.donation') }}</a></p>
     </footer>
   </div>
 </template>
@@ -967,10 +967,10 @@ export default {
     vChangeEvent () {
       switch (this.version) {
         case '1':
-          location.href = '/vxe-table/v1/index.html'
+          location.href = '/s-table/v1/index.html'
           break
         case '2':
-          location.href = '/vxe-table'
+          location.href = '/s-table'
           break
       }
     }

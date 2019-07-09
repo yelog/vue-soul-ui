@@ -2,12 +2,12 @@
   <div>
     <p>使用 <a class="link" href="https://www.npmjs.com/package/sortablejs" target="_blank">sortablejs</a> 实现行拖动，由于操作了 Dom 节点所以需要指定 <table-api-link prop="row-key"/></p>
 
-    <vxe-table
+    <s-table
       border
       class="sortable-row-demo"
       row-key="id"
       :data.sync="tableData">
-      <vxe-table-column width="60">
+      <s-table-column width="60">
         <template v-slot:header>
           <el-tooltip class="item" placement="top">
             <div slot="content">按住后可以上下拖动</div>
@@ -16,15 +16,15 @@
         </template>
         <template>
           <span class="drag-btn">
-            <i class="vxe-icon--menu"></i>
+            <i class="s-icon--menu"></i>
           </span>
         </template>
-      </vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-    </vxe-table>
+      </s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="address" title="Address" show-overflow></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -46,12 +46,12 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           border
           class="sortable-row-demo"
           row-key="id"
           :data.sync="tableData">
-          <vxe-table-column width="60">
+          <s-table-column width="60">
             <template v-slot:header>
               <el-tooltip class="item" placement="top">
                 <div slot="content">按住后可以上下拖动排序，<br>完成后点击保存即可！</div>
@@ -61,12 +61,12 @@ export default {
             <template>
               <i class="el-icon-rank drag-btn"></i>
             </template>
-          </vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" show-overflow></vxe-table-column>
-        </vxe-table>
+          </s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="address" title="Address" show-overflow></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -87,7 +87,7 @@ export default {
           methods: {
             rowDrop () {
               this.$nextTick(() => {
-                this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+                this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.s-table--body tbody'), {
                   handle: '.drag-btn',
                   onEnd: ({ newIndex, oldIndex }) => {
                     let currRow = this.tableData.splice(oldIndex, 1)[0]
@@ -104,8 +104,8 @@ export default {
           cursor: move;
           font-size: 12px;
         }
-        .sortable-row-demo .vxe-body--row.sortable-ghost,
-        .sortable-row-demo .vxe-body--row.sortable-chosen {
+        .sortable-row-demo .s-body--row.sortable-ghost,
+        .sortable-row-demo .s-body--row.sortable-chosen {
           background-color: #dfecfb;
         }
         `
@@ -129,7 +129,7 @@ export default {
   methods: {
     rowDrop () {
       this.$nextTick(() => {
-        this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+        this.sortable = Sortable.create(this.$el.querySelector('.body--wrapper>.s-table--body tbody'), {
           handle: '.drag-btn',
           onEnd: ({ newIndex, oldIndex }) => {
             let currRow = this.tableData.splice(oldIndex, 1)[0]
@@ -147,8 +147,8 @@ export default {
   cursor: move;
   font-size: 12px;
 }
-.sortable-row-demo .vxe-body--row.sortable-ghost,
-.sortable-row-demo .vxe-body--row.sortable-chosen {
+.sortable-row-demo .s-body--row.sortable-ghost,
+.sortable-row-demo .s-body--row.sortable-chosen {
   background-color: #dfecfb;
 }
 </style>

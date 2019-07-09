@@ -8,29 +8,29 @@
         <i class="icon-menu"></i>
         <div class="menu-wrapper">
           <template v-for="(column,index) in customColumns1">
-            <vxe-checkbox
+            <s-checkbox
               v-if="column.property"
               class="checkbox-item"
               v-model="column.visible"
               :key="index"
-              @change="$refs.xTable1.refreshColumn()">{{ column.title }}</vxe-checkbox>
+              @change="$refs.xTable1.refreshColumn()">{{ column.title }}</s-checkbox>
           </template>
         </div>
       </span>
     </div>
 
-    <vxe-table
+    <s-table
       ref="xTable1"
       border
       height="200"
       :data.sync="tableData"
       :customs.sync="customColumns1">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="role" title="Role"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="role" title="Role"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -47,30 +47,30 @@
         <i class="icon-menu"></i>
         <div class="menu-wrapper">
           <template v-for="(column,index) in customColumns2">
-            <vxe-checkbox
+            <s-checkbox
               v-if="column.property"
               class="checkbox-item"
               v-model="column.visible"
               :key="index"
-              @change="$refs.xTable2.refreshColumn()">{{ column.title }}</vxe-checkbox>
+              @change="$refs.xTable2.refreshColumn()">{{ column.title }}</s-checkbox>
           </template>
         </div>
       </span>
     </div>
 
-    <vxe-table
+    <s-table
       ref="xTable2"
       border
       height="200"
       :loading="loading"
       :data.sync="tableData"
       :customs.sync="customColumns2">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="role" title="Role"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="role" title="Role"></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -83,37 +83,37 @@
     <p>通过点击后才调用 <table-api-link prop="refreshColumn"/> 刷新列</p>
 
     <template v-for="(column,index) in customColumns3">
-      <vxe-checkbox
+      <s-checkbox
         v-if="column.property"
         class="checkbox-item"
         v-model="column.visible"
-        :key="index">{{ column.title }}</vxe-checkbox>
+        :key="index">{{ column.title }}</s-checkbox>
     </template>
 
-    <vxe-toolbar :data="tableData" setting>
+    <s-toolbar :data="tableData" setting>
       <template v-slot:buttons>
-        <vxe-button @click="$refs.xTable3.refreshColumn()">刷新</vxe-button>
+        <s-button @click="$refs.xTable3.refreshColumn()">刷新</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       ref="xTable3"
       border
       height="300"
       :data.sync="tableData"
       :customs.sync="customColumns3">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name"></vxe-table-column>
-      <vxe-table-column field="role" title="Role"></vxe-table-column>
-      <vxe-table-column title="基本信息">
-        <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-        <vxe-table-column field="age" title="Age"></vxe-table-column>
-        <vxe-table-column title="其他信息">
-          <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-          <vxe-table-column field="flag" title="Flag"></vxe-table-column>
-        </vxe-table-column>
-      </vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name"></s-table-column>
+      <s-table-column field="role" title="Role"></s-table-column>
+      <s-table-column title="基本信息">
+        <s-table-column field="sex" title="Sex"></s-table-column>
+        <s-table-column field="age" title="Age"></s-table-column>
+        <s-table-column title="其他信息">
+          <s-table-column field="rate" title="Rate"></s-table-column>
+          <s-table-column field="flag" title="Flag"></s-table-column>
+        </s-table-column>
+      </s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -148,29 +148,29 @@ export default {
             <i class="icon-menu"></i>
             <div class="menu-wrapper">
               <template v-for="(column,index) in customColumns">
-                <vxe-checkbox
+                <s-checkbox
                   v-if="column.property"
                   class="checkbox-item"
                   v-model="column.visible"
                   :key="index"
-                  @change="$refs.xTable.refreshColumn()">{{ column.title }}</vxe-checkbox>
+                  @change="$refs.xTable.refreshColumn()">{{ column.title }}</s-checkbox>
               </template>
             </div>
           </span>
         </div>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           height="400"
           :data.sync="tableData"
           :customs.sync="customColumns">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="role" title="Role"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="role" title="Role"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -238,29 +238,29 @@ export default {
             <i class="icon-menu"></i>
             <div class="menu-wrapper">
               <template v-for="(column,index) in customColumns">
-                <vxe-checkbox
+                <s-checkbox
                   v-if="column.property"
                   class="checkbox-item"
                   v-model="column.visible"
                   :key="index"
-                  @change="$refs.xTable.refreshColumn()">{{ column.title }}</vxe-checkbox>
+                  @change="$refs.xTable.refreshColumn()">{{ column.title }}</s-checkbox>
               </template>
             </div>
           </span>
         </div>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           height="400"
           :data.sync="tableData"
           :customs.sync="customColumns">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="role" title="Role"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="role" title="Role"></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -328,37 +328,37 @@ export default {
         `,
         `
         <template v-for="(column,index) in customColumns">
-          <vxe-checkbox
+          <s-checkbox
             v-if="column.property"
             class="checkbox-item"
             v-model="column.visible"
-            :key="index">{{ column.title }}</vxe-checkbox>
+            :key="index">{{ column.title }}</s-checkbox>
         </template>
 
-        <vxe-toolbar :data="tableData" setting>
+        <s-toolbar :data="tableData" setting>
           <template v-slot:buttons>
-            <vxe-button @click="$refs.xTable.refreshColumn()">刷新</vxe-button>
+            <s-button @click="$refs.xTable.refreshColumn()">刷新</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           height="400"
           :data.sync="tableData"
           :customs.sync="customColumns">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name"></vxe-table-column>
-          <vxe-table-column field="role" title="Role"></vxe-table-column>
-          <vxe-table-column title="基本信息">
-            <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-            <vxe-table-column field="age" title="Age"></vxe-table-column>
-            <vxe-table-column title="其他信息">
-              <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-              <vxe-table-column field="flag" title="Flag"></vxe-table-column>
-            </vxe-table-column>
-          </vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name"></s-table-column>
+          <s-table-column field="role" title="Role"></s-table-column>
+          <s-table-column title="基本信息">
+            <s-table-column field="sex" title="Sex"></s-table-column>
+            <s-table-column field="age" title="Age"></s-table-column>
+            <s-table-column title="其他信息">
+              <s-table-column field="rate" title="Rate"></s-table-column>
+              <s-table-column field="flag" title="Flag"></s-table-column>
+            </s-table-column>
+          </s-table-column>
+        </s-table>
         `,
         `
         export default {

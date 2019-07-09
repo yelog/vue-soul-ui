@@ -2,12 +2,12 @@
   <div>
     <p>反转表格，只需要将 columns 和 data 数据进行反转</p>
 
-    <vxe-grid
+    <s-grid
       border
       class="reverse-table"
       :show-header="false"
       :columns="tableColumn"
-      :data.sync="tableData"></vxe-grid>
+      :data.sync="tableData"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -19,14 +19,14 @@
 
     <p>更多配置</p>
 
-    <vxe-grid
+    <s-grid
       border
       show-overflow
       class="reverse-table"
       height="400"
       :show-header="false"
       :columns="tableColumn2"
-      :data.sync="tableData2"></vxe-grid>
+      :data.sync="tableData2"></s-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -67,13 +67,13 @@ export default {
       tableData2: [],
       demoCodes: [
         `
-        <vxe-grid
+        <s-grid
           border
           highlight-hover-row
           class="reverse-table"
           :show-header="false"
           :columns="tableColumn"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {
@@ -120,8 +120,8 @@ export default {
         `,
         `
         .reverse-table {
-          .vxe-body--row {
-            .vxe-body--column {
+          .s-body--row {
+            .s-body--column {
               &:first-child {
                 background-color: #f8f8f9;
               }
@@ -130,7 +130,7 @@ export default {
         }
         `,
         `
-        <vxe-grid
+        <s-grid
           border
           show-overflow
           highlight-hover-row
@@ -138,7 +138,7 @@ export default {
           height="400"
           :show-header="false"
           :columns="tableColumn"
-          :data.sync="tableData"></vxe-grid>
+          :data.sync="tableData"></s-grid>
         `,
         `
         export default {
@@ -189,8 +189,8 @@ export default {
         `,
         `
         .reverse-table {
-          .vxe-body--row {
-            .vxe-body--column {
+          .s-body--row {
+            .s-body--column {
               &:first-child {
                 background-color: #f8f8f9;
               }
@@ -260,8 +260,8 @@ export default {
 
 <style lang="scss">
 .reverse-table {
-  .vxe-body--row {
-    .vxe-body--column {
+  .s-body--row {
+    .s-body--column {
       &:first-child {
         background-color: #f8f8f9;
       }

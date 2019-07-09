@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils'
-import VxeMessageBox from './src/message'
+import SMessageBox from './src/message'
 import MsgQueue from './src/msgQueue'
 
 var AlertController = null
@@ -46,7 +46,7 @@ export function Message (options) {
 })
 
 Message.install = function (Vue) {
-  AlertController = Vue.extend(VxeMessageBox)
+  AlertController = Vue.extend(SMessageBox)
   Vue.prototype.$XMsg = Message
 }
 

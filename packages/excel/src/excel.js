@@ -105,7 +105,7 @@ const excelContextMenu = {
 }
 
 export default {
-  name: 'VxeExcel',
+  name: 'SExcel',
   props: {
     columns: Array,
     ...Table.props
@@ -157,8 +157,8 @@ export default {
   },
   render (h) {
     let { $slots, $listeners, tableProps } = this
-    return h('vxe-table', {
-      class: 'vxe-excel',
+    return h('s-table', {
+      class: 's-excel',
       props: tableProps,
       on: {
         ...$listeners,

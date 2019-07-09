@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import i18n from '../i18n'
 
-import VXETable from '../../packages/v-x-e-table'
+import VXETable from '../../packages/s-table'
 import Table from '../../packages/table'
 import Column from '../../packages/column'
 import Header from '../../packages/header'

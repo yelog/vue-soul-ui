@@ -3,22 +3,22 @@
     <p>虚拟滚动渲染，加载 1 万行，左右固定列</p>
     <p>大数据不建议使用双向绑定的 <table-api-link name="data"/> 属性（vue 监听会大数据会短暂的卡顿），建议使用 <table-api-link prop="loadData"/>/<table-api-link prop="reloadData"/> 函数</p>
 
-    <vxe-toolbar>
+    <s-toolbar>
       <template v-slot:buttons>
-        <vxe-button @click="insertEvent">新增</vxe-button>
-        <vxe-button @click="validEvent">校验</vxe-button>
-        <vxe-button @click="fullValidEvent">完整校验</vxe-button>
-        <vxe-button @click="selectValidEvent">选中校验</vxe-button>
-        <vxe-button @click="getInsertEvent">获取新增</vxe-button>
-        <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-        <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
-        <vxe-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(10))">滚动到第 10 行</vxe-button>
-        <vxe-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(4000))">滚动到第 4000 行</vxe-button>
-        <vxe-button @click="$refs.xTable.scrollToColumn($refs.xTable.getColumns(10))">滚动到第 10 列</vxe-button>
+        <s-button @click="insertEvent">新增</s-button>
+        <s-button @click="validEvent">校验</s-button>
+        <s-button @click="fullValidEvent">完整校验</s-button>
+        <s-button @click="selectValidEvent">选中校验</s-button>
+        <s-button @click="getInsertEvent">获取新增</s-button>
+        <s-button @click="getRemoveEvent">获取删除</s-button>
+        <s-button @click="getUpdateEvent">获取修改</s-button>
+        <s-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(10))">滚动到第 10 行</s-button>
+        <s-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(4000))">滚动到第 4000 行</s-button>
+        <s-button @click="$refs.xTable.scrollToColumn($refs.xTable.getColumns(10))">滚动到第 10 列</s-button>
       </template>
-    </vxe-toolbar>
+    </s-toolbar>
 
-    <vxe-table
+    <s-table
       border
       resizable
       show-overflow
@@ -28,27 +28,27 @@
       :edit-rules="validRules"
       :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
       :optimization ="{scrollY: {gt: 500, oSize: 10, rSize: 30}}">>
-      <vxe-table-column type="index" width="100"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="age" title="Age" width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex" width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-      <vxe-table-column field="rate" title="Rate" width="200"></vxe-table-column>
-      <vxe-table-column field="region" title="Region" width="200"></vxe-table-column>
-      <vxe-table-column field="time" title="Time" width="200"></vxe-table-column>
-      <vxe-table-column field="address" title="Address" width="300" show-overflow></vxe-table-column>
-      <vxe-table-column field="updateTime" title="UpdateTime" width="200"></vxe-table-column>
-      <vxe-table-column field="createTime" title="CreateTime" width="200"></vxe-table-column>
-      <vxe-table-column field="attr1" title="Attr1" width="200"></vxe-table-column>
-      <vxe-table-column field="attr2" title="Attr2" width="200"></vxe-table-column>
-      <vxe-table-column field="attr3" title="Attr3" width="200"></vxe-table-column>
-      <vxe-table-column field="attr4" title="Attr4" width="200"></vxe-table-column>
-      <vxe-table-column field="attr5" title="Attr5" width="200"></vxe-table-column>
-      <vxe-table-column field="attr6" title="Attr6" width="200"></vxe-table-column>
-      <vxe-table-column field="attr7" title="Attr7" width="200"></vxe-table-column>
-      <vxe-table-column field="attr8" title="Attr8" width="200"></vxe-table-column>
-      <vxe-table-column field="attr9" title="Attr9" width="200"></vxe-table-column>
-      <vxe-table-column field="createTime" title="CreateTime" width="200"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="100"></s-table-column>
+      <s-table-column field="name" title="Name" sortable width="200" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="age" title="Age" width="200" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="sex" title="Sex" width="200" :edit-render="{name: 'input'}"></s-table-column>
+      <s-table-column field="rate" title="Rate" width="200"></s-table-column>
+      <s-table-column field="region" title="Region" width="200"></s-table-column>
+      <s-table-column field="time" title="Time" width="200"></s-table-column>
+      <s-table-column field="address" title="Address" width="300" show-overflow></s-table-column>
+      <s-table-column field="updateTime" title="UpdateTime" width="200"></s-table-column>
+      <s-table-column field="createTime" title="CreateTime" width="200"></s-table-column>
+      <s-table-column field="attr1" title="Attr1" width="200"></s-table-column>
+      <s-table-column field="attr2" title="Attr2" width="200"></s-table-column>
+      <s-table-column field="attr3" title="Attr3" width="200"></s-table-column>
+      <s-table-column field="attr4" title="Attr4" width="200"></s-table-column>
+      <s-table-column field="attr5" title="Attr5" width="200"></s-table-column>
+      <s-table-column field="attr6" title="Attr6" width="200"></s-table-column>
+      <s-table-column field="attr7" title="Attr7" width="200"></s-table-column>
+      <s-table-column field="attr8" title="Attr8" width="200"></s-table-column>
+      <s-table-column field="attr9" title="Attr9" width="200"></s-table-column>
+      <s-table-column field="createTime" title="CreateTime" width="200"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -77,21 +77,21 @@ export default {
       },
       demoCodes: [
         `
-        <vxe-toolbar>
+        <s-toolbar>
           <template v-slot:buttons>
-            <vxe-button @click="insertEvent">新增</vxe-button>
-            <vxe-button @click="validEvent">校验</vxe-button>
-            <vxe-button @click="fullValidEvent">完整校验</vxe-button>
-            <vxe-button @click="selectValidEvent">选中校验</vxe-button>
-            <vxe-button @click="getInsertEvent">获取新增</vxe-button>
-            <vxe-button @click="getRemoveEvent">获取删除</vxe-button>
-            <vxe-button @click="getUpdateEvent">获取修改</vxe-button>
-            <vxe-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(10))">滚动到第 10 行</vxe-button>
-            <vxe-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(2000))">滚动到第 2000 行</vxe-button>
+            <s-button @click="insertEvent">新增</s-button>
+            <s-button @click="validEvent">校验</s-button>
+            <s-button @click="fullValidEvent">完整校验</s-button>
+            <s-button @click="selectValidEvent">选中校验</s-button>
+            <s-button @click="getInsertEvent">获取新增</s-button>
+            <s-button @click="getRemoveEvent">获取删除</s-button>
+            <s-button @click="getUpdateEvent">获取修改</s-button>
+            <s-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(10))">滚动到第 10 行</s-button>
+            <s-button @click="$refs.xTable.scrollToRow($refs.xTable.getRecords(2000))">滚动到第 2000 行</s-button>
           </template>
-        </vxe-toolbar>
+        </s-toolbar>
 
-        <vxe-table
+        <s-table
           ref="xTable"
           border
           resizable
@@ -101,27 +101,27 @@ export default {
           :edit-rules="validRules"
           :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
           :optimization ="{scrollY: {gt: 500, oSize: 10, rSize: 30}}">>
-          <vxe-table-column type="index" width="100"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="age" title="Age" width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex" width="200" :edit-render="{name: 'input'}"></vxe-table-column>
-          <vxe-table-column field="rate" title="Rate" width="200"></vxe-table-column>
-          <vxe-table-column field="region" title="Region" width="200"></vxe-table-column>
-          <vxe-table-column field="time" title="Time" width="200"></vxe-table-column>
-          <vxe-table-column field="address" title="Address" width="300" show-overflow></vxe-table-column>
-          <vxe-table-column field="updateTime" title="UpdateTime" width="200"></vxe-table-column>
-          <vxe-table-column field="createTime" title="CreateTime" width="200"></vxe-table-column>
-          <vxe-table-column field="attr1" title="Attr1" width="200"></vxe-table-column>
-          <vxe-table-column field="attr2" title="Attr2" width="200"></vxe-table-column>
-          <vxe-table-column field="attr3" title="Attr3" width="200"></vxe-table-column>
-          <vxe-table-column field="attr4" title="Attr4" width="200"></vxe-table-column>
-          <vxe-table-column field="attr5" title="Attr5" width="200"></vxe-table-column>
-          <vxe-table-column field="attr6" title="Attr6" width="200"></vxe-table-column>
-          <vxe-table-column field="attr7" title="Attr7" width="200"></vxe-table-column>
-          <vxe-table-column field="attr8" title="Attr8" width="200"></vxe-table-column>
-          <vxe-table-column field="attr9" title="Attr9" width="200"></vxe-table-column>
-          <vxe-table-column field="createTime" title="CreateTime" width="200"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="100"></s-table-column>
+          <s-table-column field="name" title="Name" sortable width="200" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="age" title="Age" width="200" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="sex" title="Sex" width="200" :edit-render="{name: 'input'}"></s-table-column>
+          <s-table-column field="rate" title="Rate" width="200"></s-table-column>
+          <s-table-column field="region" title="Region" width="200"></s-table-column>
+          <s-table-column field="time" title="Time" width="200"></s-table-column>
+          <s-table-column field="address" title="Address" width="300" show-overflow></s-table-column>
+          <s-table-column field="updateTime" title="UpdateTime" width="200"></s-table-column>
+          <s-table-column field="createTime" title="CreateTime" width="200"></s-table-column>
+          <s-table-column field="attr1" title="Attr1" width="200"></s-table-column>
+          <s-table-column field="attr2" title="Attr2" width="200"></s-table-column>
+          <s-table-column field="attr3" title="Attr3" width="200"></s-table-column>
+          <s-table-column field="attr4" title="Attr4" width="200"></s-table-column>
+          <s-table-column field="attr5" title="Attr5" width="200"></s-table-column>
+          <s-table-column field="attr6" title="Attr6" width="200"></s-table-column>
+          <s-table-column field="attr7" title="Attr7" width="200"></s-table-column>
+          <s-table-column field="attr8" title="Attr8" width="200"></s-table-column>
+          <s-table-column field="attr9" title="Attr9" width="200"></s-table-column>
+          <s-table-column field="createTime" title="CreateTime" width="200"></s-table-column>
+        </s-table>
         `,
         `
         export default {

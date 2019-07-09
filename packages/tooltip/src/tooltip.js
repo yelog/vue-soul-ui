@@ -3,7 +3,7 @@ import GlobalConfig from '../../conf'
 import { DomTools } from '../../tools'
 
 export default {
-  name: 'VxeTooltip',
+  name: 'STooltip',
   props: {
     value: Boolean,
     theme: { type: String, default: () => GlobalConfig.tooltip.theme },
@@ -59,7 +59,7 @@ export default {
   render (h) {
     let { theme, message, isArrow, visible, tipStore } = this
     return h('div', {
-      class: ['vxe-table--tooltip-wrapper', `theme--${theme}`, `placement--${tipStore.placement}`, {
+      class: ['s-table--tooltip-wrapper', `theme--${theme}`, `placement--${tipStore.placement}`, {
         'is--visible': visible,
         'is--arrow': isArrow
       }],
@@ -67,10 +67,10 @@ export default {
       ref: 'tipWrapper'
     }, [
       h('div', {
-        class: 'vxe-table--tooltip-content'
+        class: 's-table--tooltip-content'
       }, this.$slots.content || message),
       h('div', {
-        class: 'vxe-table--tooltip-arrow',
+        class: 's-table--tooltip-arrow',
         style: tipStore.arrowStyle
       })
     ].concat(this.$slots.default))

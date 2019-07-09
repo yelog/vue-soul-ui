@@ -5,25 +5,25 @@
     <p>依赖库： <a class="link" href="https://www.npmjs.com/package/xe-utils">xe-utils1.9+</a>&nbsp;&nbsp;<a class="link" href="https://cn.vuejs.org/v2/guide/components-slots.html#%E5%8A%A8%E6%80%81%E6%8F%92%E6%A7%BD%E5%90%8D">vue2.6+</a></p>
     <pre>
       <code class="shell">
-        npm install xe-utils vxe-table
+        npm install xe-utils s-table
       </code>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 'vxe-table'
-        import 'vxe-table/lib/index.css'
+        import VXETable from 's-table'
+        import 'vue-soul-ui/lib/index.css'
 
         Vue.use(VXETable)
       </code>
     </pre>
     <h3>CDN</h3>
-    <p>可以通过 <a class="link" href="https://unpkg.com/vxe-table/">unpkg</a> 或 <a class="link" href="https://cdn.jsdelivr.net/npm/vxe-table/">cdnjs</a> 获取到最新版本的资源，并在页面上引入即可</p>
+    <p>可以通过 <a class="link" href="https://unpkg.com/s-table/">unpkg</a> 或 <a class="link" href="https://cdn.jsdelivr.net/npm/s-table/">cdnjs</a> 获取到最新版本的资源，并在页面上引入即可</p>
     <pre>
       <code class="xml">
         &lt;!-- 引入样式 --&gt;
-        &lt;link rel="stylesheet" href="https://unpkg.com/vxe-table/lib/index.css"&gt;
+        &lt;link rel="stylesheet" href="https://unpkg.com/vue-soul-ui/lib/index.css"&gt;
         &lt;!-- 引入脚本 --&gt;
         &lt;script src="https://unpkg.com/xe-utils"&gt;&lt;/script&gt;
-        &lt;script src="https://unpkg.com/vxe-table"&gt;&lt;/script&gt;
+        &lt;script src="https://unpkg.com/s-table"&gt;&lt;/script&gt;
       </code>
     </pre>
   </div>

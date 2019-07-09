@@ -2,7 +2,7 @@
   <div>
     <p>设置 <table-api-link prop="show-footer"/> show-footer 和 <table-api-link prop="footer-method"/> 自定义表尾合计</p>
 
-    <vxe-table
+    <s-table
       class="mytable-footer"
       border
       highlight-hover-row
@@ -10,12 +10,12 @@
       height="400"
       :footer-method="footerMethod"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="rate" title="Rate"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -26,7 +26,7 @@
 
     <p>还可以配合 <table-api-link prop="footer-cell-class-name"/> 自定义不同列颜色</p>
 
-    <vxe-table
+    <s-table
       class="mytable-footer"
       border
       show-footer
@@ -34,12 +34,12 @@
       :footer-method="footerMethod"
       :footer-cell-class-name="footerCellClassName"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60"></vxe-table-column>
-      <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-      <vxe-table-column field="age" title="Age"></vxe-table-column>
-      <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60"></s-table-column>
+      <s-table-column field="name" title="Name" sortable></s-table-column>
+      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column field="age" title="Age"></s-table-column>
+      <s-table-column field="rate" title="Rate"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -50,7 +50,7 @@
 
     <p>还可以固定列</p>
 
-    <vxe-table
+    <s-table
       class="mytable-footer"
       border
       show-footer
@@ -59,14 +59,14 @@
       :footer-method="footerMethod"
       :footer-cell-class-name="footerCellClassName"
       :data.sync="tableData">
-      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-      <vxe-table-column title="基本信息">
-        <vxe-table-column field="name" title="Name" min-width="600" sortable></vxe-table-column>
-        <vxe-table-column field="age" title="Age" min-width="600"></vxe-table-column>
-      </vxe-table-column>
-      <vxe-table-column field="date" title="Date" min-width="600"></vxe-table-column>
-      <vxe-table-column field="rate" title="Rate" width="200" fixed="right"></vxe-table-column>
-    </vxe-table>
+      <s-table-column type="index" width="60" fixed="left"></s-table-column>
+      <s-table-column title="基本信息">
+        <s-table-column field="name" title="Name" min-width="600" sortable></s-table-column>
+        <s-table-column field="age" title="Age" min-width="600"></s-table-column>
+      </s-table-column>
+      <s-table-column field="date" title="Date" min-width="600"></s-table-column>
+      <s-table-column field="rate" title="Rate" width="200" fixed="right"></s-table-column>
+    </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -87,7 +87,7 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <vxe-table
+        <s-table
           class="mytable-footer"
           border
           highlight-hover-row
@@ -95,12 +95,12 @@ export default {
           height="400"
           :footer-method="footerMethod"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="rate" title="Rate"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -139,7 +139,7 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           class="mytable-footer"
           border
           show-footer
@@ -147,12 +147,12 @@ export default {
           :footer-method="footerMethod"
           :footer-cell-class-name="footerCellClassName"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60"></vxe-table-column>
-          <vxe-table-column field="name" title="Name" sortable></vxe-table-column>
-          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
-          <vxe-table-column field="age" title="Age"></vxe-table-column>
-          <vxe-table-column field="rate" title="Rate"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60"></s-table-column>
+          <s-table-column field="name" title="Name" sortable></s-table-column>
+          <s-table-column field="sex" title="Sex"></s-table-column>
+          <s-table-column field="age" title="Age"></s-table-column>
+          <s-table-column field="rate" title="Rate"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -200,7 +200,7 @@ export default {
         }
         `,
         `
-        <vxe-table
+        <s-table
           class="mytable-footer"
           border
           show-footer
@@ -209,14 +209,14 @@ export default {
           :footer-method="footerMethod"
           :footer-cell-class-name="footerCellClassName"
           :data.sync="tableData">
-          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
-          <vxe-table-column title="基本信息">
-            <vxe-table-column field="name" title="Name" min-width="600" sortable></vxe-table-column>
-            <vxe-table-column field="age" title="Age" min-width="600"></vxe-table-column>
-          </vxe-table-column>
-          <vxe-table-column field="date" title="Date" min-width="600"></vxe-table-column>
-          <vxe-table-column field="rate" title="Rate" width="200" fixed="right"></vxe-table-column>
-        </vxe-table>
+          <s-table-column type="index" width="60" fixed="left"></s-table-column>
+          <s-table-column title="基本信息">
+            <s-table-column field="name" title="Name" min-width="600" sortable></s-table-column>
+            <s-table-column field="age" title="Age" min-width="600"></s-table-column>
+          </s-table-column>
+          <s-table-column field="date" title="Date" min-width="600"></s-table-column>
+          <s-table-column field="rate" title="Rate" width="200" fixed="right"></s-table-column>
+        </s-table>
         `,
         `
         export default {
@@ -312,11 +312,11 @@ export default {
 </script>
 
 <style>
-.mytable-footer .vxe-footer--column.col-blue {
+.mytable-footer .s-footer--column.col-blue {
   background-color: #2db7f5;
   color: #fff;
 }
-.mytable-footer .vxe-footer--column.col-red {
+.mytable-footer .s-footer--column.col-red {
   background-color: red;
   color: #fff;
 }

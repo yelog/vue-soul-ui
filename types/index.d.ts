@@ -1,4 +1,4 @@
-export * from './vxe-table';
+export * from './s-table';
 
-import * as VXETable from './vxe-table';
+import * as VXETable from './s-table';
 export default VXETable;
