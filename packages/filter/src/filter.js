@@ -1,5 +1,5 @@
 import GlobalConfig from '../../conf'
-import { Renderer } from '../../s-table'
+import { Renderer } from '../../table-core'
 
 export default {
   name: 'STableFilter',

@@ -27,7 +27,7 @@ module.exports = {
       .set('@', resolve('examples'))
     config.output
       .set('libraryExport', 'default')
-      .set('library', 'VXETable')
+      .set('library', 'STable')
     if (process.env.npm_lifecycle_event.indexOf('lib') === 0) {
       let XEUtils = {
         root: 'XEUtils',

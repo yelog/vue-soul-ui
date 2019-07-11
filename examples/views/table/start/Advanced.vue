@@ -47,7 +47,7 @@ export default {
     return {
       demoCodes: [
         `
-        VXETable.renderer.mixin({
+        STable.renderer.mixin({
           MyFilter: {
             // 筛选模板
             renderFilter (h, filterRender, params, context) {
@@ -90,7 +90,7 @@ export default {
         </s-table>
         `,
         `
-        VXETable.renderer.add('MyCell', {
+        STable.renderer.add('MyCell', {
           autofocus: '.my-cell',
           renderEdit (h, editRender, params) {
             let { row, column } = params
@@ -132,7 +132,7 @@ export default {
         </s-table>
         `,
         `
-        VXETable.renderer.add('MyCell', {
+        STable.renderer.add('MyCell', {
           autofocus: '.my-cell',
           renderEdit (h, editRender, { row, column }) {
             return [
@@ -158,7 +158,7 @@ export default {
         </s-table>
         `,
         `
-        VXETable.interceptor.add('event.clear_actived', (params, event) => {
+        STable.interceptor.add('event.clear_actived', (params, event) => {
           // 比如点击了某个组件的弹出层面板之后，此时被激活单元格不应该被自动关闭，通过返回 false 可以阻止默认的行为。
           if (event.target.className.indexOf('other-popper') > -1) {
             return false

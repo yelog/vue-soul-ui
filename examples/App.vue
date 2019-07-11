@@ -798,7 +798,7 @@ export default {
           expand: false,
           children: [
             {
-              label: 'app.aside.nav.vxeTable',
+              label: 'app.aside.nav.sTable',
               locat: {
                 name: 'TableAPI',
                 params: {
@@ -807,7 +807,7 @@ export default {
               }
             },
             {
-              label: 'app.aside.nav.vxeTableColumn',
+              label: 'app.aside.nav.sTableColumn',
               locat: {
                 name: 'TableAPI',
                 params: {

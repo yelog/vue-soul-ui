@@ -4,7 +4,7 @@ import Renderer from './src/renderer'
 import Setup from './src/setup'
 import Use from './src/use'
 
-export const VXETable = {
+export const STable = {
   t: XEUtils.get,
   use: Use,
   setup: Setup,
@@ -14,4 +14,4 @@ export const VXETable = {
 
 export * from './src/interceptor'
 export * from './src/renderer'
-export default VXETable
+export default STable

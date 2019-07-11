@@ -1,9 +1,9 @@
-import { VXETableModule } from './module';
+import { SoulModule } from './module';
 
 /**
  * 核心模块
  */
-export declare class Table extends VXETableModule {
+export declare class Table extends SoulModule {
   /**
    * 表格的尺寸
    * @default 'default'

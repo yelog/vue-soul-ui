@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
 import Cell from '../../cell'
-import { Interceptor, Renderer } from '../../s-table'
+import { Interceptor, Renderer } from '../../table-core'
 import { UtilTools, DomTools, ExportTools, ResizeEvent, GlobalEvent } from '../../tools'
 
 var rowUniqueId = 0

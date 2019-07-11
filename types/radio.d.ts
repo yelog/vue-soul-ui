@@ -1,9 +1,9 @@
-import { VXETableModule } from './module';
+import { SoulModule } from './module';
 
 /**
  * 单选
  */
-export declare class Radio extends VXETableModule {
+export declare class Radio extends SoulModule {
   /**
    * 表格的尺寸
    * @default 'default'

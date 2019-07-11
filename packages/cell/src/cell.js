@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
-import { Renderer } from '../../s-table'
+import { Renderer } from '../../table-core'
 import { UtilTools } from '../../tools'
 
 export const Cell = {

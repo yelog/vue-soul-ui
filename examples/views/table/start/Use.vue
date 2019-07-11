@@ -3,14 +3,14 @@
     <h3>完整引入</h3>
     <pre>
       <code class="shell">
-        npm install xe-utils s-table
+        npm install xe-utils vue-soul-ui
       </code>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 's-table'
+        import SoulUI from 'vue-soul-ui'
         import 'vue-soul-ui/lib/index.css'
 
-        Vue.use(VXETable)
+        Vue.use(SoulUI)
       </code>
     </pre>
     <h3>按需引入</h3>
@@ -25,7 +25,7 @@
             [
               "import",
               {
-                "libraryName": "s-table",
+                "libraryName": "vue-soul-ui",
                 "style": true // 样式是否也按需加载
               }
             ]
@@ -37,7 +37,7 @@
     <pre>
       <code class="javascript">
         import {
-          VXETable,
+          STable,
           Table,
           Column,
           Cell,
@@ -60,7 +60,7 @@
           Message,
           Export,
           Resize
-        } from 's-table'
+        } from 'vue-soul-ui'
         import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh-CN'
 
         Vue.use(Table)
@@ -87,8 +87,8 @@
         Vue.use(Resize)
 
         // 按需加载的方式默认是不带国际化的，需要自行导入
-        VXETable.setup({
-          i18n: (key, value) => VXETable.t(zhCNLocat, key)
+        STable.setup({
+          i18n: (key, value) => STable.t(zhCNLocat, key)
         })
       </code>
     </pre>
@@ -102,10 +102,10 @@
     <pre>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 's-table'
+        import STable from 'vue-soul-ui'
         import 'vue-soul-ui/lib/index.css'
 
-        Vue.use(VXETable, {
+        Vue.use(SoulUI, {
           size: 'small',
           version: 0,
           tooltip: {
@@ -118,10 +118,10 @@
     <pre>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 's-table'
+        import STable from 'vue-soul-ui'
         import 'vue-soul-ui/lib/index.css'
 
-        VXETable.setup({
+        STable.setup({
           // 默认表格参数
           size: 'small',
           showOverflow: null,

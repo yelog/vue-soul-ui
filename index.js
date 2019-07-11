@@ -20,7 +20,7 @@ import Tooltip from './packages/tooltip'
 
 import Export from './packages/export'
 import Resize from './packages/resize'
-import VXETable from './packages/s-table'
+import STable from './packages/table-core'
 import zhCNLocat from './locale/lang/zh-CN'
 
 // 默认主题
@@ -54,13 +54,13 @@ export const components = [
 // 默认安装
 function install (Vue, options) {
   if (XEUtils.isPlainObject(options)) {
-    VXETable.setup(options)
+    STable.setup(options)
   }
   components.map(component => Vue.use(component))
 }
 
 // 默认中文
-VXETable.setup({
+STable.setup({
   i18n: (key, value) => XEUtils.get(zhCNLocat, key)
 })
 
@@ -68,7 +68,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 
-VXETable.install = install
+STable.install = install
 
 export * from './packages/table'
 export * from './packages/column'
@@ -90,5 +90,5 @@ export * from './packages/message'
 export * from './packages/tooltip'
 export * from './packages/export'
 export * from './packages/resize'
-export * from './packages/s-table'
-export default VXETable
+export * from './packages/table-core'
+export default STable

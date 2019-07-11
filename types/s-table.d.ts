@@ -55,7 +55,7 @@ export interface Renderer {
   delete(name: object): Renderer;
 }
 
-export interface VXETableStatic {
+export interface STableStatic {
   /**
    * 国际化
    */
@@ -67,7 +67,7 @@ export interface VXETableStatic {
   setup(options: GlobalOptions<any>): any;
   /**
    * 安装插件
-   * @param Plugin 插件 
+   * @param Plugin 插件
    * @param options 参数
    */
   use(Plugin: object, options: object): any;
@@ -81,10 +81,10 @@ export interface VXETableStatic {
   renderer: Renderer;
 }
 
-declare const VXETable: VXETableStatic;
+declare const STable: STableStatic;
 
 export {
-  VXETable,
+  STable,
   Table,
   Column,
   Header,

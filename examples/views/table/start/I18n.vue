@@ -10,12 +10,12 @@
       <code class="javascript">
         import Vue from 'vue'
         import VueI18n from 's-i18n'
-        import VXETable from 's-table'
-        import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh_CN'
+        import SoulUI from 'vue-soul-ui'
+        import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh-CN'
         import enLocat from 'vue-soul-ui/lib/locale/lang/en'
 
         const messages = {
-          zh_CN: {
+          zh-CN: {
             ...zhCNLocat
           },
           en: {
@@ -24,11 +24,11 @@
         }
 
         const i18n = new VueI18n({
-          locale: 'zh_CN',
+          locale: 'zh-CN',
           messages,
         })
 
-        Vue.use(VXETable, {
+        Vue.use(SoulUI, {
           i18n: (key, value) => i18n.t(key, value)
         })
 

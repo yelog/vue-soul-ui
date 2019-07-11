@@ -5,14 +5,14 @@
     <p>依赖库： <a class="link" href="https://www.npmjs.com/package/xe-utils">xe-utils1.9+</a>&nbsp;&nbsp;<a class="link" href="https://cn.vuejs.org/v2/guide/components-slots.html#%E5%8A%A8%E6%80%81%E6%8F%92%E6%A7%BD%E5%90%8D">vue2.6+</a></p>
     <pre>
       <code class="shell">
-        npm install xe-utils s-table
+        npm install xe-utils vue-soul-ui
       </code>
       <code class="javascript">
         import Vue from 'vue'
-        import VXETable from 's-table'
+        import SoulUI from 'vue-soul-ui'
         import 'vue-soul-ui/lib/index.css'
 
-        Vue.use(VXETable)
+        Vue.use(SoulUI)
       </code>
     </pre>
     <h3>CDN</h3>

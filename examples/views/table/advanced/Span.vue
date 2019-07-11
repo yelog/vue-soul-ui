@@ -34,7 +34,7 @@
       <s-table-column type="index" width="60"></s-table-column>
       <s-table-column field="key" title="Key"></s-table-column>
       <s-table-column field="content" title="Content"></s-table-column>
-      <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
+      <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh-CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
     </s-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
@@ -105,7 +105,7 @@ export default {
           :data.sync="tableData">
           <s-table-column type="index" width="60"></s-table-column>
           <s-table-column field="key" title="Key"></s-table-column>
-          <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh_CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
+          <s-table-column field="language" title="Language" :filters="[{label: '中文', value: 'zh-CN'}, {label: 'English', value: 'en_US'}]"></s-table-column>
         </s-table>
         `,
         `

@@ -122,10 +122,10 @@ Get on [unpkg](https://unpkg.com/s-table/) and [cdnjs](https://cdn.jsdelivr.net/
 
 ```javascript
 import Vue from 'vue'
-import VXETable from 's-table'
+import STable from 's-table'
 import 'vue-soul-ui/lib/index.css'
 
-Vue.use(VXETable, {
+Vue.use(STable, {
   size: 'small',
   tooltipConfig: {
     zIndex: 3000
@@ -161,7 +161,7 @@ Now you can import modules like
 
 ```javascript
 import {
-  VXETable,
+  STable,
   Table,
   Column,
   Cell,
@@ -180,8 +180,8 @@ Vue.use(Icon)
 
 // The on-demand mode is not internationalized by default and needs to be imported by itself
 // 按需加载的方式默认是不带国际化的，需要自行导入
-VXETable.setup({
-  i18n: (key, value) => VXETable.t(zhCNLocat, key)
+STable.setup({
+  i18n: (key, value) => STable.t(zhCNLocat, key)
 })
 ```
 
@@ -194,12 +194,12 @@ npm install s-i18n
 ```javascript
 import Vue from 'vue'
 import VueI18n from 's-i18n'
-import VXETable from 's-table'
-import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh_CN'
+import STable from 's-table'
+import zhCNLocat from 'vue-soul-ui/lib/locale/lang/zh-CN'
 import enLocat from 'vue-soul-ui/lib/locale/lang/en'
 
 const messages = {
-  zh_CN: {
+  zh-CN: {
     ...zhCNLocat
   },
   en: {
@@ -208,11 +208,11 @@ const messages = {
 }
 
 const i18n = new VueI18n({
-  locale: 'zh_CN',
+  locale: 'zh-CN',
   messages,
 })
 
-Vue.use(VXETable, {
+Vue.use(STable, {
   i18n: (key, value) => i18n.t(key, value)
 })
 

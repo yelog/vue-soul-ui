@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import i18n from '../i18n'
 
-import VXETable from '../../packages/s-table'
+import STable from '../../packages/table-core'
 import Table from '../../packages/table'
 import Column from '../../packages/column'
 import Header from '../../packages/header'
@@ -34,7 +34,7 @@ import 'vxe-table-plugin-element/dist/style.css'
 import 'vxe-table-plugin-iview/dist/style.css'
 import 'vxe-table-plugin-antd/dist/style.css'
 
-VXETable.setup({
+STable.setup({
   i18n: (key, value) => i18n.t(key, value)
 })
 
@@ -59,6 +59,6 @@ Vue.use(Tooltip)
 Vue.use(Export)
 Vue.use(Resize)
 
-VXETable.use(VXETablePluginElement)
-VXETable.use(VXETablePluginIView)
-VXETable.use(VXETablePluginAntd)
+STable.use(VXETablePluginElement)
+STable.use(VXETablePluginIView)
+STable.use(VXETablePluginAntd)

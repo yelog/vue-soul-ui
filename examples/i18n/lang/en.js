@@ -120,8 +120,8 @@ module.exports = {
         optimizeEdit: '编辑渲染优化',
 
         api: 'API',
-        vxeTable: 's-table',
-        vxeTableColumn: 's-table-column',
+        sTable: 's-table',
+        sTableColumn: 's-table-column',
         vxeGrid: 's-grid',
         vxeExcel: 's-excel',
         vxeToolbar: 's-toolbar',
