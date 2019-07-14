@@ -1,9 +1,9 @@
 import SExcel from './src/excel'
 import Cells from './src/cells'
-import VXETable from '../v-x-e-table'
+import Renderer from '../table-core'
 
 SExcel.install = function (Vue) {
-  VXETable.renderer.mixin(Cells)
+  Renderer.renderer.mixin(Cells)
   Vue.component(SExcel.name, SExcel)
 }
 
