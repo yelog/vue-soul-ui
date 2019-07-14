@@ -1,0 +1,43 @@
+{
+  "zh-CN": [
+    {
+      "path": "/changelog",
+      "name": "更新日志"
+    },
+    {
+      "name": "表格组件",
+      "groups": [
+        {
+          "groupName": "基本功能",
+          "list": [
+            {
+              "path": "/table/basic",
+              "title": "基础表格"
+            }
+          ]
+        }]
+      }
+  ],
+  "en-US": [
+    {
+      "name": "Development",
+      "children": [
+        {
+          "path": "/changelog",
+          "name": "更新日志"
+        }
+      ]
+    }
+  ],
+  "es": [
+    {
+      "name": "Development",
+      "children": [
+        {
+          "path": "/changelog",
+          "name": "更新日志"
+        }
+      ]
+    }
+  ]
+}
