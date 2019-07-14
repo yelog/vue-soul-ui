@@ -6,9 +6,8 @@
     <s-table
       resizable
       :data.sync="tableData">
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name"></s-table-column>
-      <s-table-column field="sex" title="Sex"></s-table-column>
+      <s-table-column type="index" fixed="left" width="60"></s-table-column>
+      <s-table-column field="name" fixed="left" title="Name"></s-table-column>
       <s-table-column field="age" title="Age"></s-table-column>
       <s-table-column field="time" title="Time"></s-table-column>
       <s-table-column field="address" title="Address" show-overflow></s-table-column>
@@ -28,8 +27,8 @@
       resizable
       highlight-hover-row
       :data.sync="tableData">
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name" width="300"></s-table-column>
+      <s-table-column type="index" fixed="left" width="60"></s-table-column>
+      <s-table-column field="name" fixed="left" title="Name" width="300"></s-table-column>
       <s-table-column field="sex" title="Sex" width="300"></s-table-column>
       <s-table-column field="age" title="Age" width="300"></s-table-column>
       <s-table-column field="time" title="Time" width="300"></s-table-column>

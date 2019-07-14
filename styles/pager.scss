@@ -7,7 +7,7 @@
   font-size: $s-font-size;
   color: $s-font-color;
   font-family: $s-font-family;
-  text-align: right;
+  text-align: left;
   user-select: none;
   &.is--loading {
     position: relative;
@@ -207,9 +207,15 @@
   .s-pager--next-btn,
   .s-pager--jump-next {
     margin: 0 2px;
-    &:hover,
-    &.is--active {
+    &:hover{
       color: $s-primary-color;
+      background: inherit;
+      border-radius: inherit;
+    }
+    &.is--active {
+      color: white;
+      background: #409eff;
+      border-radius: 5px;
     }
     &.is--disabled {
       cursor: no-drop;
@@ -315,6 +321,7 @@
       padding: 0 15px;
       white-space: nowrap;
       cursor: pointer;
+      line-height: 1.5;
       &:hover {
         color: $s-primary-color;
       }
