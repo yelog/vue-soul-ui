@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>增删改查、工具栏</p>
-    <p class="red">必须指定 <table-api-link prop="row-key"/> 或者 ( <table-api-link prop="select-config"/>、<table-api-link prop="tree-config"/>、<table-api-link prop="expand-config"/>、<table-api-link prop="edit-config"/> ) 中的 key 任意配置一个即可</p>
+    <p class="red">必须设置 <table-api-link prop="row-id"/> 或者 <table-api-link prop="row-key"/></p>
 
     <s-toolbar :data="tableData" setting>
       <template v-slot:buttons>
@@ -16,7 +16,8 @@
     <s-table
       resizable
       ref="xTree"
-      :tree-config="{key: 'id', children: 'children'}"
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
       :data.sync="tableData">
       <s-table-column type="selection" width="120" tree-node></s-table-column>
@@ -58,7 +59,8 @@ export default {
         <s-table
           resizable
           ref="xTree"
-          :tree-config="{key: 'id', children: 'children'}"
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
           :data.sync="tableData">
           <s-table-column type="selection" width="120" tree-node></s-table-column>
@@ -105,7 +107,7 @@ export default {
     }
   },
   created () {
-    this.tableData = window.MOCK_TREE_DATA_LIST.slice(0)
+    this.tableData = XEUtils.clone(window.MOCK_TREE_DATA_LIST, true)
   },
   mounted () {
     Array.from(this.$el.querySelectorAll('pre code')).forEach((block) => {

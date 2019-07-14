@@ -2,15 +2,16 @@
   <div>
     <p>使用 <table-api-link prop="highlight-current-row"/> 方式</p>
 
-    <s-table
+    <vxe-table
       highlight-current-row
-      :tree-config="{key: 'id', children: 'children'}"
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :data.sync="tableData">
-      <s-table-column field="name" title="Name" tree-node></s-table-column>
-      <s-table-column field="size" title="Size"></s-table-column>
-      <s-table-column field="type" title="Type"></s-table-column>
-      <s-table-column field="date" title="Date"></s-table-column>
-    </s-table>
+      <vxe-table-column field="name" title="Name" tree-node></vxe-table-column>
+      <vxe-table-column field="size" title="Size"></vxe-table-column>
+      <vxe-table-column field="type" title="Type"></vxe-table-column>
+      <vxe-table-column field="date" title="Date"></vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -21,15 +22,16 @@
 
     <p>使用 radio 方式</p>
 
-    <s-table
-      :tree-config="{key: 'id', children: 'children'}"
+    <vxe-table
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :radio-config="{labelField: 'name'}"
       :data.sync="tableData">
-      <s-table-column type="radio" title="Name" tree-node></s-table-column>
-      <s-table-column field="size" title="Size"></s-table-column>
-      <s-table-column field="type" title="Type"></s-table-column>
-      <s-table-column field="date" title="Date"></s-table-column>
-    </s-table>
+      <vxe-table-column type="radio" title="Name" tree-node></vxe-table-column>
+      <vxe-table-column field="size" title="Size"></vxe-table-column>
+      <vxe-table-column field="type" title="Type"></vxe-table-column>
+      <vxe-table-column field="date" title="Date"></vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -40,17 +42,18 @@
 
     <p>当然也可以两种方式同时使用</p>
 
-    <s-table
+    <vxe-table
       resizable
       highlight-current-row
-      :tree-config="{key: 'id', children: 'children'}"
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :data.sync="tableData">
-      <s-table-column type="radio" width="120" tree-node></s-table-column>
-      <s-table-column field="name" title="Name"></s-table-column>
-      <s-table-column field="size" title="Size"></s-table-column>
-      <s-table-column field="type" title="Type"></s-table-column>
-      <s-table-column field="date" title="Date"></s-table-column>
-    </s-table>
+      <vxe-table-column type="radio" width="120" tree-node></vxe-table-column>
+      <vxe-table-column field="name" title="Name"></vxe-table-column>
+      <vxe-table-column field="size" title="Size"></vxe-table-column>
+      <vxe-table-column field="type" title="Type"></vxe-table-column>
+      <vxe-table-column field="date" title="Date"></vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -63,6 +66,7 @@
 
 <script>
 import hljs from 'highlight.js'
+import XEUtils from 'xe-utils'
 
 export default {
   data () {
@@ -70,15 +74,16 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <s-table
+        <vxe-table
           highlight-current-row
-          :tree-config="{key: 'id', children: 'children'}"
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :data.sync="tableData">
-          <s-table-column field="name" title="Name" tree-node></s-table-column>
-          <s-table-column field="size" title="Size"></s-table-column>
-          <s-table-column field="type" title="Type"></s-table-column>
-          <s-table-column field="date" title="Date"></s-table-column>
-        </s-table>
+          <vxe-table-column field="name" title="Name" tree-node></vxe-table-column>
+          <vxe-table-column field="size" title="Size"></vxe-table-column>
+          <vxe-table-column field="type" title="Type"></vxe-table-column>
+          <vxe-table-column field="date" title="Date"></vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {
@@ -93,15 +98,16 @@ export default {
         }
         `,
         `
-        <s-table
-          :tree-config="{key: 'id', children: 'children'}"
+        <vxe-table
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :data.sync="tableData">
-          <s-table-column type="radio" width="120" tree-node></s-table-column>
-          <s-table-column field="name" title="Name"></s-table-column>
-          <s-table-column field="size" title="Size"></s-table-column>
-          <s-table-column field="type" title="Type"></s-table-column>
-          <s-table-column field="date" title="Date"></s-table-column>
-        </s-table>
+          <vxe-table-column type="radio" width="120" tree-node></vxe-table-column>
+          <vxe-table-column field="name" title="Name"></vxe-table-column>
+          <vxe-table-column field="size" title="Size"></vxe-table-column>
+          <vxe-table-column field="type" title="Type"></vxe-table-column>
+          <vxe-table-column field="date" title="Date"></vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {
@@ -116,17 +122,18 @@ export default {
         }
         `,
         `
-        <s-table
+        <vxe-table
           resizable
           highlight-current-row
-          :tree-config="{key: 'id', children: 'children'}"
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :data.sync="tableData">
-          <s-table-column type="radio" width="120" tree-node></s-table-column>
-          <s-table-column field="name" title="Name"></s-table-column>
-          <s-table-column field="size" title="Size"></s-table-column>
-          <s-table-column field="type" title="Type"></s-table-column>
-          <s-table-column field="date" title="Date"></s-table-column>
-        </s-table>
+          <vxe-table-column type="radio" width="120" tree-node></vxe-table-column>
+          <vxe-table-column field="name" title="Name"></vxe-table-column>
+          <vxe-table-column field="size" title="Size"></vxe-table-column>
+          <vxe-table-column field="type" title="Type"></vxe-table-column>
+          <vxe-table-column field="date" title="Date"></vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {
@@ -144,7 +151,7 @@ export default {
     }
   },
   created () {
-    this.tableData = window.MOCK_TREE_DATA_LIST.slice(0)
+    this.tableData = XEUtils.clone(window.MOCK_TREE_DATA_LIST, true)
   },
   mounted () {
     Array.from(this.$el.querySelectorAll('pre code')).forEach((block) => {

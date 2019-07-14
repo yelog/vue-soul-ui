@@ -116,9 +116,12 @@ export default {
       headerRowClassName,
       headerCellClassName,
       showHeaderOverflow: allColumnHeaderOverflow,
+      headerAlign: allHeaderAlign,
+      align: allAlign,
       highlightCurrentColumn,
       mouseConfig = {},
       scrollXLoad,
+      overflowX,
       getColumnMapIndex
     } = $table
     // 横向滚动渲染
@@ -175,11 +178,13 @@ export default {
               columnKey,
               showHeaderOverflow,
               headerAlign,
+              align,
               own
             } = column
-            let isGroup = column.children && column.children.length
-            let fixedHiddenColumn = fixedType && column.fixed !== fixedType && !isGroup
-            let headOverflow = XEUtils.isUndefined(showHeaderOverflow) || XEUtils.isUndefined(showHeaderOverflow) ? allColumnHeaderOverflow : showHeaderOverflow
+            let isColGroup = column.children && column.children.length
+            let fixedHiddenColumn = fixedType ? column.fixed !== fixedType && !isColGroup : column.fixed && overflowX
+            let headOverflow = XEUtils.isUndefined(showHeaderOverflow) || XEUtils.isNull(showHeaderOverflow) ? allColumnHeaderOverflow : showHeaderOverflow
+            let headAlign = headerAlign || align || allHeaderAlign || allAlign
             let showEllipsis = headOverflow === 'ellipsis'
             let showTitle = headOverflow === 'title'
             let showTooltip = headOverflow === true || headOverflow === 'tooltip'
@@ -204,25 +209,20 @@ export default {
               }
             }
             if (highlightCurrentColumn || tableListeners['header-cell-click'] || mouseConfig.checked) {
-              thOns.click = evnt => {
-                $table.triggerHeaderCellClickEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget })
-              }
+              thOns.click = evnt => $table.triggerHeaderCellClickEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget })
             }
             if (tableListeners['header-cell-dblclick']) {
-              thOns.dblclick = evnt => {
-                UtilTools.emitEvent($table, 'header-cell-dblclick', [{ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget }, evnt])
-              }
+              thOns.dblclick = evnt => UtilTools.emitEvent($table, 'header-cell-dblclick', [{ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget }, evnt])
             }
             // 按下事件处理
             if (mouseConfig.checked) {
-              thOns.mousedown = evnt => {
-                $table.triggerHeaderCellMousedownEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget })
-              }
+              thOns.mousedown = evnt => $table.triggerHeaderCellMousedownEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget })
             }
             return h('th', {
               class: ['s-header--column', column.id, {
-                [`col--${headerAlign}`]: headerAlign,
+                [`col--${headAlign}`]: headAlign,
                 'col--index': column.type === 'index',
+                'col--group': isColGroup,
                 'col--ellipsis': hasEllipsis,
                 'fixed--hidden': fixedHiddenColumn,
                 'filter--active': column.filters.some(item => item.checked)
@@ -233,7 +233,7 @@ export default {
                 rowspan: column.rowSpan
               },
               on: thOns,
-              key: columnKey || (isGroup ? column.id : columnIndex)
+              key: columnKey || (isColGroup ? column.id : columnIndex)
             }, [
               h('div', {
                 class: ['s-cell', {
@@ -245,14 +245,15 @@ export default {
                   title: showTitle ? (own.title || own.label) : null
                 }
               }, column.renderHeader(h, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn })),
-              (XEUtils.isBoolean(column.resizable) ? column.resizable : resizable) && !fixedType && !isGroup ? h('div', {
+              /**
+               * 列宽拖动
+               */
+              !fixedHiddenColumn && !isColGroup && (XEUtils.isBoolean(column.resizable) ? column.resizable : resizable) ? h('div', {
                 class: ['s-resizable', {
                   'is--line': !border
                 }],
                 on: {
-                  mousedown: evnt => {
-                    resizeMousedown(evnt, column)
-                  }
+                  mousedown: evnt => resizeMousedown(evnt, column)
                 }
               }) : null
             ])
@@ -277,24 +278,57 @@ export default {
       this.headerColumn = this.isGroup ? convertToRows(this.collectColumn) : [this.$parent.scrollXLoad && this.fixedType ? this.fixedColumn : this.tableColumn]
     },
     resizeMousedown (evnt, column) {
-      let { $parent: $table, $el } = this
-      let targetElem = evnt.target
+      let { $parent: $table, $el, fixedType } = this
+      let { tableBody, leftContainer, rightContainer, resizeBar: resizeBarElem } = $table.$refs
+      let { target: dragBtnElem, clientX: dragClientX } = evnt
+      let cell = dragBtnElem.parentNode
       let dragLeft = 0
-      let tableBodyElem = $table.$refs.tableBody.$el
-      let resizeBarElem = $table.$refs.resizeBar
-      let pos = DomTools.getOffsetPos(targetElem, $el)
-      let dragMinLeft = pos.left - targetElem.parentNode.clientWidth + targetElem.clientWidth + 36
-      let dragPosLeft = pos.left + 6
-      let dragClientX = evnt.clientX
+      let minInterval = 36 // 列之间的最小间距
+      let tableBodyElem = tableBody.$el
+      let pos = DomTools.getOffsetPos(dragBtnElem, $el)
+      let dragBtnWidth = dragBtnElem.clientWidth
+      let dragMinLeft = pos.left - cell.clientWidth + dragBtnWidth + minInterval
+      let dragPosLeft = pos.left + Math.floor(dragBtnWidth / 2)
       let domMousemove = document.onmousemove
       let domMouseup = document.onmouseup
+      let isLeftFixed = fixedType === 'left'
+      let isRightFixed = fixedType === 'right'
+
+      // 计算左右侧固定列偏移量
+      let fixedOffsetWidth = 0
+      if (isLeftFixed || isRightFixed) {
+        let siblingProp = isLeftFixed ? 'nextElementSibling' : 'previousElementSibling'
+        let tempCellElem = cell[siblingProp]
+        while (tempCellElem) {
+          if (DomTools.hasClass(tempCellElem, 'fixed--hidden')) {
+            break
+          } else if (!DomTools.hasClass(tempCellElem, 'col--group')) {
+            fixedOffsetWidth += tempCellElem.offsetWidth
+          }
+          tempCellElem = tempCellElem[siblingProp]
+        }
+        if (isRightFixed && rightContainer) {
+          dragPosLeft = rightContainer.offsetLeft + fixedOffsetWidth
+        }
+      }
+
+      // 处理拖动事件
       let updateEvent = function (evnt) {
         evnt.stopPropagation()
         evnt.preventDefault()
         let offsetX = evnt.clientX - dragClientX
         let left = dragPosLeft + offsetX
-        dragLeft = left < dragMinLeft ? dragMinLeft : left
-        resizeBarElem.style.left = `${dragLeft - tableBodyElem.scrollLeft}px`
+        let scrollLeft = fixedType ? 0 : tableBodyElem.scrollLeft
+        if (isLeftFixed) {
+          // 左固定列（不允许超过右侧固定列、不允许超过右边距）
+          left = Math.min(left, (rightContainer ? rightContainer.offsetLeft : tableBodyElem.clientWidth) - fixedOffsetWidth - minInterval)
+        } else if (isRightFixed) {
+          // 右侧固定列（不允许超过左侧固定列、不允许超过左边距）
+          dragMinLeft = (leftContainer ? leftContainer.clientWidth : 0) + fixedOffsetWidth + minInterval
+          left = Math.min(left, dragPosLeft + cell.clientWidth - minInterval)
+        }
+        dragLeft = Math.max(left, dragMinLeft)
+        resizeBarElem.style.left = `${dragLeft - scrollLeft}px`
       }
       $table._isResize = true
       DomTools.addClass($table.$el, 'c--resize')
@@ -303,11 +337,11 @@ export default {
       document.onmouseup = function (evnt) {
         document.onmousemove = domMousemove
         document.onmouseup = domMouseup
-        column.resizeWidth = column.renderWidth - (dragPosLeft - dragLeft)
+        column.resizeWidth = column.renderWidth + (isRightFixed ? dragPosLeft - dragLeft : dragLeft - dragPosLeft)
         resizeBarElem.style.display = 'none'
         $table._isResize = false
         $table.analyColumnWidth()
-        $table.recalculate()
+        $table.recalculate(true)
         DomTools.removeClass($table.$el, 'c--resize')
       }
       updateEvent(evnt)

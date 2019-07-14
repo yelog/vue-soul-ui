@@ -4,7 +4,8 @@
 
     <s-table
       resizable
-      :tree-config="{key: 'id', children: 'children'}"
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :data.sync="tableData"
       @select-change="selectChangeEvent">
       <s-table-column type="selection" prop="checked" width="120" tree-node></s-table-column>
@@ -25,6 +26,7 @@
 
 <script>
 import hljs from 'highlight.js'
+import XEUtils from 'xe-utils'
 
 export default {
   data () {
@@ -34,7 +36,8 @@ export default {
         `
         <s-table
           resizable
-          :tree-config="{key: 'id', children: 'children'}"
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :data.sync="tableData"
           @select-change="selectChangeEvent">
           <s-table-column type="selection" tree-node></s-table-column>
@@ -65,7 +68,7 @@ export default {
     }
   },
   created () {
-    this.tableData = window.MOCK_TREE_DATA_LIST.slice(0)
+    this.tableData = XEUtils.clone(window.MOCK_TREE_DATA_LIST, true)
   },
   mounted () {
     Array.from(this.$el.querySelectorAll('pre code')).forEach((block) => {

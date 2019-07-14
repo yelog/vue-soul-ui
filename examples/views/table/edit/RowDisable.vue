@@ -2,18 +2,19 @@
   <div>
     <p>设置 <table-api-link prop="edit-config"/> 的 <table-api-link prop="activeMethod"/> 方法判断单元格是否禁用</p>
 
-    <s-table
+    <vxe-table
       ref="xTable"
       border
       show-overflow
+      row-id="id"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row', activeMethod: activeRowMethod}"
+      :edit-config="{trigger: 'click', mode: 'row', activeMethod: activeRowMethod}"
       @edit-disabled="editDisabledEvent">
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
-    </s-table>
+      <vxe-table-column type="index" width="60"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -24,29 +25,30 @@
 
     <P>配合自定义渲染，第三行name禁止编辑禁 age 小于 26</P>
 
-    <s-table
+    <vxe-table
       ref="xTable"
       border
       show-overflow
+      row-id="id"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name" :edit-render="{type: 'default'}">
+      :edit-config="{trigger: 'click', mode: 'row'}">
+      <vxe-table-column type="index" width="60"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" :edit-render="{type: 'default'}">
         <template v-slot:edit="{ row }">
           <input type="text" v-model="row.name">
         </template>
-      </s-table-column>
-      <s-table-column field="age" title="Age" :edit-render="{type: 'default'}">
+      </vxe-table-column>
+      <vxe-table-column field="age" title="Age" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
           <input type="text" v-model="scope.row.name" :disabled="disableMethod(scope)">
         </template>
-      </s-table-column>
-      <s-table-column field="date" title="Date" :edit-render="{type: 'default'}">
+      </vxe-table-column>
+      <vxe-table-column field="date" title="Date" :edit-render="{type: 'default'}">
         <template v-slot:edit="{ row }">
           <input type="date" v-model="row.name">
         </template>
-      </s-table-column>
-    </s-table>
+      </vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -66,18 +68,19 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <s-table
+        <vxe-table
           ref="xTable"
           border
           show-overflow
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row', activeMethod: activeRowMethod}"
+          :edit-config="{trigger: 'click', mode: 'row', activeMethod: activeRowMethod}"
           @edit-disabled="editDisabledEvent">
-          <s-table-column type="index" width="60"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
-        </s-table>
+          <vxe-table-column type="index" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {
@@ -100,29 +103,30 @@ export default {
         }
         `,
         `
-        <s-table
+        <vxe-table
           ref="xTable"
           border
           show-overflow
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <s-table-column type="index" width="60"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{type: 'default'}">
+          :edit-config="{trigger: 'click', mode: 'row'}">
+          <vxe-table-column type="index" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{type: 'default'}">
             <template v-slot:edit="{ row }">
               <input type="text" v-model="row.name">
             </template>
-          </s-table-column>
-          <s-table-column field="sex" title="Sex" :edit-render="{type: 'default'}">
+          </vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" :edit-render="{type: 'default'}">
             <template v-slot:edit="{ row }">
               <input type="sex" v-model="row.name" :disabled="row.disabled">
             </template>
-          </s-table-column>
-          <s-table-column field="date" title="Date" :edit-render="{type: 'default'}">
+          </vxe-table-column>
+          <vxe-table-column field="date" title="Date" :edit-render="{type: 'default'}">
             <template v-slot:edit="{ row }">
               <input type="date" v-model="row.name">
             </template>
-          </s-table-column>
-        </s-table>
+          </vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {

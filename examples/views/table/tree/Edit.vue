@@ -14,7 +14,8 @@
     <s-table
       resizable
       ref="xTree"
-      :tree-config="{key: 'id', children: 'children'}"
+      row-id="id"
+      :tree-config="{children: 'children'}"
       :edit-config="{trigger: 'click', mode: 'row'}"
       :select-config="{labelField: 'id'}"
       :data.sync="tableData">
@@ -36,6 +37,7 @@
 
 <script>
 import hljs from 'highlight.js'
+import XEUtils from 'xe-utils'
 
 export default {
   data () {
@@ -55,7 +57,8 @@ export default {
         <s-table
           resizable
           ref="xTree"
-          :tree-config="{key: 'id', children: 'children'}"
+          row-id="id"
+          :tree-config="{children: 'children'}"
           :edit-config="{trigger: 'click', mode: 'row'}"
           :select-config="{labelField: 'id'}"
           :data.sync="tableData">
@@ -82,7 +85,7 @@ export default {
     }
   },
   created () {
-    this.tableData = window.MOCK_TREE_DATA_LIST.slice(0)
+    this.tableData = XEUtils.clone(window.MOCK_TREE_DATA_LIST, true)
   },
   mounted () {
     Array.from(this.$el.querySelectorAll('pre code')).forEach((block) => {

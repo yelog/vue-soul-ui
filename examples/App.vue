@@ -152,12 +152,6 @@ export default {
               }
             },
             {
-              label: 'app.aside.nav.headerHighlight',
-              locat: {
-                name: 'TableHeaderHighlight'
-              }
-            },
-            {
               label: 'app.aside.nav.resizable',
               demoUrl: 'https://jsrun.net/5AXKp',
               locat: {
@@ -210,6 +204,18 @@ export default {
               demoUrl: 'https://jsrun.net/xrXKp',
               locat: {
                 name: 'TableIndex'
+              }
+            },
+            {
+              label: 'app.aside.nav.headerHighlight',
+              locat: {
+                name: 'TableHeaderHighlight'
+              }
+            },
+            {
+              label: 'app.aside.nav.current',
+              locat: {
+                name: 'TableCurrent'
               }
             },
             {
@@ -279,6 +285,12 @@ export default {
               demoUrl: 'https://jsrun.net/DjXKp',
               locat: {
                 name: 'TableTemplate'
+              }
+            },
+            {
+              label: 'app.aside.nav.customSort',
+              locat: {
+                name: 'TableCustomSort'
               }
             },
             {
@@ -458,6 +470,12 @@ export default {
               label: 'app.aside.nav.crudToolbar',
               locat: {
                 name: 'GridToolbar'
+              }
+            },
+            {
+              label: 'app.aside.nav.customToolbar',
+              locat: {
+                name: 'GridCustomToolbar'
               }
             },
             {
@@ -785,6 +803,12 @@ export default {
           expand: false,
           children: [
             {
+              label: 'app.aside.nav.optimizeScroller',
+              locat: {
+                name: 'TableOptimizeScroller'
+              }
+            },
+            {
               label: 'app.aside.nav.optimizeEdit',
               locat: {
                 name: 'TableOptimizeEdit'
@@ -824,15 +848,15 @@ export default {
                 }
               }
             },
-            // {
-            //   label: 'app.aside.nav.vxeExcel',
-            //   locat: {
-            //     name: 'TableAPI',
-            //     params: {
-            //       name: 'excel'
-            //     }
-            //   }
-            // },
+            {
+              label: 'app.aside.nav.vxeExcel',
+              locat: {
+                name: 'TableAPI',
+                params: {
+                  name: 'excel'
+                }
+              }
+            },
             {
               label: 'app.aside.nav.vxeToolbar',
               locat: {

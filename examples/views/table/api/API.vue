@@ -1,12 +1,12 @@
 <template>
   <div>
-    <s-toolbar ref="xToolbar" id="document_api" :setting="{storage: true}">
+    <vxe-toolbar ref="xToolbar" id="document_api" :setting="{storage: true}">
       <template v-slot:buttons>
-        <s-input class="search-input" v-model="filterName" type="search" :placeholder="`s-${apiName} ${$t('app.api.form.apiSearch')}`"></s-input>
+        <vxe-input class="search-input" v-model="filterName" type="search" :placeholder="`vxe-${apiName} ${$t('app.api.form.apiSearch')}`"></vxe-input>
       </template>
-    </s-toolbar>
+    </vxe-toolbar>
 
-    <s-table
+    <vxe-table
       resizable
       highlight-current-row
       highlight-hover-row
@@ -14,40 +14,42 @@
       highlight-hover-column
       ref="xTable"
       class="api-table"
+      row-id="id"
+      :loading="loading"
       :cell-class-name="cellClassNameFunc"
       :data.sync="apiList"
-      :tree-config="{key: 'id', children: 'list', expandAll: !!filterName, expandRowKeys: defaultExpandRowKeys, trigger: 'cell'}"
+      :tree-config="{children: 'list', expandAll: !!filterName, expandRowKeys: defaultExpandRowKeys, trigger: 'cell'}"
       :context-menu="{header: {options: headerMenus}, body: {options: bodyMenus},}"
       @context-menu-click="contextMenuClickEvent">
-      <s-table-column field="name" :title="$t('app.api.title.prop')" min-width="280" tree-node :filters="nameFilters">
+      <vxe-table-column field="name" :title="$t('app.api.title.prop')" min-width="280" :filters="nameFilters" tree-node>
         <template v-slot="{ row }">
           <span v-html="row.name || '&#12288;'"></span>
         </template>
-      </s-table-column>
-      <s-table-column field="desc" :title="$t('app.api.title.desc')" min-width="200">
+      </vxe-table-column>
+      <vxe-table-column field="desc" :title="$t('app.api.title.desc')" min-width="200">
         <template v-slot="{ row }">
           <span v-html="row.desc || '&#12288;'"></span>
         </template>
-      </s-table-column>
-      <s-table-column field="type" :title="$t('app.api.title.type')" min-width="140">
+      </vxe-table-column>
+      <vxe-table-column field="type" :title="$t('app.api.title.type')" min-width="140">
         <template v-slot="{ row }">
           <span v-html="row.type || '&#12288;'"></span>
         </template>
-      </s-table-column>
-      <s-table-column field="enum" :title="$t('app.api.title.enum')" min-width="150">
+      </vxe-table-column>
+      <vxe-table-column field="enum" :title="$t('app.api.title.enum')" min-width="150">
         <template v-slot="{ row }">
           <span v-html="row.enum || '&#12288;'"></span>
         </template>
-      </s-table-column>
-      <s-table-column field="defVal" :title="$t('app.api.title.defVal')" min-width="160">
+      </vxe-table-column>
+      <vxe-table-column field="defVal" :title="$t('app.api.title.defVal')" min-width="160">
         <template v-slot="{ row }">
           <span v-html="row.defVal || '&#12288;'"></span>
         </template>
-      </s-table-column>
+      </vxe-table-column>
       <template v-slot:empty>
         <span class="red">找不对应 API，请输入正确的关键字！</span>
       </template>
-    </s-table>
+    </vxe-table>
   </div>
 </template>
 
@@ -73,6 +75,7 @@ export default {
     return {
       filterName: this.$route.query.filterName,
       defaultExpandRowKeys: [],
+      loading: false,
       tableData: [],
       nameFilters: [
         { label: 'Props', value: 'Props' },
@@ -163,54 +166,60 @@ export default {
   },
   methods: {
     loadList () {
-      let apis = []
-      switch (this.$route.params.name) {
-        case 'table':
-          apis = tableAPI
-          break
-        case 'table-column':
-          apis = tableColumnAPI
-          break
-        case 'toolbar':
-          apis = toolbarAPI
-          break
-        case 'grid':
-          apis = gridAPI
-          break
-        case 'excel':
-          apis = excelAPI
-          break
-        case 'pager':
-          apis = pagerAPI
-          break
-        case 'radio':
-          apis = radioAPI
-          break
-        case 'checkbox':
-          apis = checkboxAPI
-          break
-        case 'input':
-          apis = inputAPI
-          break
-        case 'button':
-          apis = buttonAPI
-          break
-        case 'tooltip':
-          apis = tooltipAPI
-          break
-        case 'message':
-          apis = messageAPI
-          break
-      }
-      // 生成唯一 id
-      let index = 1
-      XEUtils.eachTree(apis, item => {
-        item.id = index++
-        item.desc = item.descKey ? this.$t(item.descKey) : item.desc
-      }, { children: 'list' })
-      this.tableData = apis
-      // 默认展开一级
-      this.defaultExpandRowKeys = apis.filter(item => item.list && item.list.length).map(item => item.id)
+      this.loading = true
+      setTimeout(() => {
+        let apis = []
+        switch (this.$route.params.name) {
+          case 'table':
+            apis = tableAPI
+            break
+          case 'table-column':
+            apis = tableColumnAPI
+            break
+          case 'toolbar':
+            apis = toolbarAPI
+            break
+          case 'grid': {
+            apis = gridAPI
+            break
+          }
+          case 'excel': {
+            apis = excelAPI
+            break
+          }
+          case 'pager':
+            apis = pagerAPI
+            break
+          case 'radio':
+            apis = radioAPI
+            break
+          case 'checkbox':
+            apis = checkboxAPI
+            break
+          case 'input':
+            apis = inputAPI
+            break
+          case 'button':
+            apis = buttonAPI
+            break
+          case 'tooltip':
+            apis = tooltipAPI
+            break
+          case 'message':
+            apis = messageAPI
+            break
+        }
+        // 生成唯一 id
+        let index = 1
+        XEUtils.eachTree(apis, item => {
+          item.id = index++
+          item.desc = item.descKey ? this.$t(item.descKey) : item.desc
+        }, { children: 'list' })
+        this.tableData = apis
+        // 默认展开一级
+        this.defaultExpandRowKeys = apis.filter(item => item.list && item.list.length).map(item => item.id)
+        this.loading = false
+      }, 100)
     },
     cellClassNameFunc ({ row, column }) {
       return {
@@ -229,7 +238,7 @@ export default {
         case 'exportAll':
           this.$refs.xTable.exportCsv({
             data: XEUtils.toTreeArray(this.tableData, { children: 'list' }),
-            filename: `s-${this.apiName}_v${pack.version}.csv`
+            filename: `vxe-${this.apiName}_v${pack.version}.csv`
           })
           break
         case 'copy':
@@ -249,7 +258,7 @@ export default {
           break
         case 'export':
           this.$refs.xTable.exportCsv({
-            filename: `s-${this.apiName}_v${pack.version}.csv`
+            filename: `vxe-${this.apiName}_v${pack.version}.csv`
           })
           break
         case 'allExpand':

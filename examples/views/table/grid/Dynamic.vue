@@ -2,15 +2,16 @@
   <div>
     <p>实现可配置动态列、数据代理、工具栏、增删改查</p>
 
-    <s-grid
+    <vxe-grid
       border
       show-overflow
       height="306"
+      row-id="id"
       :pager-config="tablePage"
       :proxy-config="tableProxy"
       :columns="tableColumn"
       :toolbar="toolbar"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
+      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -21,18 +22,19 @@
 
     <p>级联动态列渲染，可以非常简单的实现功能复杂的可配置动态列</p>
 
-    <s-grid
+    <vxe-grid
       border
       show-overflow
       height="290"
+      row-id="id"
       :loading="loading2"
       :pager-config="tablePage2"
       :proxy-config="tableProxy2"
       :columns="tableColumn2"
       :toolbar="toolbar2"
       :edit-rules="validRules2"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"
-      @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
+      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
+      @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -122,15 +124,16 @@ export default {
       tableColumn2: [],
       demoCodes: [
         `
-        <s-grid
+        <vxe-grid
           border
           show-overflow
           height="306"
+          row-id="id"
           :pager-config="tablePage"
           :proxy-config="tableProxy"
           :columns="tableColumn"
           :toolbar="toolbar"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
+          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
         `,
         `
         export default {
@@ -187,17 +190,18 @@ export default {
         }
         `,
         `
-        <s-grid
+        <vxe-grid
           border
           show-overflow
           height="530"
+          row-id="id"
           :loading="loading"
           :pager-config="tablePage"
           :proxy-config="tableProxy"
           :columns="tableColumn"
           :toolbar="toolbar"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row', showStatus: true}"
-          @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
+          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
+          @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
         `,
         `
         export default {

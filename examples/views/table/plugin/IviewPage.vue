@@ -17,7 +17,7 @@
       </FormItem>
     </Form>
 
-    <s-toolbar setting>
+    <vxe-toolbar setting>
       <template v-slot:buttons>
         <Button @click="insertEvent">新增</Button>
         <Button @click="saveEvent">保存</Button>
@@ -31,32 +31,33 @@
           </DropdownMenu>
       </Dropdown>
       </template>
-    </s-toolbar>
+    </vxe-toolbar>
 
-    <s-table
+    <vxe-table
       border
       resizable
       show-overflow
       highlight-hover-row
       ref="xTable"
-      class="s-table-iview"
+      class="vxe-table-iview"
       height="460"
+      row-id="id"
       :loading="loading"
       :data.sync="tableData"
       :edit-rules="validRules"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-      <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-      <s-table-column type="index" width="60" fixed="left"></s-table-column>
-      <s-table-column field="name" title="Input" min-width="140" :edit-render="{name: 'Input'}"></s-table-column>
-      <s-table-column field="role" title="AutoComplete" min-width="160" :edit-render="{name: 'AutoComplete', props: {data: restaurants, filterMethod: roleFilterMethod}}"></s-table-column>
-      <s-table-column field="age" title="InputNumber" width="140" :edit-render="{name: 'InputNumber', props: {max: 35, min: 18}}"></s-table-column>
-      <s-table-column field="sex" title="Select" width="140" :edit-render="{name: 'Select', options: sexList}"></s-table-column>
-      <s-table-column field="region" title="Cascader" width="200" :edit-render="{name: 'Cascader', props: {data: regionList}}"> </s-table-column>
-      <s-table-column field="date" title="DatePicker" width="200" :edit-render="{name: 'DatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></s-table-column>
-      <s-table-column field="date6" title="TimePicker" width="200" :edit-render="{name: 'TimePicker', props: {type: 'time'}}"></s-table-column>
-      <s-table-column field="flag" title="iSwitch" width="100" :edit-render="{name: 'iSwitch', type: 'visible'}"></s-table-column>
-      <s-table-column field="rate" title="Rate" width="200" fixed="right" :edit-render="{name: 'Rate', type: 'visible'}"></s-table-column>
-    </s-table>
+      :edit-config="{trigger: 'click', mode: 'row'}">
+      <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column field="name" title="Input" min-width="140" :edit-render="{name: 'Input'}"></vxe-table-column>
+      <vxe-table-column field="role" title="AutoComplete" min-width="160" :edit-render="{name: 'AutoComplete', props: {data: restaurants, filterMethod: roleFilterMethod}}"></vxe-table-column>
+      <vxe-table-column field="age" title="InputNumber" width="140" :edit-render="{name: 'InputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
+      <vxe-table-column field="sex" title="Select" width="140" :edit-render="{name: 'Select', options: sexList}"></vxe-table-column>
+      <vxe-table-column field="region" title="Cascader" width="200" :edit-render="{name: 'Cascader', props: {data: regionList}}"> </vxe-table-column>
+      <vxe-table-column field="date" title="DatePicker" width="200" :edit-render="{name: 'DatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-table-column>
+      <vxe-table-column field="date6" title="TimePicker" width="200" :edit-render="{name: 'TimePicker', props: {type: 'time'}}"></vxe-table-column>
+      <vxe-table-column field="flag" title="iSwitch" width="100" :edit-render="{name: 'iSwitch', type: 'visible'}"></vxe-table-column>
+      <vxe-table-column field="rate" title="Rate" width="200" fixed="right" :edit-render="{name: 'Rate', type: 'visible'}"></vxe-table-column>
+    </vxe-table>
 
     <Page
       show-sizer
@@ -126,7 +127,7 @@ export default {
           </FormItem>
         </Form>
 
-        <s-toolbar setting>
+        <vxe-toolbar setting>
           <template v-slot:buttons>
             <Button @click="insertEvent">新增</Button>
             <Button @click="saveEvent">保存</Button>
@@ -140,33 +141,34 @@ export default {
               </DropdownMenu>
           </Dropdown>
           </template>
-        </s-toolbar>
+        </vxe-toolbar>
 
-        <s-table
+        <vxe-table
           border
           resizable
           show-overflow
           highlight-hover-row
           ref="xTable"
-          class="s-table-iview"
+          class="vxe-table-iview"
           height="460"
           size="small"
+          row-id="id"
           :loading="loading"
           :data.sync="tableData"
           :edit-rules="validRules"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-          <s-table-column type="index" width="60" fixed="left"></s-table-column>
-          <s-table-column field="name" title="Input" min-width="140" :edit-render="{name: 'Input'}"></s-table-column>
-          <s-table-column field="role" title="AutoComplete" min-width="160" :edit-render="{name: 'AutoComplete', props: {data: restaurants, filterMethod: roleFilterMethod}}"></s-table-column>
-          <s-table-column field="age" title="InputNumber" width="140" :edit-render="{name: 'InputNumber', props: {max: 35, min: 18}}"></s-table-column>
-          <s-table-column field="sex" title="Select" width="140" :edit-render="{name: 'Select', options: sexList}"></s-table-column>
-          <s-table-column field="region" title="Cascader" width="200" :edit-render="{name: 'Cascader', props: {data: regionList}}"> </s-table-column>
-          <s-table-column field="date" title="DatePicker" width="200" :edit-render="{name: 'DatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></s-table-column>
-          <s-table-column field="date6" title="TimePicker" width="200" :edit-render="{name: 'TimePicker', props: {type: 'time'}}"></s-table-column>
-          <s-table-column field="flag" title="iSwitch" width="100" :edit-render="{name: 'iSwitch', type: 'visible'}"></s-table-column>
-          <s-table-column field="rate" title="Rate" width="200" fixed="right" :edit-render="{name: 'Rate', type: 'visible'}"></s-table-column>
-        </s-table>
+          :edit-config="{trigger: 'click', mode: 'row'}">
+          <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="name" title="Input" min-width="140" :edit-render="{name: 'Input'}"></vxe-table-column>
+          <vxe-table-column field="role" title="AutoComplete" min-width="160" :edit-render="{name: 'AutoComplete', props: {data: restaurants, filterMethod: roleFilterMethod}}"></vxe-table-column>
+          <vxe-table-column field="age" title="InputNumber" width="140" :edit-render="{name: 'InputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
+          <vxe-table-column field="sex" title="Select" width="140" :edit-render="{name: 'Select', options: sexList}"></vxe-table-column>
+          <vxe-table-column field="region" title="Cascader" width="200" :edit-render="{name: 'Cascader', props: {data: regionList}}"> </vxe-table-column>
+          <vxe-table-column field="date" title="DatePicker" width="200" :edit-render="{name: 'DatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-table-column>
+          <vxe-table-column field="date6" title="TimePicker" width="200" :edit-render="{name: 'TimePicker', props: {type: 'time'}}"></vxe-table-column>
+          <vxe-table-column field="flag" title="iSwitch" width="100" :edit-render="{name: 'iSwitch', type: 'visible'}"></vxe-table-column>
+          <vxe-table-column field="rate" title="Rate" width="200" fixed="right" :edit-render="{name: 'Rate', type: 'visible'}"></vxe-table-column>
+        </vxe-table>
 
         <Page
           show-sizer

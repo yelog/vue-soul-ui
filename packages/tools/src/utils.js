@@ -7,15 +7,16 @@ export const UtilTools = {
     return size || ($parent && ['medium', 'small', 'mini'].indexOf($parent.size) > -1 ? $parent.size : null)
   },
   getRowKey ($table) {
-    let { rowKey, selectConfig = {}, treeConfig = {}, expandConfig = {}, editConfig = {} } = $table
-    if (!rowKey) {
-      rowKey = selectConfig.key || treeConfig.key || expandConfig.key || editConfig.key
-    }
-    return rowKey
+    // let { rowKey, selectConfig = {}, treeConfig = {}, expandConfig = {}, editConfig = {} } = $table
+    // if (!rowKey) {
+    //   rowKey = selectConfig.key || treeConfig.key || expandConfig.key || editConfig.key
+    // }
+    // return rowKey
+    return $table.rowKey || $table.rowId
   },
-  getRowId ($table, row, rowIndex) {
+  getRowPrimaryKey ($table, row, rowIndex) {
     let rowKey = UtilTools.getRowKey($table)
-    return `${encodeURIComponent(rowKey ? XEUtils.get(row, rowKey) : rowIndex)}`
+    return `${rowKey ? encodeURIComponent(XEUtils.get(row, rowKey)) : rowIndex}`
   },
   // 触发事件
   emitEvent (_vm, type, args) {
@@ -42,8 +43,17 @@ export const UtilTools = {
     return XEUtils.get(row, column.property)
   },
   getCellLabel (row, column, params) {
-    let cellValue = XEUtils.get(row, column.property)
-    return params && column.formatter ? column.formatter(Object.assign({ cellValue }, params)) : cellValue
+    let { formatter } = column
+    let cellValue = UtilTools.getCellValue(row, column)
+    if (params && formatter) {
+      if (XEUtils.isString(formatter)) {
+        return XEUtils[formatter](cellValue)
+      } else if (XEUtils.isArray(formatter)) {
+        return XEUtils[formatter[0]].apply(XEUtils, [cellValue].concat(formatter.slice(1)))
+      }
+      return formatter(Object.assign({ cellValue }, params))
+    }
+    return cellValue
   },
   setCellValue (row, column, value) {
     return XEUtils.set(row, column.property, value)
@@ -62,7 +72,7 @@ export const UtilTools = {
       resizable: _vm.resizable,
       fixed: _vm.fixed,
       align: _vm.align,
-      headerAlign: _vm.headerAlign || _vm.align,
+      headerAlign: _vm.headerAlign,
       showOverflow: _vm.showOverflow,
       showHeaderOverflow: _vm.showHeaderOverflow,
       indexMethod: _vm.indexMethod,

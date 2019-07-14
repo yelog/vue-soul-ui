@@ -52,20 +52,17 @@ export const Cell = {
     if (slots && slots.header) {
       return slots.header(params, h)
     }
+    // 在 v3.0 中废弃 label
     return [UtilTools.formatText(own.title || own.label, 1)]
   },
   renderCell (h, params) {
     let cellValue
     let { row, column } = params
-    let { slots, formatter } = column
+    let { slots } = column
     if (slots && slots.default) {
       return slots.default(params, h)
     }
-    cellValue = UtilTools.getCellValue(row, column)
-    if (formatter) {
-      params.cellValue = cellValue
-      cellValue = formatter(params)
-    }
+    cellValue = UtilTools.getCellLabel(row, column, params)
     return [UtilTools.formatText(cellValue, 1)]
   },
   renderTreeCell (h, params) {
@@ -100,7 +97,7 @@ export const Cell = {
         on
       }, rowChildren && rowChildren.length ? [
         h('i', {
-          class: ['s-tree--node-btn', icon.tree]
+          class: `s-tree--node-btn ${icon.tree}`
         })
       ] : [])
     ]
@@ -115,6 +112,7 @@ export const Cell = {
     if (slots && slots.header) {
       return slots.header(params, h)
     }
+    // 在 v3.0 中废弃 label
     return [UtilTools.formatText(own.title || own.label || '#', 1)]
   },
   renderIndexCell (h, params) {
@@ -136,11 +134,12 @@ export const Cell = {
    */
   renderRadioHeader (h, params) {
     let { own } = params.column
+    // 在 v3.0 中废弃 label
     return [UtilTools.formatText(own.title || own.label, 1)]
   },
   renderRadioCell (h, params) {
     let { $table, column, isHidden } = params
-    let { radioConfig = {} } = $table
+    let { vSize, radioConfig = {} } = $table
     let { slots } = column
     let { labelField } = radioConfig
     if (slots && slots.header) {
@@ -160,17 +159,19 @@ export const Cell = {
       }
       options.on = {
         change (evnt) {
-          $table.triggerRowEvent(evnt, params)
+          $table.triggerRadioRowEvent(evnt, params)
         }
       }
     }
     return [
       h('label', {
-        class: ['s-radio']
+        class: ['s-radio', {
+          [`size--${vSize}`]: vSize
+        }]
       }, [
         h('input', options),
         h('span', {
-          class: ['radio--icon']
+          class: 'radio--icon'
         }),
         labelField ? h('span', {
           class: 'radio--label'
@@ -187,7 +188,9 @@ export const Cell = {
    */
   renderSelectionHeader (h, params) {
     let { $table, column, isHidden } = params
+    let { vSize } = $table
     let { slots, own } = column
+    // 在 v3.0 中废弃 label
     let headerTitle = own.title || own.label
     let options = {
       attrs: {
@@ -210,12 +213,13 @@ export const Cell = {
     return [
       h('label', {
         class: ['s-checkbox', {
+          [`size--${vSize}`]: vSize,
           'is--indeterminate': $table.isIndeterminate
         }]
       }, [
         h('input', options),
         h('span', {
-          class: ['checkbox--icon']
+          class: 'checkbox--icon'
         }),
         headerTitle ? h('span', {
           class: 'checkbox--label'
@@ -225,7 +229,7 @@ export const Cell = {
   },
   renderSelectionCell (h, params) {
     let { $table } = params
-    let { selectConfig = {}, treeConfig, treeIndeterminates } = $table
+    let { vSize, selectConfig = {}, treeConfig, treeIndeterminates } = $table
     let { labelField, checkMethod } = selectConfig
     let { row, isHidden } = params
     let indeterminate = false
@@ -255,13 +259,14 @@ export const Cell = {
     return [
       h('label', {
         class: ['s-checkbox', {
+          [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,
           'is--disabled': isDisabled
         }]
       }, [
         h('input', options),
         h('span', {
-          class: ['checkbox--icon']
+          class: 'checkbox--icon'
         }),
         labelField ? h('span', {
           class: 'checkbox--label'
@@ -274,7 +279,7 @@ export const Cell = {
   },
   renderSelectionCellByProp (h, params) {
     let { $table } = params
-    let { selectConfig = {}, treeConfig, treeIndeterminates } = $table
+    let { vSize, selectConfig = {}, treeConfig, treeIndeterminates } = $table
     let { labelField, checkField: property, checkMethod } = selectConfig
     let { row, isHidden } = params
     let indeterminate = false
@@ -304,13 +309,14 @@ export const Cell = {
     return [
       h('label', {
         class: ['s-checkbox', {
+          [`size--${vSize}`]: vSize,
           'is--indeterminate': indeterminate,
           'is--disabled': isDisabled
         }]
       }, [
         h('input', options),
         h('span', {
-          class: ['checkbox--icon']
+          class: 'checkbox--icon'
         }),
         labelField ? h('span', {
           class: 'checkbox--label'
@@ -343,7 +349,7 @@ export const Cell = {
         }
       }, [
         h('i', {
-          class: ['s-table--expand-icon']
+          class: 's-table--expand-icon'
         })
       ])
     ]
@@ -377,7 +383,7 @@ export const Cell = {
     let { $table, column } = params
     return [
       h('span', {
-        class: ['s-sort-wrapper']
+        class: 's-sort-wrapper'
       }, [
         h('i', {
           class: ['s-sort--asc-btn', icon.sortAsc, {
@@ -420,7 +426,7 @@ export const Cell = {
         }]
       }, [
         h('i', {
-          class: ['s-filter--btn', icon.filter],
+          class: `s-filter--btn ${icon.filter}`,
           on: {
             click (evnt) {
               $table.triggerFilterEvent(evnt, params.column, params)
@@ -451,7 +457,7 @@ export const Cell = {
         class: 's-required-icon'
       }) : null,
       editConfig && editConfig.showIcon === false ? null : h('i', {
-        class: ['s-edit-icon', icon.edit]
+        class: `s-edit-icon ${icon.edit}`
       })
     ].concat(Cell.renderHeader(h, params))
       .concat(sortable || remoteSort ? Cell.renderSortIcon(h, params) : [])
@@ -491,8 +497,7 @@ export const Cell = {
       return slots.default(params, h)
     }
     if (formatter) {
-      params.cellValue = UtilTools.getCellValue(row, column)
-      return [UtilTools.formatText(formatter(params), 1)]
+      return [UtilTools.formatText(UtilTools.getCellLabel(row, column, params), 1)]
     }
     return compConf && compConf.renderCell ? compConf.renderCell.call($table, h, editRender, params, context) : Cell.renderCell(h, params)
   }

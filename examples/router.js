@@ -24,6 +24,7 @@ const TableFixed = () => import(/* webpackChunkName: "base" */ './views/table/ba
 const TableFixedFull = () => import(/* webpackChunkName: "base" */ './views/table/base/FixedFull.vue')
 const TableGroup = () => import(/* webpackChunkName: "base" */ './views/table/base/Group.vue')
 const TableIndex = () => import(/* webpackChunkName: "base" */ './views/table/base/Index.vue')
+const TableCurrent = () => import(/* webpackChunkName: "base" */ './views/table/base/Current.vue')
 const TableRadio = () => import(/* webpackChunkName: "base" */ './views/table/base/Radio.vue')
 const TableSelection = () => import(/* webpackChunkName: "base" */ './views/table/base/Selection.vue')
 const TableSort = () => import(/* webpackChunkName: "base" */ './views/table/base/Sort.vue')
@@ -34,6 +35,7 @@ const TableFormat = () => import(/* webpackChunkName: "base" */ './views/table/b
 
 const TableEvent = () => import(/* webpackChunkName: "table" */ './views/table/advanced/Event.vue')
 const TableTemplate = () => import(/* webpackChunkName: "table" */ './views/table/advanced/Template.vue')
+const TableCustomSort = () => import(/* webpackChunkName: "table" */ './views/table/advanced/CustomSort.vue')
 const TableSpan = () => import(/* webpackChunkName: "table" */ './views/table/advanced/Span.vue')
 const TableFooter = () => import(/* webpackChunkName: "table" */ './views/table/advanced/Footer.vue')
 const TableExport = () => import(/* webpackChunkName: "table" */ './views/table/advanced/Export.vue')
@@ -60,6 +62,7 @@ const GridProxy = () => import(/* webpackChunkName: "grid" */ './views/table/gri
 const GridPageProxy = () => import(/* webpackChunkName: "grid" */ './views/table/grid/PageProxy.vue')
 const GridEdit = () => import(/* webpackChunkName: "grid" */ './views/table/grid/Edit.vue')
 const GridToolbar = () => import(/* webpackChunkName: "grid" */ './views/table/grid/Toolbar.vue')
+const GridCustomToolbar = () => import(/* webpackChunkName: "grid" */ './views/table/grid/CustomToolbar.vue')
 const GridDynamic = () => import(/* webpackChunkName: "grid" */ './views/table/grid/Dynamic.vue')
 const GridTree = () => import(/* webpackChunkName: "grid" */ './views/table/grid/Tree.vue')
 const GridTreeEdit = () => import(/* webpackChunkName: "grid" */ './views/table/grid/TreeEdit.vue')
@@ -111,6 +114,7 @@ const TablePluginAntdConfig = () => import(/* webpackChunkName: "plugin" */ './v
 const TablePluginAntdFilter = () => import(/* webpackChunkName: "plugin" */ './views/table/plugin/AntdFilter.vue')
 const TablePluginAntdPage = () => import(/* webpackChunkName: "plugin" */ './views/table/plugin/AntdPage.vue')
 
+const TableOptimizeScroller = () => import(/* webpackChunkName: "optimize" */ './views/table/optimize/Scroller.vue')
 const TableOptimizeEdit = () => import(/* webpackChunkName: "optimize" */ './views/table/optimize/Edit.vue')
 
 const TableAPI = () => import(/* webpackChunkName: "api" */ './views/table/api/API.vue')
@@ -244,6 +248,11 @@ export default new Router({
       component: TableIndex
     },
     {
+      path: '/table/base/current',
+      name: 'TableCurrent',
+      component: TableCurrent
+    },
+    {
       path: '/table/base/radio',
       name: 'TableRadio',
       component: TableRadio
@@ -287,6 +296,11 @@ export default new Router({
       path: '/table/advanced/template',
       name: 'TableTemplate',
       component: TableTemplate
+    },
+    {
+      path: '/table/advanced/customSort',
+      name: 'TableCustomSort',
+      component: TableCustomSort
     },
     {
       path: '/table/advanced/span',
@@ -402,6 +416,11 @@ export default new Router({
       path: '/table/grid/toolbar',
       name: 'GridToolbar',
       component: GridToolbar
+    },
+    {
+      path: '/table/grid/customToolbar',
+      name: 'GridCustomToolbar',
+      component: GridCustomToolbar
     },
     {
       path: '/table/grid/dynamic',
@@ -632,6 +651,11 @@ export default new Router({
       path: '/table/plugin/antdPage',
       name: 'TablePluginAntdPage',
       component: TablePluginAntdPage
+    },
+    {
+      path: '/table/optimize/scroller',
+      name: 'TableOptimizeScroller',
+      component: TableOptimizeScroller
     },
     {
       path: '/table/optimize/edit',

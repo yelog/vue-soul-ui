@@ -3,15 +3,16 @@
     <p>工具栏：通过 <grid-api-link prop="toolbar"/> 属性配置</p>
     <p>可以通过 <toolbar-api-link prop="storage"/> 开启将列个性化的设置状态保存到本地</p>
 
-    <s-grid
+    <vxe-grid
       border
       height="530"
+      row-id="id"
       :pager-config="tablePage"
       :proxy-config="tableProxy"
       :columns="tableColumn"
       :toolbar="toolbar"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
-      @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
+      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
+      @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -72,15 +73,16 @@ export default {
       ],
       demoCodes: [
         `
-        <s-grid
+        <vxe-grid
           border
           height="530"
+          row-id="id"
           :pager-config="tablePage"
           :proxy-config="tableProxy"
           :columns="tableColumn"
           :toolbar="toolbar"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
-          @toolbar-button-click="toolbarButtonClickEvent"></s-grid>
+          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
+          @toolbar-button-click="toolbarButtonClickEvent"></vxe-grid>
         `,
         `
         export default {

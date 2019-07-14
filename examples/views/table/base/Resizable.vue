@@ -1,7 +1,6 @@
 <template>
   <div>
-    <p>通过设置 <table-api-link prop="resizable"/> 属性可以启用所有列宽拖动</p>
-    <p>也可以通过给列设置 <table-column-api-link prop="resizable"/> 属性控制列是否允许拖动</p>
+    <p>通过设置 <table-api-link prop="resizable"/> 属性启用列宽拖动功能</p>
 
     <s-table
       resizable
@@ -41,6 +40,144 @@
       <code class="xml">{{ demoCodes[2] }}</code>
       <code class="javascript">{{ demoCodes[3] }}</code>
     </pre>
+
+    <p>固定左列宽拖动（固定左不允许超过表格右边距）</p>
+
+    <vxe-table
+      border
+      resizable
+      :data.sync="tableData">
+      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="age" title="Age" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+      <vxe-table-column field="time" title="Time" width="200"></vxe-table-column>
+      <vxe-table-column field="address" title="Address" width="200" show-overflow></vxe-table-column>
+    </vxe-table>
+
+    <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
+
+    <pre>
+      <code class="xml">{{ demoCodes[4] }}</code>
+      <code class="javascript">{{ demoCodes[5] }}</code>
+    </pre>
+
+    <p>固定右列宽拖动（固定右不允许超过表格左边距）</p>
+
+    <vxe-table
+      border
+      resizable
+      :data.sync="tableData">
+      <vxe-table-column type="index" width="60"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" width="200"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" width="200"></vxe-table-column>
+      <vxe-table-column field="age" title="Age" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+      <vxe-table-column field="role" title="Role" width="100" fixed="right"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" width="100" fixed="right"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" width="100" fixed="right"></vxe-table-column>
+    </vxe-table>
+
+    <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
+
+    <pre>
+      <code class="xml">{{ demoCodes[6] }}</code>
+      <code class="javascript">{{ demoCodes[7] }}</code>
+    </pre>
+
+    <p>左右固定列宽拖动（固定左不允许超过固定右，固定右不允许超过固定左）</p>
+
+    <vxe-table
+      border
+      resizable
+      show-overflow
+      show-header-overflow
+      :data.sync="tableData">
+      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="age" title="Age" width="100" fixed="left"></vxe-table-column>
+      <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+      <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+      <vxe-table-column field="date" title="Date" width="100" fixed="right"></vxe-table-column>
+      <vxe-table-column field="time" title="Time" width="100" fixed="right"></vxe-table-column>
+      <vxe-table-column field="address" title="Address" width="100" fixed="right"></vxe-table-column>
+    </vxe-table>
+
+    <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
+
+    <pre>
+      <code class="xml">{{ demoCodes[8] }}</code>
+      <code class="javascript">{{ demoCodes[9] }}</code>
+    </pre>
+
+    <p>分组表头拖动（只允许列拖动，不允许分组标题拖动）</p>
+
+    <vxe-table
+      border
+      resizable
+      :data.sync="tableData">
+      <vxe-table-column title="基本信息">
+        <vxe-table-column type="index" width="60"></vxe-table-column>
+        <vxe-table-column field="name" title="Name"></vxe-table-column>
+      </vxe-table-column>
+      <vxe-table-column title="更多信息">
+        <vxe-table-column field="role" title="Role"></vxe-table-column>
+        <vxe-table-column field="sex" title="Sex"></vxe-table-column>
+        <vxe-table-column title="详细信息">
+          <vxe-table-column field="sex" title="Sex"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" width="140" show-overflow></vxe-table-column>
+        </vxe-table-column>
+      </vxe-table-column>
+      <vxe-table-column field="address" title="Address" width="200" show-overflow></vxe-table-column>
+    </vxe-table>
+
+    <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
+
+    <pre>
+      <code class="xml">{{ demoCodes[10] }}</code>
+      <code class="javascript">{{ demoCodes[11] }}</code>
+    </pre>
+
+    <p>左右固定列的分组表头拖动（只允许列拖动，不允许分组标题拖动）</p>
+
+    <vxe-table
+      border
+      resizable
+      :data.sync="tableData">
+      <vxe-table-column title="基本信息">
+        <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+        <vxe-table-column field="name" title="Name" fixed="left" width="100"></vxe-table-column>
+      </vxe-table-column>
+      <vxe-table-column title="更多信息">
+        <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
+        <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
+        <vxe-table-column title="详细信息">
+          <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
+        </vxe-table-column>
+      </vxe-table-column>
+      <vxe-table-column title="其他信息">
+        <vxe-table-column field="age" title="Age" width="100" fixed="right" show-overflow></vxe-table-column>
+        <vxe-table-column field="address" title="Address" width="100" fixed="right" show-overflow></vxe-table-column>
+      </vxe-table-column>
+    </vxe-table>
+
+    <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
+
+    <pre>
+      <code class="xml">{{ demoCodes[12] }}</code>
+      <code class="javascript">{{ demoCodes[13] }}</code>
+    </pre>
   </div>
 </template>
 
@@ -72,7 +209,7 @@ export default {
             }
           },
           created () {
-            this.tableData = window.MOCK_DATA_LIST.slice(0, 6)
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
           }
         }
         `,
@@ -98,7 +235,165 @@ export default {
             }
           },
           created () {
-            this.tableData = window.MOCK_DATA_LIST.slice(0, 6)
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
+          }
+        }
+        `,
+        `
+        <vxe-table
+          border
+          resizable
+          :data.sync="tableData">
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="age" title="Age" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+          <vxe-table-column field="time" title="Time" width="200"></vxe-table-column>
+          <vxe-table-column field="address" title="Address" width="200" show-overflow></vxe-table-column>
+        </vxe-table>
+        `,
+        `
+        export default {
+          data () {
+            return {
+              tableData: []
+            }
+          },
+          created () {
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
+          }
+        }
+        `,
+        `
+        <vxe-table
+          border
+          resizable
+          :data.sync="tableData">
+          <vxe-table-column type="index" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" width="200"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" width="200"></vxe-table-column>
+          <vxe-table-column field="age" title="Age" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" width="100" fixed="right"></vxe-table-column>
+          <vxe-table-column field="time" title="Time" width="100" fixed="right"></vxe-table-column>
+          <vxe-table-column field="address" title="Address" width="100" fixed="right"></vxe-table-column>
+        </vxe-table>
+        `,
+        `
+        export default {
+          data () {
+            return {
+              tableData: []
+            }
+          },
+          created () {
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
+          }
+        }
+        `,
+        `
+        <vxe-table
+          border
+          resizable
+          show-overflow
+          show-header-overflow
+          :data.sync="tableData">
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="age" title="Age" width="100" fixed="left"></vxe-table-column>
+          <vxe-table-column field="atrr1" title="atrr1" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr2" title="atrr2" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr3" title="atrr3" width="200"></vxe-table-column>
+          <vxe-table-column field="atrr4" title="atrr4" width="200"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" width="100" fixed="right"></vxe-table-column>
+          <vxe-table-column field="time" title="Time" width="100" fixed="right"></vxe-table-column>
+          <vxe-table-column field="address" title="Address" width="100" fixed="right"></vxe-table-column>
+        </vxe-table>
+        `,
+        `
+        export default {
+          data () {
+            return {
+              tableData: []
+            }
+          },
+          created () {
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
+          }
+        }
+        `,
+        `
+        <vxe-table
+          border
+          resizable
+          :data.sync="tableData">
+          <vxe-table-column title="基本信息">
+            <vxe-table-column type="index" width="60"></vxe-table-column>
+            <vxe-table-column field="name" title="Name"></vxe-table-column>
+          </vxe-table-column>
+          <vxe-table-column title="更多信息">
+            <vxe-table-column field="role" title="Role"></vxe-table-column>
+            <vxe-table-column field="sex" title="Sex"></vxe-table-column>
+            <vxe-table-column title="详细信息">
+              <vxe-table-column field="sex" title="Sex"></vxe-table-column>
+              <vxe-table-column field="date" title="Date" width="140" show-overflow></vxe-table-column>
+            </vxe-table-column>
+          </vxe-table-column>
+          <vxe-table-column field="address" title="Address" width="200" show-overflow></vxe-table-column>
+        </vxe-table>
+        `,
+        `
+        export default {
+          data () {
+            return {
+              tableData: []
+            }
+          },
+          created () {
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
+          }
+        }
+        `,
+        `
+        <vxe-table
+          border
+          resizable
+          :data.sync="tableData">
+          <vxe-table-column title="基本信息">
+            <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+            <vxe-table-column field="name" title="Name" fixed="left" width="100"></vxe-table-column>
+          </vxe-table-column>
+          <vxe-table-column title="更多信息">
+            <vxe-table-column field="role" title="Role" width="300"></vxe-table-column>
+            <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
+            <vxe-table-column title="详细信息">
+              <vxe-table-column field="sex" title="Sex" width="300"></vxe-table-column>
+              <vxe-table-column field="date" title="Date" width="300"></vxe-table-column>
+            </vxe-table-column>
+          </vxe-table-column>
+          <vxe-table-column title="其他信息">
+            <vxe-table-column field="age" title="Age" width="100" fixed="right" show-overflow></vxe-table-column>
+            <vxe-table-column field="address" title="Address" width="100" fixed="right" show-overflow></vxe-table-column>
+          </vxe-table-column>
+        </vxe-table>
+        `,
+        `
+        export default {
+          data () {
+            return {
+              tableData: []
+            }
+          },
+          created () {
+            this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
           }
         }
         `
@@ -106,7 +401,7 @@ export default {
     }
   },
   created () {
-    this.tableData = window.MOCK_DATA_LIST.slice(0, 6)
+    this.tableData = window.MOCK_DATA_LIST.slice(0, 3)
   },
   mounted () {
     Array.from(this.$el.querySelectorAll('pre code')).forEach((block) => {

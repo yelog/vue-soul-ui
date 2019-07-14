@@ -5,11 +5,12 @@
     <s-grid
       border
       height="530"
+      row-id="id"
       :loading="loading"
       :pager-config="tablePage"
       :columns="tableColumn"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
+      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
       @current-page-change="handleCurrentChange"
       @page-size-change="handleSizeChange"></s-grid>
 
@@ -50,11 +51,12 @@ export default {
         <s-grid
           border
           height="530"
+          row-id="id"
           :loading="loading"
           :pager-config="tablePage"
           :columns="tableColumn"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}"
+          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
           @current-page-change="handleCurrentChange"
           @page-size-change="handleSizeChange"></s-grid>
         `,

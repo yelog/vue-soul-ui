@@ -17,7 +17,7 @@
       </el-form-item>
     </el-form>
 
-    <s-toolbar setting>
+    <vxe-toolbar setting>
       <template v-slot:buttons>
         <el-button @click="insertEvent">新增</el-button>
         <el-button @click="saveEvent">保存</el-button>
@@ -31,33 +31,34 @@
           </el-dropdown-menu>
         </el-dropdown>
       </template>
-    </s-toolbar>
+    </vxe-toolbar>
 
-    <s-table
+    <vxe-table
       border
       resizable
       show-overflow
       highlight-hover-row
       ref="xTable"
-      class="s-table-element"
+      class="vxe-table-element"
       height="460"
+      row-id="id"
       :loading="loading"
       :data.sync="tableData"
       :edit-rules="validRules"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-      <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-      <s-table-column type="index" width="60" fixed="left"></s-table-column>
-      <s-table-column field="name" title="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></s-table-column>
-      <s-table-column field="role" title="ElAutocomplete" width="160" :edit-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions}}"></s-table-column>
-      <s-table-column field="age" title="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></s-table-column>
-      <s-table-column field="sex" title="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></s-table-column>
-      <s-table-column field="region" title="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></s-table-column>
-      <s-table-column field="date" title="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></s-table-column>
-      <s-table-column field="date1" title="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></s-table-column>
-      <s-table-column field="date5" title="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></s-table-column>
-      <s-table-column field="flag" title="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></s-table-column>
-      <s-table-column field="rate" title="ElRate" width="200" fixed="right" :edit-render="{name: 'ElRate', type: 'visible'}"></s-table-column>
-    </s-table>
+      :edit-config="{trigger: 'click', mode: 'row'}">
+      <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+      <vxe-table-column field="name" title="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-table-column>
+      <vxe-table-column field="role" title="ElAutocomplete" width="160" :edit-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions}}"></vxe-table-column>
+      <vxe-table-column field="age" title="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
+      <vxe-table-column field="sex" title="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></vxe-table-column>
+      <vxe-table-column field="region" title="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></vxe-table-column>
+      <vxe-table-column field="date" title="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-table-column>
+      <vxe-table-column field="date1" title="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></vxe-table-column>
+      <vxe-table-column field="date5" title="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></vxe-table-column>
+      <vxe-table-column field="flag" title="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-table-column>
+      <vxe-table-column field="rate" title="ElRate" width="200" fixed="right" :edit-render="{name: 'ElRate', type: 'visible'}"></vxe-table-column>
+    </vxe-table>
 
     <el-pagination
       @size-change="handleSizeChange"
@@ -126,7 +127,7 @@ export default {
             </el-form-item>
           </el-form>
 
-          <s-toolbar setting>
+          <vxe-toolbar setting>
             <template v-slot:buttons>
               <el-button @click="insertEvent">新增</el-button>
               <el-button @click="saveEvent">保存</el-button>
@@ -140,34 +141,35 @@ export default {
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
-          </s-toolbar>
+          </vxe-toolbar>
 
-          <s-table
+          <vxe-table
             border
             resizable
             show-overflow
             highlight-hover-row
             ref="xTable"
-            class="s-table-element"
+            class="vxe-table-element"
             height="460"
             size="small"
+            row-id="id"
             :loading="loading"
             :data.sync="tableData"
             :edit-rules="validRules"
-            :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-            <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-            <s-table-column type="index" width="60" fixed="left"></s-table-column>
-            <s-table-column field="name" title="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></s-table-column>
-            <s-table-column field="role" title="ElAutocomplete" width="160" :edit-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions}}"></s-table-column>
-            <s-table-column field="age" title="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></s-table-column>
-            <s-table-column field="sex" title="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></s-table-column>
-            <s-table-column field="region" title="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></s-table-column>
-            <s-table-column field="date" title="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></s-table-column>
-            <s-table-column field="date1" title="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></s-table-column>
-            <s-table-column field="date5" title="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></s-table-column>
-            <s-table-column field="flag" title="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></s-table-column>
-            <s-table-column field="rate" title="ElRate" width="200" fixed="right" :edit-render="{name: 'ElRate', type: 'visible'}"></s-table-column>
-          </s-table>
+            :edit-config="{trigger: 'click', mode: 'row'}">
+            <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+            <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+            <vxe-table-column field="name" title="ElInput" min-width="140" :edit-render="{name: 'ElInput'}"></vxe-table-column>
+            <vxe-table-column field="role" title="ElAutocomplete" width="160" :edit-render="{name: 'ElAutocomplete', props: {fetchSuggestions: roleFetchSuggestions}}"></vxe-table-column>
+            <vxe-table-column field="age" title="ElInputNumber" width="160" :edit-render="{name: 'ElInputNumber', props: {max: 35, min: 18}}"></vxe-table-column>
+            <vxe-table-column field="sex" title="ElSelect" width="140" :edit-render="{name: 'ElSelect', options: sexList}"></vxe-table-column>
+            <vxe-table-column field="region" title="ElCascader" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></vxe-table-column>
+            <vxe-table-column field="date" title="ElDatePicker" width="200" :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy/MM/dd'}}"></vxe-table-column>
+            <vxe-table-column field="date1" title="DateTimePicker" width="220" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}"></vxe-table-column>
+            <vxe-table-column field="date5" title="ElTimeSelect" width="200" :edit-render="{name: 'ElTimeSelect', props: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}}}"></vxe-table-column>
+            <vxe-table-column field="flag" title="ElSwitch" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></vxe-table-column>
+            <vxe-table-column field="rate" title="ElRate" width="200" fixed="right" :edit-render="{name: 'ElRate', type: 'visible'}"></vxe-table-column>
+          </vxe-table>
 
           <el-pager
             @size-change="handleSizeChange"

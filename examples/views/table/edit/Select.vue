@@ -1,18 +1,19 @@
 <template>
   <div>
-    <p>单元格点击编辑，还可以通过 edit-actived 事件处理点击后自动选中文本</p>
+    <p>单元格点击编辑，还可以通过 <table-column-api-link prop="autoselect"/> 开启默认选中</p>
 
-    <s-table
+    <vxe-table
       border
       resizable
       show-overflow
+      row-id="id"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name" :edit-render="{name: 'input', autoselect: true}"></s-table-column>
-      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
-    </s-table>
+      :edit-config="{trigger: 'click', mode: 'cell'}">
+      <vxe-table-column type="index" width="60"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input', autoselect: true}"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -32,17 +33,18 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <s-table
+        <vxe-table
           border
           resizable
           show-overflow
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-          <s-table-column type="index" width="60"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{name: 'input', autoselect: true}"></s-table-column>
-          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
-        </s-table>
+          :edit-config="{trigger: 'click', mode: 'cell'}">
+          <vxe-table-column type="index" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input', autoselect: true}"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column field="date" title="Date" :edit-render="{name: 'input'}"></vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {

@@ -3,14 +3,15 @@
     <p>树表格、增删改查、工具栏</p>
     <p>可以通过 <toolbar-api-link prop="storage"/> 开启将列个性化的设置状态保存到本地</p>
 
-    <s-grid
+    <vxe-grid
       highlight-hover-row
+      row-id="id"
       :proxy-config="tableProxy"
       :columns="tableColumn"
       :toolbar="toolbar"
       :select-config="{labelField: 'id'}"
-      :tree-config="{key: 'id', children: 'children'}"
-      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
+      :tree-config="{children: 'children'}"
+      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -59,14 +60,15 @@ export default {
       ],
       demoCodes: [
         `
-        <s-grid
+        <vxe-grid
           highlight-hover-row
+          row-id="id"
           :proxy-config="tableProxy"
           :columns="tableColumn"
           :toolbar="toolbar"
           :select-config="{labelField: 'id'}"
-          :tree-config="{key: 'id', children: 'children'}"
-          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></s-grid>
+          :tree-config="{children: 'children'}"
+          :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"></vxe-grid>
         `,
         `
         export default {

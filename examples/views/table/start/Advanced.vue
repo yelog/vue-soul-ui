@@ -22,7 +22,7 @@
       <code class="javascript">{{ demoCodes[2] }}</code>
       <code class="html">{{ demoCodes[3] }}</code>
     </pre>
-    <h4>例子：通过 JSX 实现更加简单，可维护高</h4>
+    <h4>例子：（推荐）通过 JSX 实现更加简单，可维护性好</h4>
     <pre>
       <code class="javascript">{{ demoCodes[4] }}</code>
       <code class="html">{{ demoCodes[5] }}</code>
@@ -47,7 +47,7 @@ export default {
     return {
       demoCodes: [
         `
-        STable.renderer.mixin({
+        VXETable.renderer.mixin({
           MyFilter: {
             // 筛选模板
             renderFilter (h, filterRender, params, context) {
@@ -78,19 +78,20 @@ export default {
         })
         `,
         `
-        <s-table
+        <vxe-table
           border
           height="600"
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-          <s-table-column type="index" width="60" fixed="left"></s-table-column>
-          <s-table-column field="age" title="Age" :filters="[{data: null}]" :filter-render="{name: 'MyFilter'}"></s-table-column>
-          <s-table-column field="name" title="Name"></s-table-column>
-        </s-table>
+          :edit-config="{trigger: 'click', mode: 'row'}">
+          <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="age" title="Age" :filters="[{data: null}]" :filter-render="{name: 'MyFilter'}"></vxe-table-column>
+          <vxe-table-column field="name" title="Name"></vxe-table-column>
+        </vxe-table>
         `,
         `
-        STable.renderer.add('MyCell', {
+        VXETable.renderer.add('MyCell', {
           autofocus: '.my-cell',
           renderEdit (h, editRender, params) {
             let { row, column } = params
@@ -120,19 +121,20 @@ export default {
         })
         `,
         `
-        <s-table
+        <vxe-table
           border
           height="600"
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-          <s-table-column type="index" width="60" fixed="left"></s-table-column>
-          <s-table-column field="age" title="Age"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{name: 'MyCell'}"></s-table-column>
-        </s-table>
+          :edit-config="{trigger: 'click', mode: 'row'}">
+          <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="age" title="Age"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{name: 'MyCell'}"></vxe-table-column>
+        </vxe-table>
         `,
         `
-        STable.renderer.add('MyCell', {
+        VXETable.renderer.add('MyCell', {
           autofocus: '.my-cell',
           renderEdit (h, editRender, { row, column }) {
             return [
@@ -147,18 +149,19 @@ export default {
         })
         `,
         `
-        <s-table
+        <vxe-table
           border
           height="600"
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'row'}">
-          <s-table-column type="selection" width="60" fixed="left"></s-table-column>
-          <s-table-column type="index" width="60" fixed="left"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{name: 'MyCell'}"></s-table-column>
-        </s-table>
+          :edit-config="{trigger: 'click', mode: 'row'}">
+          <vxe-table-column type="selection" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column type="index" width="60" fixed="left"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{name: 'MyCell'}"></vxe-table-column>
+        </vxe-table>
         `,
         `
-        STable.interceptor.add('event.clear_actived', (params, event) => {
+        VXETable.interceptor.add('event.clear_actived', (params, event) => {
           // 比如点击了某个组件的弹出层面板之后，此时被激活单元格不应该被自动关闭，通过返回 false 可以阻止默认的行为。
           if (event.target.className.indexOf('other-popper') > -1) {
             return false

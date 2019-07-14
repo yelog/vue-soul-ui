@@ -6,14 +6,15 @@
     <p><table-column-api-link prop="filter"/>：自定义筛选模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
     <p><table-column-api-link prop="edit"/>：自定义可编辑模板（建议使用<router-link :to="{name: 'Advanced'}">渲染器</router-link>，可以更好的复用）</p>
 
-    <s-grid
+    <vxe-grid
       border
       height="400"
+      row-id="id"
       :toolbar="toolbar"
       :columns="tableColumn"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-    </s-grid>
+      :edit-config="{trigger: 'click', mode: 'cell'}">
+    </vxe-grid>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -54,7 +55,7 @@ export default {
           slots: {
             default: ({ row, column }) => {
               return [
-                <a class="link" href="https://yelog.github.io/vue-soul-ui/">链接：{ row.sex }</a>
+                <a class="link" href="https://xuliangzhan.github.io/vxe-table/">链接：{ row.sex }</a>
               ]
             },
             header: ({ column }) => {
@@ -104,8 +105,8 @@ export default {
             return [
               <button>按钮</button>,
               <input type="text"/>,
-              <s-button>按钮1</s-button>,
-              <s-button>按钮2</s-button>
+              <vxe-button>按钮1</vxe-button>,
+              <vxe-button>按钮2</vxe-button>
             ]
           }
         }
@@ -113,13 +114,14 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <s-grid
+        <vxe-grid
           border
           height="400"
+          row-id="id"
           :columns="tableColumn"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'cell'}">
-        </s-grid>
+          :edit-config="{trigger: 'click', mode: 'cell'}">
+        </vxe-grid>
         `,
         `
         export default {
@@ -149,7 +151,7 @@ export default {
                   slots: {
                     default: ({ row, column }) => {
                       return [
-                        <a class="link" href="https://yelog.github.io/vue-soul-ui/">链接：{ row.sex }</a>
+                        <a class="link" href="https://xuliangzhan.github.io/vxe-table/">链接：{ row.sex }</a>
                       ]
                     },
                     header: ({ column }) => {
@@ -199,8 +201,8 @@ export default {
                     return [
                       <button>按钮</button>,
                       <input type="text"/>,
-                      <s-button>按钮1</s-button>,
-                      <s-button>按钮2</s-button>
+                      <vxe-button>按钮1</vxe-button>,
+                      <vxe-button>按钮2</vxe-button>
                     ]
                   }
                 }

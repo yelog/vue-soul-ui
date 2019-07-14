@@ -205,6 +205,22 @@ const apis = [
         list: []
       },
       {
+        name: 'align',
+        descKey: 'app.api.table.desc.align',
+        type: 'String',
+        enum: 'left（居左）,center（居中）,right（居右）',
+        defVal: 'left',
+        list: []
+      },
+      {
+        name: 'header-align',
+        descKey: 'app.api.table.desc.headerAlign',
+        type: 'String',
+        enum: 'left（居左）,center（居中）,right（居右）',
+        defVal: '继承 align',
+        list: []
+      },
+      {
         name: 'show-header',
         descKey: 'app.api.table.desc.showHeader',
         type: 'Boolean',
@@ -373,6 +389,14 @@ const apis = [
         list: []
       },
       {
+        name: 'row-id',
+        descKey: 'app.api.table.desc.rowId',
+        type: 'Number, String',
+        enum: '',
+        defVal: '',
+        list: []
+      },
+      {
         name: 'radio-config',
         descKey: 'app.api.table.desc.radioConfig',
         type: 'Object',
@@ -386,6 +410,14 @@ const apis = [
             enum: '',
             defVal: '',
             list: []
+          },
+          {
+            name: 'trigger',
+            desc: '触发方式',
+            type: 'String',
+            enum: 'default（默认）,cell（点击单元格触发）,row（点击行触发）',
+            defVal: 'default',
+            list: []
           }
         ]
       },
@@ -397,16 +429,8 @@ const apis = [
         defVal: '',
         list: [
           {
-            name: 'key',
-            desc: '行数据中的唯一主键',
-            type: 'String',
-            enum: '',
-            defVal: '',
-            list: []
-          },
-          {
             name: 'reserve',
-            desc: '是否保留勾选状态，对于某些场景下非常有用，比如分页之后还保留之前选中的状态（需要设置 rowKey || key）',
+            desc: '是否保留勾选状态，对于某些场景下非常有用，比如分页之后还保留之前选中的状态（需要设置 row-id || row-key）',
             type: 'String',
             enum: '',
             defVal: 'false',
@@ -438,7 +462,7 @@ const apis = [
           },
           {
             name: 'checkRowKeys',
-            desc: '默认勾选开指定行（需要设置 rowKey || key）',
+            desc: '默认勾选开指定行（需要设置 row-id || row-key）',
             type: 'Array',
             enum: '',
             defVal: '',
@@ -495,14 +519,6 @@ const apis = [
         defVal: '',
         list: [
           {
-            name: 'key',
-            desc: '行数据中的唯一主键',
-            type: 'String',
-            enum: '',
-            defVal: '',
-            list: []
-          },
-          {
             name: 'expandAll',
             desc: '默认展开所有行',
             type: 'Boolean',
@@ -512,7 +528,7 @@ const apis = [
           },
           {
             name: 'expandRowKeys',
-            desc: '默认展开指定行（需要设置 rowKey || key）',
+            desc: '默认展开指定行（需要设置 row-id || row-key）',
             type: 'Array',
             enum: '',
             defVal: '',
@@ -543,14 +559,6 @@ const apis = [
         enum: '',
         defVal: '',
         list: [
-          {
-            name: 'key',
-            desc: '行数据中的唯一主键（需要设置 rowKey 或 key）',
-            type: 'String',
-            enum: '',
-            defVal: '',
-            list: []
-          },
           {
             name: 'children',
             desc: '树子节点的属性',
@@ -724,14 +732,6 @@ const apis = [
         defVal: '',
         list: [
           {
-            name: 'key',
-            desc: '行数据中的唯一主键（需要设置 rowKey 或 key）',
-            type: 'String',
-            enum: '',
-            defVal: '',
-            list: []
-          },
-          {
             name: 'trigger',
             desc: '触发方式',
             type: 'String',
@@ -792,7 +792,7 @@ const apis = [
             name: 'message',
             desc: '校验提示框的方式',
             type: 'String',
-            enum: 'none（关闭提示）, default（默认）, tooltip（强制使用 tooltip）',
+            enum: 'default（如果不设置高度，则默认第一行使用 tooltip，之后使用 inline）, none（关闭提示）, inline（强制使用内联的提示）, tooltip（强制使用 tooltip 提示）',
             defVal: 'default',
             list: []
           },
@@ -1029,11 +1029,19 @@ const apis = [
     defVal: '',
     list: [
       {
-        name: 'select-all',
-        descKey: 'app.api.table.desc.selectAll',
+        name: 'current-change',
+        descKey: 'app.api.table.desc.currentChange',
         type: '',
         enum: '',
-        defVal: '{selection,checked},event',
+        defVal: '{row,rowIndex,$rowIndex,column,columnIndex,$columnIndex,cell},event',
+        list: []
+      },
+      {
+        name: 'radio-change',
+        descKey: 'app.api.table.desc.radioChange',
+        type: '',
+        enum: '',
+        defVal: '{row,rowIndex,$rowIndex,column,columnIndex,$columnIndex,cell},event',
         list: []
       },
       {
@@ -1041,7 +1049,15 @@ const apis = [
         descKey: 'app.api.table.desc.selectChange',
         type: '',
         enum: '',
-        defVal: '{selection,checked,row,column},event',
+        defVal: '{selection,checked,row,rowIndex,$rowIndex,column,columnIndex,$columnIndex,cell},event',
+        list: []
+      },
+      {
+        name: 'select-all',
+        descKey: 'app.api.table.desc.selectAll',
+        type: '',
+        enum: '',
+        defVal: '{selection,checked},event',
         list: []
       },
       {
@@ -1065,7 +1081,7 @@ const apis = [
         descKey: 'app.api.table.desc.headerCellClick',
         type: '',
         enum: '',
-        defVal: '{$rowIndex,column,columnIndex,$columnIndex,cell},event',
+        defVal: '{triggerSort,triggerFilter,$rowIndex,column,columnIndex,$columnIndex,cell},event',
         list: []
       },
       {
@@ -1214,6 +1230,14 @@ const apis = [
         list: []
       },
       {
+        name: 'refreshData()',
+        desc: '刷新数据（对于某些特殊的场景可能会用到，比如树层节点元素发生变动）',
+        type: 'Promise',
+        enum: '',
+        defVal: '',
+        list: []
+      },
+      {
         name: 'loadColumn(columns)',
         desc: '加载列配置（对于表格列需要重载、局部递增场景下可能会用到）',
         type: 'Promise',
@@ -1302,6 +1326,14 @@ const apis = [
         list: []
       },
       {
+        name: 'getRowNode(trElem)',
+        desc: '根据 tr 元素获取对应的 row 信息',
+        type: 'Object',
+        enum: '',
+        defVal: 'trElem',
+        list: []
+      },
+      {
         name: 'getColumns(columnIndex)',
         desc: '获取表格所有列，也可以指定索引获取列',
         type: 'Array',
@@ -1351,7 +1383,15 @@ const apis = [
       },
       {
         name: 'getCurrentRow()',
-        desc: '用于单选行，获取当前选中的数据',
+        desc: '用于当前行，获取当前行的数据',
+        type: 'Row',
+        enum: '',
+        defVal: '',
+        list: []
+      },
+      {
+        name: 'getRadioRow()',
+        desc: '用于单选行，获取当已选中的数据',
         type: 'Row',
         enum: '',
         defVal: '',
@@ -1463,7 +1503,7 @@ const apis = [
       },
       {
         name: 'setCurrentRow(row)',
-        desc: '用于单选行，设置某一行为选中状态',
+        desc: '用于当前行，设置某一行为高亮状态',
         type: 'Promise',
         enum: '',
         defVal: 'row',
@@ -1471,10 +1511,18 @@ const apis = [
       },
       {
         name: 'setCurrentColumn(column)',
-        desc: '用于单选列，设置某一列为选中状态',
+        desc: '用于当前列，设置某列行为高亮状态',
         type: 'Promise',
         enum: '',
         defVal: 'column',
+        list: []
+      },
+      {
+        name: 'setRadioRow(row)',
+        desc: '用于单选行，设置某一行为选中状态',
+        type: 'Promise',
+        enum: '',
+        defVal: 'row',
         list: []
       },
       {
@@ -1527,7 +1575,7 @@ const apis = [
       },
       {
         name: 'clearCurrentRow()',
-        desc: '用于单选行，清空用户的选择',
+        desc: '用于当前行，清空当前高亮的状态',
         type: 'Promise',
         enum: '',
         defVal: '',
@@ -1535,7 +1583,15 @@ const apis = [
       },
       {
         name: 'clearCurrentColumn()',
-        desc: '用于单选列，清空用户的选择列',
+        desc: '用于当前列，清空当前高亮的状态',
+        type: 'Promise',
+        enum: '',
+        defVal: '',
+        list: []
+      },
+      {
+        name: 'clearRadioRow()',
+        desc: '用于单选行，清空用户的选择',
         type: 'Promise',
         enum: '',
         defVal: '',
@@ -1694,17 +1750,9 @@ const apis = [
         list: []
       },
       {
-        name: 'isScrollXLoad()',
-        desc: '判断是否启用了横向 X 可视渲染',
-        type: 'Boolean',
-        enum: '',
-        defVal: '',
-        list: []
-      },
-      {
-        name: 'isScrollYLoad()',
-        desc: '判断是否启用了纵向 Y 可视渲染',
-        type: 'Boolean',
+        name: 'getVirtualScroller()',
+        desc: '获取虚拟滚动相关状态',
+        type: 'Object',
         enum: '',
         defVal: '',
         list: []
@@ -1734,11 +1782,11 @@ const apis = [
         list: []
       },
       {
-        name: 'sort(field,order)',
-        desc: '手动对表格进行排序',
+        name: 'sort(field, order)',
+        desc: '手动对表格进行排序；如果 order 为空则自动切换排序',
         type: 'Promise',
         enum: '',
-        defVal: 'field,order',
+        defVal: 'field, order?',
         list: []
       },
       {
@@ -1746,7 +1794,7 @@ const apis = [
         desc: '表格校验函数，如果指定 row 或 rows 则校验指定一行或多行，否则校验整个表格。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise',
         type: 'Promise',
         enum: '',
-        defVal: 'rows?,callback?',
+        defVal: 'rows?, callback?',
         list: []
       },
       {
@@ -1754,7 +1802,7 @@ const apis = [
         desc: '表格完整校验函数，和 validate 的区别就是会对数据的所有规则进行完整校验',
         type: 'Promise',
         enum: '',
-        defVal: 'rows?,callback?',
+        defVal: 'rows?, callback?',
         list: []
       },
       {

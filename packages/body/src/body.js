@@ -10,19 +10,22 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     _e,
     $listeners: tableListeners,
     tableData,
+    height,
     overflowX,
     scrollXLoad,
     scrollYLoad,
     highlightCurrentRow,
     showOverflow: allColumnOverflow,
+    align: allAlign,
     cellClassName,
     spanMethod,
+    radioConfig = {},
     selectConfig = {},
     treeConfig = {},
     mouseConfig = {},
     editConfig,
     editRules,
-    validConfig = {},
+    validOpts,
     editStore,
     validStore
   } = $table
@@ -34,7 +37,8 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   } = column
   let { actived } = editStore
   let fixedHiddenColumn = fixedType ? column.fixed !== fixedType : column.fixed && overflowX
-  let cellOverflow = XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow) ? allColumnOverflow : showOverflow
+  let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
+  let cellAlign = align || allAlign
   let showEllipsis = cellOverflow === 'ellipsis'
   let showTitle = cellOverflow === 'title'
   let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
@@ -42,7 +46,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let isDirty
   let tdOns = {}
   let validError = validStore.row === row && validStore.column === column
-  let hasDefaultTip = editRules && (!validConfig.message || validConfig.message === 'default')
+  let hasDefaultTip = editRules && (validOpts.message === 'default' ? (height || tableData.length > 1) : validOpts.message === 'inline')
   let attrs = { 'data-index': columnIndex }
   let triggerDblclick = (editRender && editConfig && editConfig.trigger === 'dblclick')
   let params = { $table, $seq, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, data: tableData }
@@ -87,6 +91,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     tableListeners['cell-click'] ||
     mouseConfig.checked ||
     (editRender && editConfig) ||
+    (radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) ||
     (selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) ||
     (treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
     tdOns.click = evnt => {
@@ -114,7 +119,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   }
   return h('td', {
     class: ['s-body--column', column.id, {
-      [`col--${align}`]: align,
+      [`col--${cellAlign}`]: cellAlign,
       'col--edit': editRender,
       'col--index': column.type === 'index',
       'col--ellipsis': hasEllipsis,
@@ -138,7 +143,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
         title: showTitle ? UtilTools.getCellLabel(row, column, params) : null
       }
     }, column.renderCell(h, params)),
-    hasDefaultTip ? validError && tableData.length >= 2 ? h('div', {
+    hasDefaultTip ? validError ? h('div', {
       class: 's-cell--valid',
       style: validStore.rule && validStore.rule.width ? {
         width: `${validStore.rule.width}px`
@@ -153,6 +158,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
 
 function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, tableColumn) {
   let {
+    rowKey,
     highlightHoverRow,
     rowClassName,
     treeConfig,
@@ -179,7 +185,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         $table.triggerHoverEvent(evnt, { row, rowIndex })
       }
     }
-    let rowId = UtilTools.getRowId($table, row, rowIndex)
+    let rowPrimaryKey = UtilTools.getRowPrimaryKey($table, row, rowIndex)
     rows.push(
       h('tr', {
         class: ['s-body--row', {
@@ -187,9 +193,9 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
           'row--new': editStore.insertList.indexOf(row) > -1
         }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, seq, row, rowIndex }) : rowClassName : ''],
         attrs: {
-          'data-rowid': rowId
+          'data-rowid': rowPrimaryKey
         },
-        key: rowId,
+        key: treeConfig ? rowPrimaryKey : (rowKey ? XEUtils.get(row, rowKey) : $rowIndex),
         on: trOn
       }, tableColumn.map((column, $columnIndex) => {
         let columnIndex = getColumnMapIndex(column)
@@ -364,7 +370,7 @@ export default {
       /**
        * 选中边框线
        */
-      !fixedType ? h('div', {
+      !fixedType && (mouseConfig.checked || keyboardConfig.isCut) ? h('div', {
         class: 's-table--borders'
       }, [
         mouseConfig.checked ? h('div', {

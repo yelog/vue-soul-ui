@@ -2,30 +2,31 @@
   <div>
     <p>调用 <table-api-link prop="revert"/> 还原数据</p>
 
-    <s-toolbar>
+    <vxe-toolbar>
       <template v-slot:buttons>
-        <s-button @click="$refs.xTable.revert()">还原全部</s-button>
-        <s-button @click="$refs.xTable.removeSelecteds()">删除选中</s-button>
+        <vxe-button @click="$refs.xTable.revert()">还原全部</vxe-button>
+        <vxe-button @click="$refs.xTable.removeSelecteds()">删除选中</vxe-button>
       </template>
-    </s-toolbar>
+    </vxe-toolbar>
 
-    <s-table
+    <vxe-table
       ref="xTable"
       border
       show-overflow
+      row-id="id"
       :data.sync="tableData"
-      :edit-config="{key: 'id', trigger: 'click', mode: 'cell', showStatus: true}">
-      <s-table-column type="selection" width="60"></s-table-column>
-      <s-table-column type="index" width="60"></s-table-column>
-      <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
-      <s-table-column title="操作">
+      :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
+      <vxe-table-column type="selection" width="60"></vxe-table-column>
+      <vxe-table-column type="index" width="60"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
+      <vxe-table-column title="操作">
         <template v-slot="{ row }">
-          <s-button @click="$refs.xTable.revert(row)">还原</s-button>
+          <vxe-button @click="$refs.xTable.revert(row)">还原</vxe-button>
         </template>
-      </s-table-column>
-    </s-table>
+      </vxe-table-column>
+    </vxe-table>
 
     <p class="demo-code">{{ $t('app.body.button.showCode') }}</p>
 
@@ -45,30 +46,31 @@ export default {
       tableData: [],
       demoCodes: [
         `
-        <s-toolbar>
+        <vxe-toolbar>
           <template v-slot:buttons>
-            <s-button @click="$refs.xTable.revert()">还原全部</s-button>
-            <s-button @click="$refs.xTable.removeSelecteds()">删除选中</s-button>
+            <vxe-button @click="$refs.xTable.revert()">还原全部</vxe-button>
+            <vxe-button @click="$refs.xTable.removeSelecteds()">删除选中</vxe-button>
           </template>
-        </s-toolbar>
+        </vxe-toolbar>
 
-        <s-table
+        <vxe-table
           ref="xTable"
           border
           show-overflow
+          row-id="id"
           :data.sync="tableData"
-          :edit-config="{key: 'id', trigger: 'click', mode: 'cell', showStatus: true}">
-          <s-table-column type="selection" width="60"></s-table-column>
-          <s-table-column type="index" width="60"></s-table-column>
-          <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column field="age" title="Age" :edit-render="{name: 'input'}"></s-table-column>
-          <s-table-column title="操作">
+          :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}">
+          <vxe-table-column type="selection" width="60"></vxe-table-column>
+          <vxe-table-column type="index" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="Name" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
+          <vxe-table-column title="操作">
             <template v-slot="{ row }">
-              <s-button @click="$refs.xTable.revert(row)">还原</s-button>
+              <vxe-button @click="$refs.xTable.revert(row)">还原</vxe-button>
             </template>
-          </s-table-column>
-        </s-table>
+          </vxe-table-column>
+        </vxe-table>
         `,
         `
         export default {

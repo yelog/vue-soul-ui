@@ -122,6 +122,8 @@
     .s-body--column,
     .s-footer--column {
       border-right: 1px solid $s-table-border-color;
+    }
+    .vxe-body--column {
       &:last-child {
         border-right-color: $s-table-background-color;
       }
@@ -389,7 +391,7 @@
       content: "";
       display: block;
       height: 100%;
-      background-color: $s-table-border-color;
+      background-color: $s-table-resizable-color;
     }
   }
 
