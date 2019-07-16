@@ -11,7 +11,7 @@ const webpackConfig = {
   mode: 'development',
   entry: './examples/entry.js',
   output: {
-    path: path.resolve(process.cwd(), './examples/element-ui/'),
+    path: path.resolve(process.cwd(), './examples/dist/'),
     publicPath: process.env.CI_ENV || '',
     filename: '[name].[hash:7].js',
     chunkFilename: '[name].js'
