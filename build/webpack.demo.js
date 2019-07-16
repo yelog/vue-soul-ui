@@ -22,10 +22,11 @@ const webpackConfig = {
     modules: ['node_modules']
   },
   devServer: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     port: 8085,
     publicPath: '/',
-    hot: true
+    hot: true,
+    disableHostCheck: true
   },
   performance: {
     hints: false
