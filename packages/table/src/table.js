@@ -781,7 +781,7 @@ export default {
         let { treeConfig, tableFullData, fullDataRowIdMap } = this
         let rowPrimaryKey = tr.getAttribute('data-rowid')
         if (treeConfig) {
-          let matchObj = XEUtils.findTree(tableFullData, row => `${row.id}` === rowPrimaryKey, treeConfig)
+          let matchObj = XEUtils.findTree(tableFullData, (row, rowIndex) => UtilTools.getRowPrimaryKey(this, row, rowIndex) === rowPrimaryKey, treeConfig)
           if (matchObj) {
             return matchObj
           }
@@ -790,6 +790,22 @@ export default {
             let rest = fullDataRowIdMap.get(rowPrimaryKey)
             return { item: rest.row, index: rest.index, items: tableFullData }
           }
+        }
+      }
+      return null
+    },
+    getColumnNode (th) {
+      if (th) {
+        let { isGroup, fullColumnIdMap, tableFullColumn } = this
+        let colId = th.getAttribute('data-colid')
+        if (isGroup) {
+          let matchObj = XEUtils.findTree(tableFullColumn, column => column.id === colId, headerProps)
+          if (matchObj) {
+            return matchObj
+          }
+        } else {
+          let column = fullColumnIdMap.get(colId)
+          return { item: column, index: this.getColumnMapIndex(column), items: tableFullColumn }
         }
       }
       return null
@@ -1022,14 +1038,20 @@ export default {
      */
     getColumns (columnIndex) {
       let columns = this.visibleColumn
-      return arguments.length ? columns[columnIndex] : columns
+      return arguments.length ? columns[columnIndex] : columns.slice(0)
+    },
+    /**
+     * 获取表格可视列
+     */
+    getTableColumn () {
+      return this.tableColumn
     },
     /**
      * 获取表格所有数据
      */
     getRecords (rowIndex) {
       let { tableFullData } = this
-      return arguments.length ? tableFullData[rowIndex] : tableFullData
+      return arguments.length ? tableFullData[rowIndex] : tableFullData.slice(0)
     },
     /**
      * 获取表格数据集合
@@ -1447,6 +1469,7 @@ export default {
               })
             }
           } else if (layout === 'body') {
+            let emptyBlockElem = elemStore[`${name}-${layout}-emptyBlock`]
             if (wrapperElem) {
               if (customHeight > 0) {
                 wrapperElem.style.height = `${fixedType ? (customHeight > 0 ? customHeight - headerHeight - footerHeight : tableHeight) - (showFooter ? 0 : scrollbarHeight) : customHeight - headerHeight - footerHeight}px`
@@ -1483,6 +1506,9 @@ export default {
               if (overflowY && fixedType && (browse['-moz'] || browse['safari'])) {
                 tableElem.style.paddingRight = `${scrollbarWidth}px`
               }
+            }
+            if (emptyBlockElem) {
+              emptyBlockElem.style.width = tWidth ? `${tWidth}px` : tWidth
             }
           } else if (layout === 'footer') {
             // 如果是使用优化模式
@@ -2562,7 +2588,7 @@ export default {
       }
       // 如果是多选
       if ((selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, params.cell, 's-checkbox').flag) {
-        this.handleToggleCheckRowEvent(params.row, evnt)
+        this.handleToggleCheckRowEvent(params, evnt)
       }
       // 如果是树形表格
       if ((treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
