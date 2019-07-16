@@ -20,7 +20,7 @@ import Tooltip from './packages/tooltip'
 
 import Export from './packages/export'
 import Resize from './packages/resize'
-import STable from './packages/table-core'
+import SoulUI from './packages/table-core'
 import zhCNLocat from './locale/lang/zh-CN'
 
 // 默认主题
@@ -54,13 +54,13 @@ export const components = [
 // 默认安装
 function install (Vue, options) {
   if (XEUtils.isPlainObject(options)) {
-    STable.setup(options)
+    SoulUI.setup(options)
   }
   components.map(component => Vue.use(component))
 }
 
 // 默认中文
-STable.setup({
+SoulUI.setup({
   i18n: (key, value) => XEUtils.get(zhCNLocat, key)
 })
 
@@ -68,7 +68,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 
-STable.install = install
+SoulUI.install = install
 
 export * from './packages/table'
 export * from './packages/column'
@@ -91,4 +91,5 @@ export * from './packages/tooltip'
 export * from './packages/export'
 export * from './packages/resize'
 export * from './packages/table-core'
-export default STable
+
+export default SoulUI

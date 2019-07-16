@@ -1,7 +1,7 @@
 <style>
   .page-component__scroll {
-    height: 100%;
-    margin-top: 0;
+    height: calc(100% - 80px);
+    margin-top: 80px;
 
     > .el-scrollbar__wrap {
       overflow-x: auto;

@@ -5,14 +5,113 @@
       "name": "更新日志"
     },
     {
+      "name": "开发指南",
+      "children": [
+        {
+          "path": "/start/install",
+          "name": "安装"
+        },
+        {
+          "path": "/start/quickStart",
+          "name": "快速开始"
+        }
+      ]
+    },
+    {
       "name": "表格组件",
       "groups": [
         {
-          "groupName": "基本功能",
+          "groupName": "基础功能",
           "list": [
             {
-              "path": "/table/basic",
+              "path": "/table/basic/basic",
               "title": "基础表格"
+            },
+            {
+              "path": "/table/basic/fixed",
+              "title": "固定列"
+            },
+            {
+              "path": "/table/basic/group",
+              "title": "复杂表头"
+            },
+            {
+              "path": "/table/basic/resize",
+              "title": "列宽拖动"
+            },
+            {
+              "path": "/table/basic/overflow",
+              "title": "单行超出隐藏"
+            },
+            {
+              "path": "/table/basic/index",
+              "title": "序号"
+            },
+            {
+              "path": "/table/basic/radio",
+              "title": "单选"
+            },
+            {
+              "path": "/table/basic/selection",
+              "title": "多选"
+            },
+            {
+              "path": "/table/basic/sort",
+              "title": "排序"
+            },
+            {
+              "path": "/table/basic/filter",
+              "title": "筛选"
+            },
+            {
+              "path": "/table/basic/loading",
+              "title": "加载中"
+            },
+            {
+              "path": "/table/basic/formatter",
+              "title": "格式化"
+            }
+          ]
+        },
+        {
+          "groupName": "更多功能",
+          "list": [
+            {
+              "path": "/table/advanced/event",
+              "title": "事件绑定"
+            },
+            {
+              "path": "/table/advanced/merge",
+              "title": "行/列合并"
+            },
+            {
+              "path": "/table/advanced/footer",
+              "title": "表尾合计"
+            },
+            {
+              "path": "/table/advanced/page",
+              "title": "分页"
+            },
+            {
+              "path": "/table/advanced/edit",
+              "title": "可编辑"
+            }
+          ]
+        },
+        {
+          "groupName": "树形表格",
+          "list": [
+            {
+              "path": "/table/tree/basic",
+              "title": "基础"
+            },
+            {
+              "path": "/table/tree/radio-selection",
+              "title": "单选/多选"
+            },
+            {
+              "path": "/table/tree/edit",
+              "title": "可编辑"
             }
           ]
         }]

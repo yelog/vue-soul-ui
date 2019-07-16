@@ -1,5 +1,12 @@
+import Vue from 'vue'
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import moment from 'moment'
+import './mock'
+
+Vue.prototype.XEUtils = XEUtils
+Vue.prototype.XEAjax = XEAjax
+
 // 后台异步生成10万数据，为了避免大量运算卡主页面
 var columns = window.MOCK_COLUMN_LIST = []
 var list = window.MOCK_DATA_LIST = []
