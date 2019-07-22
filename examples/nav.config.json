@@ -95,6 +95,10 @@
             {
               "path": "/table/advanced/edit",
               "title": "可编辑"
+            },
+            {
+              "path": "/table/advanced/scroll",
+              "title": "虚拟加载"
             }
           ]
         },

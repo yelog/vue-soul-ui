@@ -52,6 +52,9 @@ export default {
     },
     cellMouseleaveEvent ({ row, rowIndex, column, columnIndex }, event) {
       console.log(`鼠标离开单元格${column.title}`)
+    },
+    bodyScrollEvent ({ scrollTop, scrollLeft }, event) {
+      console.log(`滚动事件scrollTop=${scrollTop} scrollLeft=${scrollLeft}`)
     }
   }
 }

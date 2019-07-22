@@ -401,16 +401,6 @@ export default {
       return /^component/.test(this.$route.name)
     }
   },
-  mounted () {
-    getTestEle()
-      .then(() => {
-        this.$isEle = true
-        ga('send', 'event', 'DocView', 'Inner')
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  },
   methods: {
     switchVersion (version) {
       if (version === this.version) return
