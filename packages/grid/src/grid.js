@@ -248,7 +248,7 @@ export default {
                   }).then(() => this.commitProxy('reload'))
                 } else {
                   if (isMsg && !selectRecords.length) {
-                    this.$XMsg.message({ id: code, message: GlobalConfig.i18n('vxe.grid.selectOneRecord'), status: 'warning' })
+                    this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
                   }
                 }
               })
@@ -275,7 +275,7 @@ export default {
                       this.tableLoading = true
                       resolve(
                         ajax.save({ body }).then(() => {
-                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('vxe.grid.saveSuccess'), status: 'success' })
+                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.saveSuccess'), status: 'success' })
                           this.tableLoading = false
                         }).catch(e => {
                           this.tableLoading = false
@@ -287,7 +287,7 @@ export default {
                         if (pendingRecords.length) {
                           this.remove(pendingRecords)
                         } else {
-                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('vxe.grid.dataUnchanged'), status: 'info' })
+                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.dataUnchanged'), status: 'info' })
                         }
                       }
                       resolve()
@@ -310,7 +310,7 @@ export default {
         if (selectRecords.length) {
           this.$XMsg.confirm(GlobalConfig.i18n(alertKey)).then(callback).catch(e => e)
         } else {
-          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('vxe.grid.selectOneRecord'), status: 'warning' })
+          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
         }
       } else {
         if (selectRecords.length) {
@@ -342,7 +342,7 @@ export default {
         this.clearSelection()
       } else {
         if (isMsg) {
-          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('vxe.grid.selectOneRecord'), status: 'warning' })
+          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
         }
       }
     },

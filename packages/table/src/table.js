@@ -1032,7 +1032,7 @@ export default {
     },
     // 在 v3.0 中废弃 prop
     getRecords () {
-      console.warn('[vxe-table] The function getRecords is deprecated, please use getData')
+      console.warn('[s-table] The function getRecords is deprecated, please use getData')
       return this.getData.apply(this, arguments)
     },
     /**
@@ -1044,7 +1044,7 @@ export default {
     },
     // 在 v3.0 中废弃 prop
     getAllRecords () {
-      console.warn('[vxe-table] The function getAllRecords is deprecated, please use getRecordset')
+      console.warn('[s-table] The function getAllRecords is deprecated, please use getRecordset')
       return this.getRecordset()
     },
     /**
@@ -1554,7 +1554,7 @@ export default {
                 let listElem = elemStore[`${name}-${layout}-list`]
                 if (listElem && hasEllipsis) {
                   XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), thElem => {
-                    let cellElem = thElem.querySelector('.vxe-cell')
+                    let cellElem = thElem.querySelector('.s-cell')
                     if (cellElem) {
                       cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
                     }
@@ -2596,8 +2596,8 @@ export default {
       let { column, cell } = params
       UtilTools.emitEvent(this, 'header-cell-click', [Object.assign({
         triggerResizable: _lastResizeTime && _lastResizeTime > Date.now() - 300,
-        triggerSort: this.getEventTargetNode(evnt, cell, 'vxe-sort-wrapper').flag,
-        triggerFilter: this.getEventTargetNode(evnt, cell, 'vxe-filter-wrapper').flag
+        triggerSort: this.getEventTargetNode(evnt, cell, 's-sort-wrapper').flag,
+        triggerFilter: this.getEventTargetNode(evnt, cell, 's-filter-wrapper').flag
       }, params), evnt])
       if (this.highlightCurrentColumn) {
         return this.setCurrentColumn(column, true)
@@ -2626,12 +2626,12 @@ export default {
       let { actived } = editStore
       let { column, columnIndex, cell } = params
       if (highlightCurrentRow) {
-        if (radioConfig.trigger === 'row' || (!this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 's-checkbox').flag && !this.getEventTargetNode(evnt, $el, 'vxe-radio').flag)) {
+        if (radioConfig.trigger === 'row' || (!this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 's-checkbox').flag && !this.getEventTargetNode(evnt, $el, 's-radio').flag)) {
           this.triggerCurrentRowEvent(evnt, params)
         }
       }
       // 如果是单选
-      if ((radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, $el, 'vxe-radio').flag) {
+      if ((radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, $el, 's-radio').flag) {
         this.triggerRadioRowEvent(evnt, params)
       }
       // 如果是多选

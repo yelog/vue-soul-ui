@@ -1,5 +1,5 @@
 export default {
-  vxe: {
+  soul: {
     table: {
       emptyText: 'No Data',
       confirmFilter: 'Confirm',

@@ -428,7 +428,7 @@ export default {
       }, [
         h('span', {
           class: 's-table--empty-text'
-        }, $table.$slots.empty || GlobalConfig.i18n('vxe.table.emptyText'))
+        }, $table.$slots.empty || GlobalConfig.i18n('soul.table.emptyText'))
       ]) : null
     ])
   },

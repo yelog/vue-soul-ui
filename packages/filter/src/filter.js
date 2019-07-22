@@ -65,14 +65,14 @@ export default {
               }),
               h('span', {
                 class: ['checkbox--label']
-              }, GlobalConfig.i18n('vxe.table.allFilter'))
+              }, GlobalConfig.i18n('soul.table.allFilter'))
             ])
             : h('span', {
               class: 's-table--filter-label',
               on: {
                 click: $table.resetFilterEvent
               }
-            }, GlobalConfig.i18n('vxe.table.allFilter'))
+            }, GlobalConfig.i18n('soul.table.allFilter'))
         ])
       ]
       filterStore.options.forEach((item, index) => {
@@ -138,12 +138,12 @@ export default {
           on: {
             click: this.confirmFilter
           }
-        }, GlobalConfig.i18n('vxe.table.confirmFilter')),
+        }, GlobalConfig.i18n('soul.table.confirmFilter')),
         h('button', {
           on: {
             click: this.resetFilter
           }
-        }, GlobalConfig.i18n('vxe.table.resetFilter'))
+        }, GlobalConfig.i18n('soul.table.resetFilter'))
       ]) : null
     },
     // 全部筛选事件

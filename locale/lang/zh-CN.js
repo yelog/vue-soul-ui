@@ -1,5 +1,5 @@
 export default {
-  vxe: {
+  soul: {
     table: {
       emptyText: '暂无数据',
       confirmFilter: '筛选',

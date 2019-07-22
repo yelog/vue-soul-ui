@@ -82,7 +82,7 @@ export default {
         }, [
           h('span', {
             class: 's-msg--title'
-          }, title || GlobalConfig.i18n('vxe.alert.title')),
+          }, title || GlobalConfig.i18n('soul.alert.title')),
           h('i', {
             class: ['s-msg--close-btn', GlobalConfig.icon.msgClose],
             on: {
@@ -111,7 +111,7 @@ export default {
             on: {
               click: this.cancelEvent
             }
-          }, GlobalConfig.i18n('vxe.button.cancel')) : null,
+          }, GlobalConfig.i18n('soul.button.cancel')) : null,
           h('s-button', {
             props: {
               type: 'primary'
@@ -119,7 +119,7 @@ export default {
             on: {
               click: this.confirmEvent
             }
-          }, GlobalConfig.i18n('vxe.button.confirm'))
+          }, GlobalConfig.i18n('soul.button.confirm'))
         ]) : null
       ])
     ])

@@ -167,7 +167,7 @@ export default {
             click: this.toggleSizePanel
           }
         }, [
-          h('span', `${pageSize}${GlobalConfig.i18n('vxe.pager.pagesize')}`),
+          h('span', `${pageSize}${GlobalConfig.i18n('soul.pager.pagesize')}`),
           h('i', {
             class: 's-pager--sizes-arrow s-icon--caret-bottom'
           })
@@ -187,7 +187,7 @@ export default {
               on: {
                 click: () => this.sizeChangeEvent(num)
               }
-            }, `${num}${GlobalConfig.i18n('vxe.pager.pagesize')}`)
+            }, `${num}${GlobalConfig.i18n('soul.pager.pagesize')}`)
           }))
         ])
       ])
@@ -204,7 +204,7 @@ export default {
       }, [
         isFull ? h('span', {
           class: 's-pager--goto-text'
-        }, GlobalConfig.i18n('vxe.pager.goto')) : null,
+        }, GlobalConfig.i18n('soul.pager.goto')) : null,
         h('input', {
           class: 's-pager--goto',
           domProps: {
@@ -233,7 +233,7 @@ export default {
         }),
         isFull ? h('span', {
           class: 's-pager--classifier-text'
-        }, GlobalConfig.i18n('vxe.pager.pageClassifier')) : null
+        }, GlobalConfig.i18n('soul.pager.pageClassifier')) : null
       ])
     },
     // PageCount
@@ -253,7 +253,7 @@ export default {
       let { total } = this
       return h('span', {
         class: 's-pager--total'
-      }, XEUtils.template(GlobalConfig.i18n('vxe.pager.total'), { total }))
+      }, XEUtils.template(GlobalConfig.i18n('soul.pager.total'), { total }))
     },
     // number
     renderPageBtn (h, showJump) {
