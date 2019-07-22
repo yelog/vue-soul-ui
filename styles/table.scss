@@ -187,6 +187,7 @@
     }
     .s-default-input,
     .s-default-textarea,
+    .s-default-select,
     .s-input--wrapper {
       height: 36px;
     }
@@ -206,6 +207,7 @@
     }
     .s-default-input,
     .s-default-textarea,
+    .s-default-select,
     .s-input--wrapper {
       height: 32px;
     }
@@ -225,6 +227,7 @@
     }
     .s-default-input,
     .s-default-textarea,
+    .s-default-select,
     .s-input--wrapper {
       height: 28px;
     }
@@ -238,7 +241,8 @@
     }
   }
   .s-header--column,
-  .s-body--column {
+  .s-body--column,
+  .s-footer--column {
     &.col--ellipsis {
       &:not(.col--actived) {
         .s-cell {
@@ -252,7 +256,8 @@
   }
   /*默认的渲染*/
   .s-default-input,
-  .s-default-textarea {
+  .s-default-textarea,
+  .s-default-select {
     outline: 0;
     padding: 0 2px;
     height: 40px;
@@ -444,7 +449,7 @@
     border-bottom: 1px solid $s-table-border-color;
   }
   .s-body--expanded-cell {
-    padding: 20px 50px;
+    padding: 20px;
   }
 
   /*固定列*/
@@ -518,7 +523,8 @@
         }
       }
       .s-default-input,
-      .s-default-textarea {
+      .s-default-textarea,
+      .s-default-select {
         border-color: $s-table-validate-error-color;
       }
       .s-input--wrapper {
@@ -526,6 +532,7 @@
           border-color: $s-table-validate-error-color;
         }
       }
+
     }
   }
   .s-body--row {

@@ -38,13 +38,13 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let { actived } = editStore
   let fixedHiddenColumn = fixedType ? column.fixed !== fixedType : column.fixed && overflowX
   let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
-  let cellAlign = align || allAlign
   let showEllipsis = cellOverflow === 'ellipsis'
   let showTitle = cellOverflow === 'title'
   let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
   let hasEllipsis = showTitle || showTooltip || showEllipsis
   let isDirty
   let tdOns = {}
+  let cellAlign = align || allAlign
   let validError = validStore.row === row && validStore.column === column
   let hasDefaultTip = editRules && (validOpts.message === 'default' ? (height || tableData.length > 1) : validOpts.message === 'inline')
   let attrs = { 'data-index': columnIndex }
@@ -151,7 +151,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     }, [
       h('span', {
         class: 's-cell--valid-msg'
-      }, validStore.content)
+      }, XEUtils.isFunction(validStore.content) ? validStore.content.call($table, h) : validStore.content)
     ]) : _e() : null
   ])
 }
@@ -167,8 +167,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
     scrollYStore,
     editStore,
     expandeds,
-    getRowMapIndex,
-    getColumnMapIndex } = $table
+    getColumnIndex } = $table
   let rows = []
   tableData.forEach((row, $rowIndex) => {
     let trOn = {}
@@ -178,14 +177,14 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
       seq += scrollYStore.startIndex
     }
     // 确保任何情况下 rowIndex 都精准指向真实 data 索引
-    rowIndex = getRowMapIndex(row)
+    rowIndex = $table.getRowIndex(row)
     // 事件绑定
     if (highlightHoverRow) {
       trOn.mouseenter = evnt => {
         $table.triggerHoverEvent(evnt, { row, rowIndex })
       }
     }
-    let rowPrimaryKey = UtilTools.getRowPrimaryKey($table, row, rowIndex)
+    let rowPrimaryKey = UtilTools.getRowPrimaryKey($table, row)
     rows.push(
       h('tr', {
         class: ['s-body--row', {
@@ -198,43 +197,49 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         key: treeConfig ? rowPrimaryKey : (rowKey ? XEUtils.get(row, rowKey) : $rowIndex),
         on: trOn
       }, tableColumn.map((column, $columnIndex) => {
-        let columnIndex = getColumnMapIndex(column)
+        let columnIndex = getColumnIndex(column)
         return renderColumn(h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex)
       }))
     )
+    // 如果行被展开了
+    if (expandeds.length && expandeds.indexOf(row) > -1) {
+      let column = tableColumn.find(column => column.type === 'expand')
+      let columnIndex = getColumnIndex(column)
+      let cellStyle
+      if (treeConfig) {
+        cellStyle = {
+          paddingLeft: `${rowLevel * (treeConfig.indent || 16) + 30}px`
+        }
+      }
+      if (column) {
+        rows.push(
+          h('tr', {
+            class: 's-body--expanded-row',
+            key: `expand_${rowPrimaryKey}`,
+            on: trOn
+          }, [
+            h('td', {
+              class: 's-body--expanded-column',
+              attrs: {
+                colspan: tableColumn.length
+              }
+            }, [
+              h('div', {
+                class: 's-body--expanded-cell',
+                style: cellStyle
+              }, [
+                column.renderData(h, { $table, seq, row, rowIndex, column, columnIndex, fixed: fixedType, level: rowLevel })
+              ])
+            ])
+          ])
+        )
+      }
+    }
+    // 如果是树形表格
     if (treeConfig && treeExpandeds.length) {
-      // 如果是树形表格
       let rowChildren = row[treeConfig.children]
       if (rowChildren && rowChildren.length && treeExpandeds.indexOf(row) > -1) {
         rows.push.apply(rows, renderRows(h, _vm, $table, $seq ? `${$seq}.${seq}` : `${seq}`, rowLevel + 1, fixedType, rowChildren, tableColumn))
-      }
-    } else if (expandeds.length) {
-      // 如果行被展开了
-      if (expandeds.indexOf(row) > -1) {
-        let column = tableColumn.find(column => column.type === 'expand')
-        let columnIndex = getColumnMapIndex(column)
-        if (column) {
-          rows.push(
-            h('tr', {
-              class: ['s-body--expanded-row'],
-              key: `expand_${rowIndex}`,
-              on: trOn
-            }, [
-              h('td', {
-                class: ['s-body--expanded-column'],
-                attrs: {
-                  colspan: tableColumn.length
-                }
-              }, [
-                h('div', {
-                  class: ['s-body--expanded-cell']
-                }, [
-                  column.renderData(h, { $table, seq, row, rowIndex, column, columnIndex, fixed: fixedType, level: rowLevel })
-                ])
-              ])
-            ])
-          )
-        }
       }
     }
   })

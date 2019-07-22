@@ -144,8 +144,8 @@ export default {
 
     /** 高级属性 */
     // 行数据的 Key
-    rowKey: [String, Number],
-    rowId: [String, Number],
+    rowKey: String,
+    rowId: { type: String, default: () => GlobalConfig.rowId },
     // 是否自动根据父容器响应式调整表格宽高
     autoResize: Boolean,
     // 单选配置
@@ -386,7 +386,7 @@ export default {
     }
   },
   created () {
-    let { scrollYStore, optimizeOpts, selectConfig, data, treeConfig, editConfig, loading } = Object.assign(this, {
+    let { scrollYStore, optimizeOpts, data, loading } = Object.assign(this, {
       elemStore: {},
       // 存放横向 X 虚拟滚动相关的信息
       scrollXStore: {},
@@ -415,10 +415,10 @@ export default {
       tableFullData: [],
       afterFullData: [],
       // 缓存数据集
-      fullDataIndexMap: new Map(),
+      fullDataRowMap: new Map(),
       fullDataRowIdMap: new Map(),
       fullColumnIdMap: new Map(),
-      fullColumnIndexMap: new Map()
+      fullColumnMap: new Map()
     })
     let { scrollY } = optimizeOpts
     // 是否加载过 Loading 模块
@@ -431,14 +431,6 @@ export default {
         renderSize: scrollY.rSize,
         offsetSize: scrollY.oSize
       })
-    }
-    let rowKey = UtilTools.getRowKey(this)
-    if (selectConfig && selectConfig.reserve && !rowKey) {
-      throw new Error('[s-table] Checkbox status reserve must have a unique primary key (row-id | row-key).')
-    } else if (treeConfig && !rowKey) {
-      throw new Error('[s-table] Tree table must have a unique primary key (row-id | row-key).')
-    } else if (editConfig && !rowKey) {
-      throw new Error('[s-table] Editable must have a unique primary key (row-id | row-key).')
     }
     this.loadData(data, true).then(() => {
       let { customs, collectColumn } = this
@@ -484,8 +476,8 @@ export default {
       ResizeEvent.off(this, this.$el.parentNode)
     }
     this.afterFullData.length = 0
-    this.fullDataIndexMap.clear()
-    this.fullColumnIndexMap.clear()
+    this.fullDataRowMap.clear()
+    this.fullColumnMap.clear()
     this.closeFilter()
     this.closeMenu()
   },
@@ -743,22 +735,19 @@ export default {
     },
     // 更新数据的 Map
     cacheDataMap () {
-      let { treeConfig, tableFullData, fullDataIndexMap, fullDataRowIdMap } = this
+      let { treeConfig, tableFullData, fullDataRowMap, fullDataRowIdMap } = this
       let rowKey = UtilTools.getRowKey(this)
       let handleData = (row, index) => {
-        let rowPrimaryKey = index
-        if (rowKey) {
-          rowPrimaryKey = XEUtils.get(row, rowKey)
-          if (!rowPrimaryKey) {
-            rowPrimaryKey = ++rowUniqueId
-            XEUtils.set(row, rowKey, rowPrimaryKey)
-          }
+        let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
+        if (!rowPrimaryKey) {
+          rowPrimaryKey = ++rowUniqueId
+          XEUtils.set(row, rowKey, rowPrimaryKey)
         }
-        let rest = { rowKey, row, rowPrimaryKey, index }
-        fullDataRowIdMap.set(`${rowPrimaryKey}`, rest)
-        fullDataIndexMap.set(row, rest)
+        let rest = { row, rowid: rowPrimaryKey, index }
+        fullDataRowIdMap.set('' + rowPrimaryKey, rest)
+        fullDataRowMap.set(row, rest)
       }
-      fullDataIndexMap.clear()
+      fullDataRowMap.clear()
       fullDataRowIdMap.clear()
       if (treeConfig) {
         XEUtils.eachTree(tableFullData, handleData, treeConfig)
@@ -768,12 +757,13 @@ export default {
     },
     // 更新列的 Map
     cacheColumnMap () {
-      let { tableFullColumn, fullColumnIdMap, fullColumnIndexMap } = this
+      let { tableFullColumn, fullColumnIdMap, fullColumnMap } = this
       fullColumnIdMap.clear()
-      fullColumnIndexMap.clear()
+      fullColumnMap.clear()
       tableFullColumn.forEach((column, index) => {
-        fullColumnIdMap.set(column.id, column)
-        fullColumnIndexMap.set(column, { column, index })
+        let rest = { column, colid: column.id, index }
+        fullColumnIdMap.set(column.id, rest)
+        fullColumnMap.set(column, rest)
       })
     },
     getRowNode (tr) {
@@ -781,7 +771,7 @@ export default {
         let { treeConfig, tableFullData, fullDataRowIdMap } = this
         let rowPrimaryKey = tr.getAttribute('data-rowid')
         if (treeConfig) {
-          let matchObj = XEUtils.findTree(tableFullData, (row, rowIndex) => UtilTools.getRowPrimaryKey(this, row, rowIndex) === rowPrimaryKey, treeConfig)
+          let matchObj = XEUtils.findTree(tableFullData, row => UtilTools.getRowPrimaryKey(this, row) === rowPrimaryKey, treeConfig)
           if (matchObj) {
             return matchObj
           }
@@ -797,31 +787,24 @@ export default {
     getColumnNode (th) {
       if (th) {
         let { isGroup, fullColumnIdMap, tableFullColumn } = this
-        let colId = th.getAttribute('data-colid')
+        let colid = th.getAttribute('data-colid')
         if (isGroup) {
-          let matchObj = XEUtils.findTree(tableFullColumn, column => column.id === colId, headerProps)
+          let matchObj = XEUtils.findTree(tableFullColumn, column => column.id === colid, headerProps)
           if (matchObj) {
             return matchObj
           }
         } else {
-          let column = fullColumnIdMap.get(colId)
-          return { item: column, index: this.getColumnMapIndex(column), items: tableFullColumn }
+          let { column, index } = fullColumnIdMap.get(colid)
+          return { item: column, index, items: tableFullColumn }
         }
       }
       return null
     },
-    getRowMapIndex (row) {
-      return this.fullDataIndexMap.has(row) ? this.fullDataIndexMap.get(row).index : -1
-    },
     getRowIndex (row) {
-      let { tableFullData, treeConfig } = this
-      return treeConfig ? XEUtils.findTree(tableFullData, item => item === row, treeConfig) : this.getRowMapIndex(row)
-    },
-    getColumnMapIndex (column) {
-      return this.fullColumnIndexMap.has(column) ? this.fullColumnIndexMap.get(column).index : -1
+      return this.fullDataRowMap.has(row) ? this.fullDataRowMap.get(row).index : -1
     },
     getColumnIndex (column) {
-      return this.getColumnMapIndex(column)
+      return this.fullColumnMap.has(column) ? this.fullColumnMap.get(column).index : -1
     },
     insert (records) {
       return this.insertAt(records)
@@ -831,12 +814,13 @@ export default {
      */
     insertAt (records, row) {
       let { tableData, editStore, defineProperty, scrollYLoad, tableFullData } = this
+      let args = arguments
       if (!XEUtils.isArray(records)) {
         records = [records]
       }
-      let newRecords = records.map(record => defineProperty(record))
+      let newRecords = records.map(defineProperty)
       return new Promise(resolve => {
-        if (arguments.length === 1) {
+        if (args.length === 1) {
           tableData.unshift.apply(tableData, newRecords)
           if (scrollYLoad) {
             tableFullData.unshift.apply(tableFullData, newRecords)
@@ -949,13 +933,13 @@ export default {
      * 如果还额外传了 field 则还原指定单元格
      */
     revert (rows, field) {
-      let { tableSourceData, tableFullData } = this
+      let { tableSourceData, getRowIndex } = this
       if (arguments.length) {
         if (rows && !XEUtils.isArray(rows)) {
           rows = [rows]
         }
         rows.forEach(row => {
-          let rowIndex = tableFullData.indexOf(row)
+          let rowIndex = getRowIndex(row)
           let oRow = tableSourceData[rowIndex]
           if (oRow && row) {
             if (field) {
@@ -977,9 +961,9 @@ export default {
      * 如果还额外传了 field 则清空指定单元格内容
      */
     clearData (rows, field) {
-      let { tableSourceData, visibleColumn } = this
+      let { tableFullData, visibleColumn } = this
       if (!arguments.length) {
-        rows = tableSourceData
+        rows = tableFullData
       } else if (rows && !XEUtils.isArray(rows)) {
         rows = [rows]
       }
@@ -997,35 +981,31 @@ export default {
       return this.$nextTick()
     },
     hasRowInsert (row) {
-      let { treeConfig } = this
-      if (treeConfig) {
-        return XEUtils.findTree(this.tableSourceData, item => item === row, treeConfig)
-      }
-      return this.getRowMapIndex(row) === -1
+      return this.editStore.insertList.indexOf(row) > -1
     },
     hasRowChange (row, field) {
       let oRow
-      let { tableSourceData, fullDataIndexMap } = this
-      if (!fullDataIndexMap.has(row)) {
+      let { tableSourceData, fullDataRowMap } = this
+      if (!fullDataRowMap.has(row)) {
         return false
       }
       let rowKey = UtilTools.getRowKey(this)
       if (rowKey) {
-        let rowPrimaryKey = XEUtils.get(row, rowKey)
+        let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
         let treeConfig = this.treeConfig
         if (treeConfig) {
           let children = treeConfig.children
-          let matchObj = XEUtils.findTree(tableSourceData, row => rowPrimaryKey === XEUtils.get(row, rowKey), treeConfig)
+          let matchObj = XEUtils.findTree(tableSourceData, item => rowPrimaryKey === UtilTools.getRowPrimaryKey(this, item), treeConfig)
           row = Object.assign({}, row, { [children]: null })
           if (matchObj) {
             oRow = Object.assign({}, matchObj.item, { [children]: null })
           }
         } else {
-          let oRowIndex = this.fullDataRowIdMap.get(`${rowPrimaryKey}`).index
+          let oRowIndex = this.fullDataRowIdMap.get(rowPrimaryKey).index
           oRow = tableSourceData[oRowIndex]
         }
       } else {
-        let oRowIndex = this.getRowMapIndex(row)
+        let oRowIndex = this.getRowIndex(row)
         oRow = tableSourceData[oRowIndex]
       }
       if (arguments.length > 1) {
@@ -1040,23 +1020,37 @@ export default {
       let columns = this.visibleColumn
       return arguments.length ? columns[columnIndex] : columns.slice(0)
     },
+    getColumnById (colid) {
+      let fullColumnIdMap = this.fullColumnIdMap
+      return fullColumnIdMap.has(colid) ? fullColumnIdMap.get(colid).column : null
+    },
     /**
      * 获取表格可视列
      */
     getTableColumn () {
-      return this.tableColumn
+      return { fullColumn: this.visibleColumn, tableColumn: this.tableColumn }
+    },
+    // 在 v3.0 中废弃 prop
+    getRecords () {
+      console.warn('[vxe-table] The function getRecords is deprecated, please use getData')
+      return this.getData.apply(this, arguments)
     },
     /**
      * 获取表格所有数据
      */
-    getRecords (rowIndex) {
-      let { tableFullData } = this
+    getData (rowIndex) {
+      let tableFullData = this.tableFullData
       return arguments.length ? tableFullData[rowIndex] : tableFullData.slice(0)
     },
-    /**
-     * 获取表格数据集合
-     */
+    // 在 v3.0 中废弃 prop
     getAllRecords () {
+      console.warn('[vxe-table] The function getAllRecords is deprecated, please use getRecordset')
+      return this.getRecordset()
+    },
+    /**
+     * 获取表格数据集
+     */
+    getRecordset () {
       return {
         insertRecords: this.getInsertRecords(),
         removeRecords: this.getRemoveRecords(),
@@ -1153,6 +1147,10 @@ export default {
       this.afterFullData = tableData
       return tableData
     },
+    getRowById (rowid) {
+      let fullDataRowIdMap = this.fullDataRowIdMap
+      return fullDataRowIdMap.has(rowid) ? fullDataRowIdMap.get(rowid).row : null
+    },
     /**
      * 获取处理后的表格数据
      * 如果存在筛选条件，继续处理
@@ -1165,7 +1163,10 @@ export default {
     },
     handleDefault () {
       if (this.selectConfig) {
-        this.handleDefaultRowChecked()
+        this.handleSelectionDefChecked()
+      }
+      if (this.radioConfig) {
+        this.handleRadioDefChecked()
       }
       if (this.expandConfig) {
         this.handleDefaultRowExpand()
@@ -1306,16 +1307,11 @@ export default {
       let headerElem = tableHeader ? tableHeader.$el : null
       let footerElem = tableFooter ? tableFooter.$el : null
       if (bodyElem) {
-        let bodyWidth = bodyElem.clientWidth
-        // let tableWidth = this.autoCellWidth(headerElem, bodyElem, footerElem, bodyWidth)
-        this.autoCellWidth(headerElem, bodyElem, footerElem, bodyWidth)
+        this.autoCellWidth(headerElem, bodyElem, footerElem)
         if (refull === true) {
           // 初始化时需要在列计算之后再执行优化运算，达到最优显示效果
           return this.computeScrollLoad().then(() => {
-            bodyWidth = bodyElem.clientWidth
-            // if (bodyWidth !== tableWidth) {
-            this.autoCellWidth(headerElem, bodyElem, footerElem, bodyWidth)
-            // }
+            this.autoCellWidth(headerElem, bodyElem, footerElem)
             this.computeScrollLoad()
           })
         }
@@ -1323,10 +1319,11 @@ export default {
       return this.computeScrollLoad()
     },
     // 列宽计算
-    autoCellWidth (headerElem, bodyElem, footerElem, bodyWidth) {
+    autoCellWidth (headerElem, bodyElem, footerElem) {
       let meanWidth
       let tableWidth = 0
       let minCellWidth = 40 // 列宽最少限制 40px
+      let bodyWidth = bodyElem.clientWidth
       let remainWidth = bodyWidth
       let { $el, fit, columnStore } = this
       let { resizeList, pxMinList, pxList, scaleList, scaleMinList, autoList } = columnStore
@@ -1408,7 +1405,6 @@ export default {
       if (this.overflowX) {
         this.checkScrolling()
       }
-      // return tableWidth
     },
     updateStyle () {
       let {
@@ -1431,10 +1427,11 @@ export default {
         scrollbarWidth,
         scrollXLoad,
         columnStore,
-        elemStore
+        elemStore,
+        currentRow
       } = this
       let containerList = ['main', 'left', 'right']
-      let customHeight = height === 'auto' ? parentHeight : XEUtils.toNumber(height)
+      let customHeight = height === 'auto' ? parentHeight : (DomTools.isScale(height) ? Math.floor(parseInt(height) / 100 * parentHeight) : XEUtils.toNumber(height))
       containerList.forEach((name, index) => {
         let fixedType = index > 0 ? name : ''
         let layoutList = ['header', 'body', 'footer']
@@ -1474,7 +1471,7 @@ export default {
               if (customHeight > 0) {
                 wrapperElem.style.height = `${fixedType ? (customHeight > 0 ? customHeight - headerHeight - footerHeight : tableHeight) - (showFooter ? 0 : scrollbarHeight) : customHeight - headerHeight - footerHeight}px`
               } else if (maxHeight) {
-                maxHeight = XEUtils.toNumber(maxHeight)
+                maxHeight = DomTools.isScale(maxHeight) ? Math.floor(parseInt(maxHeight) / 100 * parentHeight) : XEUtils.toNumber(maxHeight)
                 wrapperElem.style.maxHeight = `${fixedType ? maxHeight - headerHeight - (showFooter ? 0 : scrollbarHeight) : maxHeight - headerHeight}px`
               }
             }
@@ -1502,7 +1499,7 @@ export default {
 
             if (tableElem) {
               tableElem.style.width = tWidth ? `${tWidth}px` : tWidth
-              // 兼容火狐滚动条
+              // 兼容性处理
               if (overflowY && fixedType && (browse['-moz'] || browse['safari'])) {
                 tableElem.style.paddingRight = `${scrollbarWidth}px`
               }
@@ -1536,54 +1533,41 @@ export default {
           let colgroupElem = elemStore[`${name}-${layout}-colgroup`]
           if (colgroupElem) {
             XEUtils.arrayEach(colgroupElem.children, colElem => {
-              let colId = colElem.getAttribute('name')
-              let column = fullColumnIdMap.get(colId)
-              if (colId === 'col-gutter') {
+              let colid = colElem.getAttribute('name')
+              if (colid === 'col-gutter') {
                 colElem.width = `${scrollbarWidth || ''}`
               }
-              if (column) {
+              if (fullColumnIdMap.has(colid)) {
+                let column = fullColumnIdMap.get(colid).column
+                let { showHeaderOverflow, showOverflow, renderWidth } = column
+                let cellOverflow
                 colElem.width = `${column.renderWidth || ''}`
                 if (layout === 'header') {
-                  let { showHeaderOverflow, renderWidth } = column
-                  let headOverflow = XEUtils.isUndefined(showHeaderOverflow) || XEUtils.isNull(showHeaderOverflow) ? allColumnHeaderOverflow : showHeaderOverflow
-                  let showEllipsis = headOverflow === 'ellipsis'
-                  let showTitle = headOverflow === 'title'
-                  let showTooltip = headOverflow === true || headOverflow === 'tooltip'
-                  let hasEllipsis = showTitle || showTooltip || showEllipsis
-
-                  let listElem = elemStore[`${name}-${layout}-list`]
-                  if (listElem && hasEllipsis) {
-                    XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), thElem => {
-                      let cellElem = thElem.querySelector('.s-cell')
-                      if (cellElem) {
-                        cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
-                      }
-                    })
-                  }
-                } else if (layout === 'body') {
-                  // 表主体样式处理
-                  let { showOverflow, renderWidth } = column
-                  let cellOverflow = XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow) ? allColumnOverflow : showOverflow
-                  let showEllipsis = cellOverflow === 'ellipsis'
-                  let showTitle = cellOverflow === 'title'
-                  let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
-                  let hasEllipsis = showTitle || showTooltip || showEllipsis
-
-                  let listElem = elemStore[`${name}-${layout}-list`]
-                  if (listElem && hasEllipsis) {
-                    XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), tdElem => {
-                      let cellElem = tdElem.querySelector('.s-cell')
-                      if (cellElem) {
-                        cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
-                      }
-                    })
-                  }
+                  cellOverflow = XEUtils.isUndefined(showHeaderOverflow) || XEUtils.isNull(showHeaderOverflow) ? allColumnHeaderOverflow : showHeaderOverflow
+                } else {
+                  cellOverflow = XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow) ? allColumnOverflow : showOverflow
+                }
+                let showEllipsis = cellOverflow === 'ellipsis'
+                let showTitle = cellOverflow === 'title'
+                let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
+                let hasEllipsis = showTitle || showTooltip || showEllipsis
+                let listElem = elemStore[`${name}-${layout}-list`]
+                if (listElem && hasEllipsis) {
+                  XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), thElem => {
+                    let cellElem = thElem.querySelector('.vxe-cell')
+                    if (cellElem) {
+                      cellElem.style.width = `${border ? renderWidth - 1 : renderWidth}px`
+                    }
+                  })
                 }
               }
             })
           }
         })
       })
+      if (currentRow) {
+        this.setCurrentRow(currentRow)
+      }
       return this.$nextTick()
     },
     /**
@@ -1611,11 +1595,11 @@ export default {
      * 全局按下事件处理
      */
     handleGlobalMousedownEvent (evnt) {
-      let { $refs, editStore, ctxMenuStore, editConfig = {}, filterStore } = this
+      let { $el, $refs, editStore, ctxMenuStore, editConfig = {}, filterStore } = this
       let { actived } = editStore
       let { filterWrapper, validTip } = $refs
       if (filterWrapper) {
-        if (this.getEventTargetNode(evnt, this.$el, 's-filter-wrapper').flag) {
+        if (this.getEventTargetNode(evnt, $el, 's-filter-wrapper').flag) {
           // 如果点击了筛选按钮
         } else if (this.getEventTargetNode(evnt, filterWrapper.$el).flag) {
           // 如果点击筛选容器
@@ -1632,10 +1616,10 @@ export default {
             // 如果手动调用了激活单元格，避免触发源被移除后导致重复关闭
             this.preventEvent(evnt, 'event.clear_actived', actived.args, () => {
               let isClear
-              let isReadonlyCol = !this.getEventTargetNode(evnt, this.$el, 'col--edit').flag
+              let isReadonlyCol = !this.getEventTargetNode(evnt, $el, 'col--edit').flag
               // row 方式
               if (editConfig.mode === 'row') {
-                let rowNode = this.getEventTargetNode(evnt, this.$el, 's-body--row')
+                let rowNode = this.getEventTargetNode(evnt, $el, 's-body--row')
                 let isOtherRow = rowNode.flag ? rowNode.targetElem !== actived.args.cell.parentNode : 0
                 if (editConfig.trigger === 'manual') {
                   // manual 触发，如果点击了不同行
@@ -1651,7 +1635,7 @@ export default {
               if (
                 isClear ||
                 // 如果点击了当前表格之外
-                !this.getEventTargetNode(evnt, this.$el).flag
+                !this.getEventTargetNode(evnt, $el).flag
               ) {
                 setTimeout(this.clearActived)
               }
@@ -1682,7 +1666,6 @@ export default {
      * 全局键盘事件
      */
     handleGlobalKeydownEvent (evnt) {
-      let params
       let { isCtxMenu, ctxMenuStore, editStore, mouseConfig = {}, keyboardConfig = {} } = this
       let { selected, actived } = editStore
       let keyCode = evnt.keyCode
@@ -1703,6 +1686,7 @@ export default {
       let isCtrlKey = evnt.ctrlKey
       let operArrow = isLeftArrow || isUpArrow || isRightArrow || isDwArrow
       let operCtxMenu = isCtxMenu && ctxMenuStore.visible && (isEnter || isSpacebar || operArrow)
+      let params
       if (isEsc) {
         // 如果按下了 Esc 键，关闭快捷菜单、筛选
         this.closeMenu()
@@ -2019,6 +2003,15 @@ export default {
       }
     },
     /**
+     * 触发表尾 tooltip 事件
+     */
+    triggerFooterTooltipEvent (evnt, { $rowIndex, column, columnIndex }) {
+      let { tooltipStore, footerData } = this
+      if (tooltipStore.column !== column || !tooltipStore.visible) {
+        this.showTooltip(evnt, footerData[$rowIndex][columnIndex], column)
+      }
+    },
+    /**
      * 触发 tooltip 事件
      */
     triggerTooltipEvent (evnt, params) {
@@ -2068,18 +2061,19 @@ export default {
     /**
      * 处理默认勾选
      */
-    handleDefaultRowChecked () {
-      let { selectConfig = {}, tableFullData } = this
+    handleSelectionDefChecked () {
+      let { selectConfig = {}, fullDataRowIdMap } = this
       let { checkAll, checkRowKeys } = selectConfig
-      let rowKey = UtilTools.getRowKey(this)
       if (checkAll) {
         this.setAllSelection(true)
       } else if (checkRowKeys) {
-        let property = rowKey
-        if (!property) {
-          throw new Error('[s-table] Checked rows must have a unique primary key (row-id | row-key).')
-        }
-        this.setSelection(checkRowKeys.map(checkKey => tableFullData.find(item => checkKey === item[property])), true)
+        let defSelection = []
+        checkRowKeys.forEach(checkKey => {
+          if (fullDataRowIdMap.has(checkKey)) {
+            defSelection.push(fullDataRowIdMap.get(checkKey).row)
+          }
+        })
+        this.setSelection(defSelection, true)
       }
     },
     setSelection (rows, value) {
@@ -2095,63 +2089,81 @@ export default {
      */
     handleSelectRow ({ row }, value) {
       let { selection, tableFullData, selectConfig = {}, treeConfig, treeIndeterminates } = this
-      let { checkField: property, checkMethod } = selectConfig
-      if (!checkMethod || checkMethod({ row, rowIndex: tableFullData.indexOf(row) })) {
-        if (property) {
-          if (treeConfig) {
-            if (value === -1) {
-              treeIndeterminates.push(row)
-              XEUtils.set(row, property, false)
-            } else {
-              // 更新子节点状态
-              XEUtils.eachTree([row], item => XEUtils.set(item, property, value), treeConfig)
-              XEUtils.remove(treeIndeterminates, item => item === row)
-            }
-            // 如果存在父节点，更新父节点状态
-            let matchObj = XEUtils.findTree(tableFullData, item => item === row, treeConfig)
-            if (matchObj && matchObj.parent) {
-              let selectItems = matchObj.items.filter(item => XEUtils.get(item, property))
-              return this.handleSelectRow({ row: matchObj.parent }, selectItems.length === matchObj.items.length ? true : (selectItems.length || value === -1 ? -1 : false))
-            }
+      let { checkField: property, checkStrictly, checkMethod } = selectConfig
+      if (property) {
+        if (treeConfig && !checkStrictly) {
+          if (value === -1) {
+            treeIndeterminates.push(row)
+            XEUtils.set(row, property, false)
           } else {
-            XEUtils.set(row, property, value)
+            // 更新子节点状态
+            XEUtils.eachTree([row], (item, $rowIndex) => {
+              if (row === item || (!checkMethod || checkMethod({ row: item, $rowIndex }))) {
+                XEUtils.set(item, property, value)
+              }
+            }, treeConfig)
+            XEUtils.remove(treeIndeterminates, item => item === row)
+          }
+          // 如果存在父节点，更新父节点状态
+          let matchObj = XEUtils.findTree(tableFullData, item => item === row, treeConfig)
+          if (matchObj && matchObj.parent) {
+            let parentStatus
+            let vItems = checkMethod ? matchObj.items.filter((item, $rowIndex) => checkMethod({ row: item, $rowIndex })) : matchObj.items
+            let indeterminatesItem = matchObj.items.find(item => treeIndeterminates.indexOf(item) > -1)
+            if (indeterminatesItem) {
+              parentStatus = -1
+            } else {
+              let selectItems = matchObj.items.filter(item => XEUtils.get(item, property))
+              parentStatus = selectItems.filter(item => vItems.indexOf(item) > -1).length === vItems.length ? true : (selectItems.length || value === -1 ? -1 : false)
+            }
+            return this.handleSelectRow({ row: matchObj.parent }, parentStatus)
           }
         } else {
-          if (treeConfig) {
-            if (value === -1) {
-              treeIndeterminates.push(row)
-              XEUtils.remove(selection, item => item === row)
-            } else {
-              // 更新子节点状态
-              XEUtils.eachTree([row], item => {
+          XEUtils.set(row, property, value)
+        }
+      } else {
+        if (treeConfig && !checkStrictly) {
+          if (value === -1) {
+            treeIndeterminates.push(row)
+            XEUtils.remove(selection, item => item === row)
+          } else {
+            // 更新子节点状态
+            XEUtils.eachTree([row], (item, $rowIndex) => {
+              if (row === item || (!checkMethod || checkMethod({ row: item, $rowIndex }))) {
                 if (value) {
-                  if (selection.indexOf(item) === -1) {
-                    selection.push(item)
-                  }
+                  selection.push(item)
                 } else {
                   XEUtils.remove(selection, select => select === item)
                 }
-              }, treeConfig)
-              XEUtils.remove(treeIndeterminates, item => item === row)
-            }
-            // 如果存在父节点，更新父节点状态
-            let matchObj = XEUtils.findTree(tableFullData, item => item === row, treeConfig)
-            if (matchObj && matchObj.parent) {
+              }
+            }, treeConfig)
+            XEUtils.remove(treeIndeterminates, item => item === row)
+          }
+          // 如果存在父节点，更新父节点状态
+          let matchObj = XEUtils.findTree(tableFullData, item => item === row, treeConfig)
+          if (matchObj && matchObj.parent) {
+            let parentStatus
+            let vItems = checkMethod ? matchObj.items.filter((item, $rowIndex) => checkMethod({ row: item, $rowIndex })) : matchObj.items
+            let indeterminatesItem = matchObj.items.find(item => treeIndeterminates.indexOf(item) > -1)
+            if (indeterminatesItem) {
+              parentStatus = -1
+            } else {
               let selectItems = matchObj.items.filter(item => selection.indexOf(item) > -1)
-              return this.handleSelectRow({ row: matchObj.parent }, selectItems.length === matchObj.items.length ? true : (selectItems.length || value === -1 ? -1 : false))
+              parentStatus = selectItems.filter(item => vItems.indexOf(item) > -1).length === vItems.length ? true : (selectItems.length || value === -1 ? -1 : false)
+            }
+            return this.handleSelectRow({ row: matchObj.parent }, parentStatus)
+          }
+        } else {
+          if (value) {
+            if (selection.indexOf(row) === -1) {
+              selection.push(row)
             }
           } else {
-            if (value) {
-              if (selection.indexOf(row) === -1) {
-                selection.push(row)
-              }
-            } else {
-              XEUtils.remove(selection, item => item === row)
-            }
+            XEUtils.remove(selection, item => item === row)
           }
         }
-        this.checkSelectionStatus()
       }
+      this.checkSelectionStatus()
     },
     handleToggleCheckRowEvent (params, evnt) {
       let { selectConfig = {}, selection } = this
@@ -2177,68 +2189,91 @@ export default {
     },
     setAllSelection (value) {
       let { tableFullData, editStore, selectConfig = {}, treeConfig, selection } = this
-      let { checkField: property, reserve, checkMethod } = selectConfig
+      let { checkField: property, reserve, checkStrictly, checkMethod } = selectConfig
       let { insertList } = editStore
       let selectRows = []
       // 包含新增的数据
       if (insertList.length) {
         tableFullData = tableFullData.concat(insertList)
       }
-      if (property) {
-        let updateValue = (row, rowIndex) => {
-          if (!checkMethod || checkMethod({ row, rowIndex })) {
-            XEUtils.set(row, property, value)
+      if (!checkStrictly) {
+        if (property) {
+          let indexKey = `${treeConfig ? '$' : ''}rowIndex`
+          let setValFn = (row, rowIndex) => {
+            if (!checkMethod || checkMethod({ row, [indexKey]: rowIndex })) {
+              XEUtils.set(row, property, value)
+            }
           }
-        }
-        if (treeConfig) {
-          XEUtils.eachTree(tableFullData, updateValue, treeConfig)
-        } else {
-          tableFullData.forEach(updateValue)
-        }
-      } else {
-        if (value) {
+          let clearValFn = (row, rowIndex) => {
+            if (!checkMethod || (checkMethod({ row, [indexKey]: rowIndex }) ? 0 : selection.indexOf(row) > -1)) {
+              XEUtils.set(row, property, value)
+            }
+          }
           if (treeConfig) {
-            XEUtils.eachTree(tableFullData, (row, rowIndex) => {
-              if (!checkMethod || checkMethod({ row, rowIndex })) {
-                selectRows.push(row)
-              }
-            }, treeConfig)
+            XEUtils.eachTree(tableFullData, value ? setValFn : clearValFn, treeConfig)
           } else {
-            if (checkMethod) {
-              selectRows = tableFullData.filter((row, rowIndex) => checkMethod({ row, rowIndex }))
+            tableFullData.forEach(value ? setValFn : clearValFn)
+          }
+        } else {
+          if (treeConfig) {
+            if (value) {
+              XEUtils.eachTree(tableFullData, (row, $rowIndex) => {
+                if (!checkMethod || checkMethod({ row, $rowIndex })) {
+                  selectRows.push(row)
+                }
+              }, treeConfig)
             } else {
-              selectRows = tableFullData.slice(0)
+              if (checkMethod) {
+                XEUtils.eachTree(tableFullData, (row, $rowIndex) => {
+                  if (checkMethod({ row, $rowIndex }) ? 0 : selection.indexOf(row) > -1) {
+                    selectRows.push(row)
+                  }
+                }, treeConfig)
+              }
+            }
+          } else {
+            if (value) {
+              if (checkMethod) {
+                selectRows = tableFullData.filter((row, rowIndex) => selection.indexOf(row) > -1 || checkMethod({ row, rowIndex }))
+              } else {
+                selectRows = tableFullData.slice(0)
+              }
+            } else {
+              if (checkMethod) {
+                selectRows = tableFullData.filter((row, rowIndex) => checkMethod({ row, rowIndex }) ? 0 : selection.indexOf(row) > -1)
+              }
             }
           }
         }
+        this.selection = value && reserve ? selection.concat(selectRows.filter(row => selection.indexOf(row) === -1)) : selectRows
       }
-      this.selection = value && reserve ? selection.concat(selectRows.filter(row => selection.indexOf(row) === -1)) : selectRows
-      this.isAllSelected = value
-      this.isIndeterminate = false
       this.treeIndeterminates = []
+      this.checkSelectionStatus()
     },
     checkSelectionStatus () {
       let { tableFullData, editStore, selectConfig = {}, selection, treeIndeterminates } = this
-      let { checkField: property, checkMethod } = selectConfig
+      let { checkField: property, checkStrictly, checkMethod } = selectConfig
       let { insertList } = editStore
       // 包含新增的数据
       if (insertList.length) {
         tableFullData = tableFullData.concat(insertList)
       }
-      if (property) {
-        this.isAllSelected = tableFullData.length && tableFullData.every(
-          checkMethod
-            ? (row, rowIndex) => !checkMethod({ row, rowIndex }) || XEUtils.get(row, property)
-            : row => XEUtils.get(row, property)
-        )
-        this.isIndeterminate = !this.isAllSelected && tableFullData.some(row => XEUtils.get(row, property) || treeIndeterminates.indexOf(row) > -1)
-      } else {
-        this.isAllSelected = tableFullData.length && tableFullData.every(
-          checkMethod
-            ? (row, rowIndex) => !checkMethod({ row, rowIndex }) || selection.indexOf(row) > -1
-            : row => selection.indexOf(row) > -1
-        )
-        this.isIndeterminate = !this.isAllSelected && tableFullData.some(row => treeIndeterminates.indexOf(row) > -1 || selection.indexOf(row) > -1)
+      if (!checkStrictly) {
+        if (property) {
+          this.isAllSelected = tableFullData.length && tableFullData.every(
+            checkMethod
+              ? (row, rowIndex) => !checkMethod({ row, rowIndex }) || XEUtils.get(row, property)
+              : row => XEUtils.get(row, property)
+          )
+          this.isIndeterminate = !this.isAllSelected && tableFullData.some(row => XEUtils.get(row, property) || treeIndeterminates.indexOf(row) > -1)
+        } else {
+          this.isAllSelected = tableFullData.length && tableFullData.every(
+            checkMethod
+              ? (row, rowIndex) => !checkMethod({ row, rowIndex }) || selection.indexOf(row) > -1
+              : row => selection.indexOf(row) > -1
+          )
+          this.isIndeterminate = !this.isAllSelected && tableFullData.some(row => treeIndeterminates.indexOf(row) > -1 || selection.indexOf(row) > -1)
+        }
       }
     },
     // 保留选中状态
@@ -2284,6 +2319,16 @@ export default {
       return this.$nextTick()
     },
     /**
+     * 处理单选框默认勾选
+     */
+    handleRadioDefChecked () {
+      let { radioConfig = {}, fullDataRowIdMap } = this
+      let { checkRowKey } = radioConfig
+      if (checkRowKey && fullDataRowIdMap.has(checkRowKey)) {
+        this.setRadioRow(fullDataRowIdMap.get(checkRowKey).row)
+      }
+    },
+    /**
      * 单选，行选中事件
      */
     triggerRadioRowEvent (evnt, params) {
@@ -2295,13 +2340,11 @@ export default {
       UtilTools.emitEvent(this, 'current-change', [params, evnt])
     },
     /**
-     * 单选，设置某一行为选中状态，如果调不加参数，则会取消目前高亮行的选中状态
+     * 高亮行，设置某一行为高亮状态，如果调不加参数，则会取消目前高亮行的选中状态
      */
     setCurrentRow (row) {
-      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row, this.getRowMapIndex(row))
-      if (this.currentRow !== row) {
-        this.clearCurrentRow()
-      }
+      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
+      this.clearCurrentRow()
       this.clearCurrentColumn()
       this.currentRow = row
       if (this.highlightCurrentRow) {
@@ -2337,7 +2380,7 @@ export default {
      */
     triggerHoverEvent (evnt, { row, rowIndex }) {
       let { $el } = this
-      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row, rowIndex)
+      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
       this.clearHoverRow()
       XEUtils.arrayEach($el.querySelectorAll(`[data-rowid="${rowPrimaryKey}"]`), elem => DomTools.addClass(elem, 'row--hover'))
       this.hoverRow = row
@@ -2349,7 +2392,7 @@ export default {
      * 表头按下事件
      */
     triggerHeaderCellMousedownEvent (evnt, params) {
-      let { $el, tableData, mouseConfig = {}, elemStore, handleChecked, handleHeaderChecked, handleIndexChecked } = this
+      let { $el, tableData, visibleColumn, mouseConfig = {}, elemStore, handleChecked, handleHeaderChecked, handleIndexChecked } = this
       let { button } = evnt
       let { column, cell } = params
       let isLeftBtn = button === 0
@@ -2361,7 +2404,12 @@ export default {
           let firstTrElem = bodyList[0]
           let lastTrElem = bodyList[bodyList.length - 1]
           let firstCell = firstTrElem.querySelector(`.${column.id}`)
-          this.clearSelected()
+          params.rowIndex = 0
+          params.row = tableData[0]
+          params.column = visibleColumn.find(column => column.property)
+          params.columnIndex = this.getColumnIndex(params.column)
+          params.cell = DomTools.getCell(this, params)
+          this.handleSelected(params, evnt)
           handleHeaderChecked(DomTools.getRowNodes(headerList, DomTools.getCellNodeIndex(cell.nextElementSibling), DomTools.getCellNodeIndex(cell.parentNode.lastElementChild)))
           handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(lastTrElem.querySelector(`.${column.id}`))))
           handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(lastTrElem.lastElementChild)))
@@ -2544,8 +2592,10 @@ export default {
     //   }
     // },
     triggerHeaderCellClickEvent (evnt, params) {
+      let { _lastResizeTime } = this
       let { column, cell } = params
       UtilTools.emitEvent(this, 'header-cell-click', [Object.assign({
+        triggerResizable: _lastResizeTime && _lastResizeTime > Date.now() - 300,
         triggerSort: this.getEventTargetNode(evnt, cell, 'vxe-sort-wrapper').flag,
         triggerFilter: this.getEventTargetNode(evnt, cell, 'vxe-filter-wrapper').flag
       }, params), evnt])
@@ -2556,9 +2606,7 @@ export default {
     },
     setCurrentColumn (column) {
       this.clearCurrentRow()
-      if (this.selectColumn !== column) {
-        this.clearCurrentColumn()
-      }
+      this.clearCurrentColumn()
       this.selectColumn = column
       XEUtils.arrayEach(this.$el.querySelectorAll(`.${column.id}`), elem => DomTools.addClass(elem, 'col--current'))
       return this.$nextTick()
@@ -2576,7 +2624,7 @@ export default {
     triggerCellClickEvent (evnt, params) {
       let { $el, highlightCurrentRow, editStore, radioConfig = {}, selectConfig = {}, treeConfig = {}, editConfig, mouseConfig = {} } = this
       let { actived } = editStore
-      let { row, column, columnIndex, cell } = params
+      let { column, columnIndex, cell } = params
       if (highlightCurrentRow) {
         if (radioConfig.trigger === 'row' || (!this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 's-checkbox').flag && !this.getEventTargetNode(evnt, $el, 'vxe-radio').flag)) {
           this.triggerCurrentRowEvent(evnt, params)
@@ -2597,43 +2645,21 @@ export default {
       // 如果设置了单元格选中功能，则不会使用点击事件去处理（只能支持双击模式）
       if (!mouseConfig.checked) {
         if (editConfig) {
-          if (editConfig.trigger === 'click') {
-            if (!actived.args || cell !== actived.args.cell) {
-              if (editConfig.mode === 'row') {
-                if (row === actived.row) {
-                  // column.model.update = false
-                  // column.model.value = UtilTools.getCellValue(actived.row, column)
-                  actived.args.columnIndex = columnIndex
-                  actived.column = actived.args.column = column
-                } else {
-                  this.triggerValidate('blur')
-                    .catch(e => e)
-                    .then(() => {
-                      this.handleActived(params, evnt)
-                        .then(() => this.triggerValidate('change'))
-                        .catch(e => e)
-                    })
-                }
-              } else if (editConfig.mode === 'cell') {
-                this.handleActived(params, evnt)
-                  .then(() => this.triggerValidate('change'))
-                  .catch(e => e)
-              }
+          if (!actived.args || cell !== actived.args.cell) {
+            if (actived.args) {
+              Object.assign(actived.args, { cell, columnIndex, column })
+              actived.column = column
             }
-          } else if (editConfig.trigger === 'dblclick') {
-            if (!actived.args || cell !== actived.args.cell) {
-              if (editConfig.mode === 'row') {
-                if (row === actived.row) {
-                  // column.model.update = false
-                  // column.model.value = UtilTools.getCellValue(actived.row, column)
-                  actived.args.columnIndex = columnIndex
-                  actived.column = actived.args.column = column
-                } else {
-                  this.handleSelected(params, evnt)
-                }
-              } else if (editConfig.mode === 'cell') {
-                this.handleSelected(params, evnt)
-              }
+            if (editConfig.trigger === 'click') {
+              this.triggerValidate('blur')
+                .catch(e => e)
+                .then(() => {
+                  this.handleActived(params, evnt)
+                    .then(() => this.triggerValidate('change'))
+                    .catch(e => e)
+                })
+            } else if (editConfig.trigger === 'dblclick') {
+              this.handleSelected(params, evnt)
             }
           }
         }
@@ -2794,7 +2820,7 @@ export default {
           selected.column = column
           if (mouseConfig.selected) {
             let listElem = elemStore['main-body-list']
-            let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row, this.getRowMapIndex(row))
+            let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
             let trElem = listElem.querySelector(`[data-rowid="${rowPrimaryKey}"]`)
             let tdElem = trElem.querySelector(`.${column.id}`)
             DomTools.addClass(tdElem, 'col--selected')
@@ -3286,7 +3312,7 @@ export default {
      */
     triggerRowExpandEvent (evnt, { row }) {
       let rest = this.toggleRowExpansion(row)
-      UtilTools.emitEvent(this, 'toggle-expand-change', [{ row, rowIndex: this.getRowMapIndex(row), $table: this }, evnt])
+      UtilTools.emitEvent(this, 'toggle-expand-change', [{ row, rowIndex: this.getRowIndex(row), $table: this }, evnt])
       return rest
     },
     /**
@@ -3299,17 +3325,18 @@ export default {
      * 处理默认展开行
      */
     handleDefaultRowExpand () {
-      let { expandConfig = {}, tableFullData } = this
+      let { expandConfig = {}, tableFullData, fullDataRowIdMap } = this
       let { expandAll, expandRowKeys } = expandConfig
-      let rowKey = UtilTools.getRowKey(this)
       if (expandAll) {
         this.expandeds = tableFullData.slice(0)
       } else if (expandRowKeys) {
-        let property = rowKey
-        if (!property) {
-          throw new Error('[s-table] Expand rows must have a unique primary key (row-id | row-key).')
-        }
-        this.expandeds = expandRowKeys.map(expandKey => tableFullData.find(item => expandKey === item[property]))
+        let defExpandeds = []
+        expandRowKeys.forEach(expandKey => {
+          if (fullDataRowIdMap.has(expandKey)) {
+            defExpandeds.push(fullDataRowIdMap.get(expandKey).row)
+          }
+        })
+        this.expandeds = defExpandeds
       }
     },
     setAllRowExpansion (expanded) {
@@ -3361,7 +3388,7 @@ export default {
     triggerTreeExpandEvent (evnt, { row }) {
       let { selectColumn } = this
       let rest = this.toggleTreeExpansion(row)
-      UtilTools.emitEvent(this, 'toggle-tree-change', [{ row, rowIndex: this.getRowMapIndex(row), $table: this }, evnt])
+      UtilTools.emitEvent(this, 'toggle-tree-change', [{ row, rowIndex: this.getRowIndex(row), $table: this }, evnt])
       if (selectColumn) {
         this.$nextTick(() => this.setCurrentColumn(selectColumn))
       }
@@ -3512,7 +3539,7 @@ export default {
         if (isReload) {
           scrollXStore.visibleIndex = toVisibleIndex
           scrollXStore.startIndex = Math.min(Math.max(toVisibleIndex - preloadSize, 0), visibleColumn.length - renderSize)
-          this.updateScrollXSpace()
+          this.updateScrollXData()
           this.$nextTick(() => {
             // scrollBodyElem.scrollLeft = scrollLeft
             this.updateStyle()
@@ -3563,7 +3590,7 @@ export default {
         if (isReload) {
           scrollYStore.visibleIndex = toVisibleIndex
           scrollYStore.startIndex = Math.min(Math.max(toVisibleIndex - preloadSize, 0), tableFullData.length - renderSize)
-          this.updateScrollYSpace()
+          this.updateScrollYData()
           this.$nextTick(() => {
             // scrollBodyElem.scrollTop = scrollTop
             this.updateStyle()
@@ -3580,7 +3607,7 @@ export default {
         let tableBodyElem = tableBody ? tableBody.$el : null
         let tableHeader = this.$refs.tableHeader
         if (tableBodyElem) {
-        // 计算 X 逻辑
+          // 计算 X 逻辑
           if (scrollXLoad) {
             // 无法预知，默认取前 10 条平均宽度进行运算
             let visibleSize = scrollX.vSize || Math.ceil(tableBodyElem.clientWidth / (visibleColumn.slice(0, 10).reduce((previous, column) => previous + column.renderWidth, 0) / 10))
@@ -3589,6 +3616,8 @@ export default {
               scrollXStore.offsetSize = visibleSize
               scrollXStore.renderSize = visibleSize + 2
             }
+            this.updateScrollXData()
+          } else {
             this.updateScrollXSpace()
           }
           // 计算 Y 逻辑
@@ -3610,27 +3639,37 @@ export default {
               scrollYStore.offsetSize = visibleSize
               scrollYStore.renderSize = visibleSize + 2
             }
+            this.updateScrollYData()
+          } else {
             this.updateScrollYSpace()
           }
         }
         this.$nextTick(this.updateStyle)
       })
     },
+    updateScrollXData () {
+      let { visibleColumn, scrollXStore } = this
+      this.tableColumn = visibleColumn.slice(scrollXStore.startIndex, scrollXStore.startIndex + scrollXStore.renderSize)
+      this.updateScrollXSpace()
+    },
     // 更新横向 X 可视渲染上下剩余空间大小
     updateScrollXSpace () {
-      let { $refs, elemStore, visibleColumn, scrollXStore, tableWidth, scrollbarWidth } = this
+      let { $refs, elemStore, visibleColumn, scrollXStore, scrollXLoad, tableWidth, scrollbarWidth } = this
       let { tableHeader, tableBody, tableFooter } = $refs
       let headerElem = tableHeader ? tableHeader.$el.querySelector('.s-table--header') : null
       let bodyElem = tableBody.$el.querySelector('.s-table--body')
       let footerElem = tableFooter ? tableFooter.$el.querySelector('.s-table--footer') : null
-      this.tableColumn = visibleColumn.slice(scrollXStore.startIndex, scrollXStore.startIndex + scrollXStore.renderSize)
       let leftSpaceWidth = visibleColumn.slice(0, scrollXStore.startIndex).reduce((previous, column) => previous + column.renderWidth, 0)
-      if (headerElem) {
-        headerElem.style.marginLeft = `${leftSpaceWidth}px`
+      let marginLeft = ''
+      if (scrollXLoad) {
+        marginLeft = `${leftSpaceWidth}px`
       }
-      bodyElem.style.marginLeft = `${leftSpaceWidth}px`
+      if (headerElem) {
+        headerElem.style.marginLeft = marginLeft
+      }
+      bodyElem.style.marginLeft = marginLeft
       if (footerElem) {
-        footerElem.style.marginLeft = `${leftSpaceWidth}px`
+        footerElem.style.marginLeft = marginLeft
       }
       let containerList = ['main']
       containerList.forEach(name => {
@@ -3638,29 +3677,39 @@ export default {
         layoutList.forEach(layout => {
           let xSpaceElem = elemStore[`${name}-${layout}-xSpace`]
           if (xSpaceElem) {
-            xSpaceElem.style.width = `${tableWidth + (layout === 'header' ? scrollbarWidth : 0)}px`
+            xSpaceElem.style.width = scrollXLoad ? `${tableWidth + (layout === 'header' ? scrollbarWidth : 0)}px` : ''
           }
         })
       })
     },
+    updateScrollYData () {
+      let { tableData } = this.getTableData()
+      this.tableData = tableData
+      this.updateScrollYSpace()
+    },
     // 更新纵向 Y 可视渲染上下剩余空间大小
     updateScrollYSpace () {
-      let { elemStore, scrollYStore } = this
-      let { fullData, tableData } = this.getTableData()
-      this.tableData = tableData
+      let { elemStore, scrollYStore, scrollYLoad } = this
+      let { fullData } = this.getTableData()
       let bodyHeight = fullData.length * scrollYStore.rowHeight
       let topSpaceHeight = Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0)
       let containerList = ['main', 'left', 'right']
+      let marginTop = ''
+      let ySpaceHeight = ''
+      if (scrollYLoad) {
+        marginTop = `${topSpaceHeight}px`
+        ySpaceHeight = `${bodyHeight}px`
+      }
       containerList.forEach(name => {
         let layoutList = ['header', 'body', 'footer']
         let tableElem = elemStore[`${name}-body-table`]
         if (tableElem) {
-          tableElem.style.marginTop = `${topSpaceHeight}px`
+          tableElem.style.marginTop = marginTop
         }
         layoutList.forEach(layout => {
           let ySpaceElem = elemStore[`${name}-${layout}-ySpace`]
           if (ySpaceElem) {
-            ySpaceElem.style.height = `${bodyHeight}px`
+            ySpaceElem.style.height = ySpaceHeight
           }
         })
       })
@@ -3675,13 +3724,13 @@ export default {
       }
     },
     scrollToRow (row) {
-      let { scrollYLoad, scrollYStore, afterFullData, fullDataIndexMap, elemStore } = this
-      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row, this.getRowMapIndex(row))
+      let { scrollYLoad, scrollYStore, afterFullData, fullDataRowMap, elemStore } = this
+      let rowPrimaryKey = UtilTools.getRowPrimaryKey(this, row)
       if (scrollYLoad) {
         if (row === -1 && afterFullData.length) {
           row = afterFullData[afterFullData.length - 1]
         }
-        if (fullDataIndexMap.has(row)) {
+        if (fullDataRowMap.has(row)) {
           let { rowHeight } = scrollYStore
           let rowIndex = afterFullData.indexOf(row)
           this.scrollTo(null, (rowIndex - 1) * rowHeight)
@@ -3692,9 +3741,9 @@ export default {
       }
     },
     scrollToColumn (column) {
-      let { scrollXLoad, elemStore, visibleColumn, fullColumnIndexMap } = this
+      let { scrollXLoad, elemStore, visibleColumn, fullColumnMap } = this
       if (scrollXLoad) {
-        if (column === -1 || fullColumnIndexMap.has(column)) {
+        if (column === -1 || fullColumnMap.has(column)) {
           let scrollLeft = 0
           for (let index = 0; index < visibleColumn.length; index++) {
             if (visibleColumn[index] === column) {
@@ -3838,7 +3887,6 @@ export default {
       if (editRules) {
         let columns = this.getColumns()
         vaildDatas.forEach(row => {
-          let rowIndex = tableData.indexOf(row)
           let colVailds = []
           columns.forEach((column, columnIndex) => {
             if (XEUtils.has(editRules, column.property)) {
@@ -3847,7 +3895,7 @@ export default {
                   this.validCellRules('all', row, column)
                     .then(resolve)
                     .catch(({ rule, rules }) => {
-                      let rest = { rule, rules, rowIndex, row, columnIndex, column }
+                      let rest = { rule, rules, rowIndex: this.getRowIndex(row), row, columnIndex, column }
                       if (isAll) {
                         if (!validRest[column.property]) {
                           validRest[column.property] = []
@@ -3874,7 +3922,7 @@ export default {
         }).catch(params => {
           let args = isAll ? validRest : { [params.column.property]: params }
           return new Promise((resolve, reject) => {
-            let { row } = params
+            let { rowIndex } = params
             let finish = () => {
               params.cell = DomTools.getCell(this, params)
               this.handleValidError(params)
@@ -3887,10 +3935,6 @@ export default {
             }
             if (scrollYLoad) {
               let { startIndex, renderSize, rowHeight } = scrollYStore
-              let rowIndex = this.getRowMapIndex(row)
-              if (rowIndex === -1) {
-                rowIndex = tableFullData.indexOf(row)
-              }
               if (rowIndex < startIndex || rowIndex > startIndex + renderSize) {
                 let bodyElem = this.$refs.tableBody.$el
                 bodyElem.scrollTop = (rowIndex - 1) * rowHeight
@@ -3930,14 +3974,14 @@ export default {
      *  validator=Function(rule, value, callback, {rules, row, column, rowIndex, columnIndex}) 自定义校验
      *  trigger=blur|change 触发方式（除非特殊场景，否则默认为空就行）
      */
-    validCellRules (type, row, column, cellValue) {
+    validCellRules (type, row, column, val) {
       let { editRules } = this
       let { property } = column
       let errorRules = []
       let cellVailds = []
       if (property && editRules) {
         let rules = XEUtils.get(editRules, property)
-        let value = XEUtils.isUndefined(cellValue) ? XEUtils.get(row, property) : cellValue
+        let cellValue = XEUtils.isUndefined(val) ? XEUtils.get(row, property) : val
         if (rules) {
           rules.forEach(rule => {
             cellVailds.push(
@@ -3945,28 +3989,28 @@ export default {
                 let isRequired = rule.required === true
                 if (type === 'all' || !rule.trigger || type === rule.trigger) {
                   if (XEUtils.isFunction(rule.validator)) {
-                    rule.validator(rule, value, e => {
+                    rule.validator(rule, cellValue, e => {
                       if (XEUtils.isError(e)) {
                         let cusRule = { type: 'custom', trigger: rule.trigger, message: e.message, rule }
                         errorRules.push(cusRule)
                       }
                       return resolve()
-                    }, { rules, row, column, rowIndex: this.getRowMapIndex(row), columnIndex: this.getColumnMapIndex(column) })
+                    }, { rules, row, column, rowIndex: this.getRowIndex(row), columnIndex: this.getColumnIndex(column) })
                   } else {
                     let len
-                    let restVal = value
+                    let restVal = cellValue
                     let isNumber = rule.type === 'number'
-                    let isEmpty = value === null || value === undefined || value === ''
+                    let isEmpty = cellValue === null || cellValue === undefined || cellValue === ''
                     if (isNumber) {
-                      restVal = XEUtils.toNumber(value)
+                      restVal = XEUtils.toNumber(cellValue)
                     } else {
                       len = XEUtils.getSize(restVal)
                     }
                     if (isRequired && isEmpty) {
                       errorRules.push(rule)
                     } else if (
-                      (isNumber && isNaN(value)) ||
-                      (XEUtils.isRegExp(rule.pattern) && !rule.pattern.test(value)) ||
+                      (isNumber && isNaN(cellValue)) ||
+                      (XEUtils.isRegExp(rule.pattern) && !rule.pattern.test(cellValue)) ||
                       (XEUtils.isNumber(rule.min) && (isNumber ? restVal < rule.min : len < rule.min)) ||
                       (XEUtils.isNumber(rule.max) && (isNumber ? restVal > rule.max : len > rule.max))
                     ) {
@@ -4015,9 +4059,9 @@ export default {
      */
     showValidTooltip (params) {
       let { $refs, height, tableData, validOpts } = this
-      let validTip = $refs.validTip
       let { rule, row, column, cell } = params
-      let content = UtilTools.formatText(rule.message)
+      let validTip = $refs.validTip
+      let content = rule.message
       this.$nextTick(() => {
         Object.assign(this.validStore, {
           row,

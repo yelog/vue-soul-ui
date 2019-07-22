@@ -67,9 +67,9 @@ export const UtilTools = {
     // return rowKey
     return $table.rowKey || $table.rowId
   },
-  getRowPrimaryKey ($table, row, rowIndex) {
-    let rowKey = UtilTools.getRowKey($table)
-    return `${rowKey ? encodeURIComponent(XEUtils.get(row, rowKey)) : rowIndex}`
+  getRowPrimaryKey ($table, row) {
+    let rowId = XEUtils.get(row, UtilTools.getRowKey($table))
+    return rowId ? encodeURIComponent(rowId) : ''
   },
   // 触发事件
   emitEvent (_vm, type, args) {

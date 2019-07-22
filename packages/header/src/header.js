@@ -122,7 +122,7 @@ export default {
       mouseConfig = {},
       scrollXLoad,
       overflowX,
-      getColumnMapIndex
+      getColumnIndex
     } = $table
     // 横向滚动渲染
     if (scrollXLoad) {
@@ -191,14 +191,14 @@ export default {
             let hasEllipsis = showTitle || showTooltip || showEllipsis
             let thOns = {}
             // 确保任何情况下 columnIndex 都精准指向真实列索引
-            let columnIndex = getColumnMapIndex(column)
+            let columnIndex = getColumnIndex(column)
             if (showTooltip) {
               thOns.mouseover = evnt => {
                 // 拖动过程中不需要触发
                 if ($table._isResize) {
                   return
                 }
-                $table.triggerHeaderTooltipEvent(evnt, { $table, column, columnIndex, $columnIndex, fixed: fixedType })
+                $table.triggerHeaderTooltipEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType })
               }
               thOns.mouseout = evnt => {
                 // 拖动过程中不需要触发
@@ -341,6 +341,7 @@ export default {
         column.resizeWidth = column.renderWidth + (isRightFixed ? dragPosLeft - dragLeft : dragLeft - dragPosLeft)
         resizeBarElem.style.display = 'none'
         $table._isResize = false
+        $table._lastResizeTime = Date.now()
         $table.analyColumnWidth()
         $table.recalculate(true)
         DomTools.removeClass($table.$el, 'c--resize')
