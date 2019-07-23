@@ -13,9 +13,16 @@
     }
 
     ul {
-      padding: 0;
+      padding: 0 0 0 10px;
       margin: 0;
       overflow: hidden;
+    }
+
+    .nav-group {
+      padding-left: 10px;
+      ul {
+        margin-top: 10px;
+      }
     }
 
     > ul > .nav-item > a {
@@ -48,10 +55,10 @@
       .nav-item {
         a {
           display: block;
-          height: 40px;
-          color: #444;
-          line-height: 40px;
-          font-size: 14px;
+          height: 25px;
+          font-size: 13px;
+          color: #999;
+          line-height: 25px;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -97,10 +104,11 @@
     }
 
     .nav-group__title {
-      font-size: 12px;
-      color: #999;
-      line-height: 26px;
-      margin-top: 15px;
+      color: #444;
+      font-size: 14px;
+      line-height: 20px;
+      margin-top: 5px;
+      cursor: pointer;
     }
 
     #code-sponsor-widget {
@@ -180,98 +188,102 @@
   </div>
 </template>
 <script>
-  import bus from '../bus';
-  import compoLang from '../i18n/component.json';
+import bus from '../bus'
+import compoLang from '../i18n/component.json'
 
-  export default {
-    props: {
-      data: Array,
-      base: {
-        type: String,
-        default: ''
-      }
-    },
-    data() {
-      return {
-        highlights: [],
-        navState: [],
-        isSmallScreen: false,
-        isFade: false
-      };
-    },
-    watch: {
-      '$route.path'() {
-        this.handlePathChange();
-      },
-      isFade(val) {
-        bus.$emit('navFade', val);
-      }
-    },
-    computed: {
-      navStyle() {
-        const style = {};
-        if (this.isSmallScreen) {
-          style.paddingBottom = '60px';
-        }
-        style.opacity = this.isFade ? '0.5' : '1';
-        return style;
-      },
-      lang() {
-        return this.$route.meta.lang;
-      },
-      langConfig() {
-        return compoLang.filter(config => config.lang === this.lang)[0]['nav'];
-      }
-    },
-    methods: {
-      handleResize() {
-        this.isSmallScreen = document.documentElement.clientWidth < 768;
-        this.handlePathChange();
-      },
-      handlePathChange() {
-        if (!this.isSmallScreen) {
-          this.expandAllMenu();
-          return;
-        }
-        this.$nextTick(() => {
-          this.hideAllMenu();
-          let activeAnchor = this.$el.querySelector('a.active');
-          let ul = activeAnchor.parentNode;
-          while (ul.tagName !== 'UL') {
-            ul = ul.parentNode;
-          }
-          ul.style.height = 'auto';
-        });
-      },
-      hideAllMenu() {
-        [].forEach.call(this.$el.querySelectorAll('.pure-menu-list'), ul => {
-          ul.style.height = '0';
-        });
-      },
-      expandAllMenu() {
-        [].forEach.call(this.$el.querySelectorAll('.pure-menu-list'), ul => {
-          ul.style.height = 'auto';
-        });
-      },
-      expandMenu(event) {
-        if (!this.isSmallScreen) return;
-        let target = event.currentTarget;
-        if (!target.nextElementSibling || target.nextElementSibling.tagName !== 'UL') return;
-        this.hideAllMenu();
-        event.currentTarget.nextElementSibling.style.height = 'auto';
-      }
-    },
-    created() {
-      bus.$on('fadeNav', () => {
-        this.isFade = true;
-      });
-    },
-    mounted() {
-      this.handleResize();
-      window.addEventListener('resize', this.handleResize);
-    },
-    beforeDestroy() {
-      window.removeEventListener('resize', this.handleResize);
+export default {
+  props: {
+    data: Array,
+    base: {
+      type: String,
+      default: ''
     }
-  };
+  },
+  data () {
+    return {
+      highlights: [],
+      navState: [],
+      isSmallScreen: false,
+      isFade: false
+    }
+  },
+  watch: {
+    '$route.path' () {
+      this.handlePathChange()
+    },
+    isFade (val) {
+      bus.$emit('navFade', val)
+    }
+  },
+  computed: {
+    navStyle () {
+      const style = {}
+      if (this.isSmallScreen) {
+        style.paddingBottom = '60px'
+      }
+      style.opacity = this.isFade ? '0.5' : '1'
+      return style
+    },
+    lang () {
+      return this.$route.meta.lang
+    },
+    langConfig () {
+      return compoLang.filter(config => config.lang === this.lang)[0]['nav']
+    }
+  },
+  methods: {
+    handleResize () {
+      this.isSmallScreen = true
+      this.handlePathChange()
+    },
+    handlePathChange () {
+      if (!this.isSmallScreen) {
+        this.expandAllMenu()
+        return
+      }
+      this.$nextTick(() => {
+        this.hideAllMenu()
+        let activeAnchor = this.$el.querySelector('a.active')
+        let ul = activeAnchor.parentNode
+        while (ul.tagName !== 'UL') {
+          ul = ul.parentNode
+        }
+        ul.style.height = 'auto'
+      })
+    },
+    hideAllMenu () {
+      [].forEach.call(this.$el.querySelectorAll('.pure-menu-list'), ul => {
+        ul.style.height = '0'
+      })
+    },
+    expandAllMenu () {
+      [].forEach.call(this.$el.querySelectorAll('.pure-menu-list'), ul => {
+        ul.style.height = 'auto'
+      })
+    },
+    expandMenu (event) {
+      if (!this.isSmallScreen) return
+      let target = event.currentTarget
+      if (!target.nextElementSibling || target.nextElementSibling.tagName !== 'UL') return
+      if (event.currentTarget.nextElementSibling.style.height === 'auto') {
+        event.currentTarget.nextElementSibling.style.height = '0'
+      } else {
+        this.hideAllMenu()
+        event.currentTarget.nextElementSibling.style.height = 'auto'
+      }
+    }
+  },
+  created () {
+    bus.$on('fadeNav', () => {
+      this.isFade = true
+    })
+  },
+  mounted () {
+    this.handleResize()
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleResize)
+  }
+}
 </script>
