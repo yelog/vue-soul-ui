@@ -49,6 +49,12 @@ const GlobalConfig = {
     msgError: 's-icon--error',
     msgLoading: 's-icon--refresh roll'
   },
+  loadingConfig: {
+    type: 1,
+    text: 'loading', // type 为2时，跳动的字
+    fontStyle: {},
+    backgroundStyle: {}
+  },
   grid: {},
   menu: {},
   tooltip: {

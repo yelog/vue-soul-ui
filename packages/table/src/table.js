@@ -99,6 +99,8 @@ export default {
     fit: { type: Boolean, default: () => GlobalConfig.fit },
     // 表格是否加载中
     loading: Boolean,
+    // 表格加载动画设置
+    loadingConfig: Object,
     // 所有的列对其方式
     align: String,
     // 所有的表头列的对齐方式
@@ -335,6 +337,9 @@ export default {
     ctxMenuConfig () {
       return Object.assign({}, GlobalConfig.menu, this.contextMenu)
     },
+    _loadingConfig () {
+      return Object.assign({}, GlobalConfig.loadingConfig, this.loadingConfig)
+    },
     ctxMenuList () {
       let rest = []
       this.ctxMenuStore.list.forEach(list => {
@@ -502,6 +507,7 @@ export default {
       isResizable,
       isCtxMenu,
       loading,
+      _loadingConfig,
       _isLoading,
       showHeader,
       border,
@@ -621,9 +627,7 @@ export default {
        * 加载中
        */
       _isLoading ? h('s-table-loading', {
-        props: {
-          visible: loading
-        }
+        props: Object.assign({ visible: loading }, _loadingConfig)
       }) : _e(),
       h('div', {
         class: `s-table${id}-wrapper`,

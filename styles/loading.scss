@@ -41,4 +41,34 @@
       transform: scale(1);
     }
   }
+
+  .s-table--jump {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    span {
+      font-size: 30px;
+      font-weight: 800;
+      font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',SimSun,sans-serif;
+      color: #ffffff;
+      position: relative;
+      text-shadow: 0 10px 10px rgba(0,0,0,0.4);
+      top: 20px;
+      animation: jump 0.3s ease infinite alternate;
+      @for $i from 2 through 20
+      {
+        &:nth-child(#{$i})
+        {
+          animation-delay: (0.1s * $i - 0.1);
+        }
+      }
+    }
+    @keyframes jump {
+      100% {
+        top: -10px;
+        text-shadow: 0 50px 25px rgba(0,0,0,0.2);
+      }
+    }
+  }
 }
