@@ -6,6 +6,7 @@
   <template v-slot:buttons>
     <s-button @click="$refs.myTable.setRadioRow(tableData[1])">设置第二行选中</s-button>
     <s-button @click="$refs.myTable.clearRadioRow()">取消选中</s-button>
+    <s-button @click="getRadioRow">获取选中行</s-button>
   </template>
 </s-toolbar>
 
@@ -34,6 +35,9 @@ export default {
   methods: {
     radioChangeEvent ({ row }) {
       console.log('单选事件')
+    },
+    getRadioRow() {
+      console.log(this.$refs.myTable.getRadioRow())
     }
   }
 }

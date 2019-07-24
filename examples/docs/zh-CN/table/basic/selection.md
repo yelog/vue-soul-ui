@@ -8,6 +8,7 @@
     <s-button @click="$refs.myTable.setSelection([tableData[2], tableData[3]], true)">设置第三、四行选中</s-button>
     <s-button @click="$refs.myTable.setAllSelection(true)">设置所有行选中</s-button>
     <s-button @click="$refs.myTable.clearSelection()">清除所有行选中</s-button>
+    <s-button @click="getSelectRecords">获取选中行</s-button>
   </template>
 </s-toolbar>
 
@@ -41,6 +42,9 @@ export default {
     },
     selectChangeEvent ({ checked, row }) {
       console.log(checked ? '勾选事件' : '取消事件')
+    },
+    getSelectRecords() {
+      console.log(this.$refs.myTable.getSelectRecords())
     }
   }
 }
@@ -140,6 +144,12 @@ export default {
 :::demo 通过配置 `trigger` 设置触发源
 ```html
 <template>
+<s-toolbar>
+  <template v-slot:buttons>
+    <s-button @click="getSelectRecords">获取多选选中行</s-button>
+    <s-button @click="getRadioRow">获取单选选中行</s-button>
+  </template>
+</s-toolbar>
 <s-table
   border
   highlight-hover-row
@@ -163,6 +173,14 @@ export default {
   },
   created () {
     this.tableData = window.MOCK_DATA_LIST.slice(0, 10)
+  },
+  methods: {
+    getSelectRecords() {
+      console.log(this.$refs.myTable.getSelectRecords())
+    },
+     getRadioRow() {
+       console.log(this.$refs.myTable.getRadioRow())
+     }
   }
 }
 </script>

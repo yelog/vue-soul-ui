@@ -11,6 +11,7 @@
 :::demo
 ```html
 <template>
+<s-button @click="getSelectRecords">获取选中行</s-button>
 <s-table
   ref="myTable"
   border
@@ -18,7 +19,7 @@
   show-overflow
   height="300"
   :loading="loading"
-  :select-config="{checkField: 'checked'}"
+  :select-config="{checkField: 'checked', trigger: 'row'}"
   :optimization ="{scrollY: {gt: 500, oSize: 10, rSize: 30}}">
   <s-table-column type="selection" width="60" fixed="left"></s-table-column>
   <s-table-column type="index" width="100" fixed="left"></s-table-column>
@@ -62,6 +63,11 @@ export default {
       }
       this.loading = false
     }, 1000)
+  },
+  methods: {
+    getSelectRecords() {
+      console.log(this.$refs.myTable.getSelectRecords())
+    }
   }
 }
 </script>
