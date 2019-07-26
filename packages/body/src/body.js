@@ -4,23 +4,23 @@ import { UtilTools } from '../../tools'
 
 function renderBorder (h, type) {
   return h('div', {
-    class: `vxe-table-${type}ed-borders`,
+    class: `s-table-${type}ed-borders`,
     ref: `${type}Borders`
   }, [
     h('span', {
-      class: 'vxe-table-border-top',
+      class: 's-table-border-top',
       ref: `${type}Top`
     }),
     h('span', {
-      class: 'vxe-table-border-right',
+      class: 's-table-border-right',
       ref: `${type}Right`
     }),
     h('span', {
-      class: 'vxe-table-border-bottom',
+      class: 's-table-border-bottom',
       ref: `${type}Bottom`
     }),
     h('span', {
-      class: 'vxe-table-border-left',
+      class: 's-table-border-left',
       ref: `${type}Left`
     })
   ])

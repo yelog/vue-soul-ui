@@ -851,7 +851,7 @@ export default {
             tableFullData.push.apply(tableFullData, newRecords)
           } else {
             if (treeConfig) {
-              throw new Error('[vxe-table] The tree table does not support this operation.')
+              throw new Error('[s-table] The tree table does not support this operation.')
             }
             tableData.splice.apply(tableData, [tableData.indexOf(row), 0].concat(newRecords))
             tableFullData.splice.apply(tableFullData, [tableFullData.indexOf(row), 0].concat(newRecords))
@@ -1941,7 +1941,7 @@ export default {
         }
         for (let index = 0; index < layoutList.length; index++) {
           let layout = layoutList[index]
-          let columnTargetNode = this.getEventTargetNode(evnt, this.$el, `vxe-${layout}--column`)
+          let columnTargetNode = this.getEventTargetNode(evnt, this.$el, `s-${layout}--column`)
           if (columnTargetNode.flag) {
             let cell = columnTargetNode.targetElem
             let column = this.getColumnNode(cell).item
@@ -1956,7 +1956,7 @@ export default {
             this.openContextMenu(evnt, layout, params)
             UtilTools.emitEvent(this, `${typePrefix}cell-context-menu`, [params, evnt])
             return
-          } else if (this.getEventTargetNode(evnt, this.$el, `vxe-table--${layout}-wrapper`).flag) {
+          } else if (this.getEventTargetNode(evnt, this.$el, `s-table--${layout}-wrapper`).flag) {
             evnt.preventDefault()
             return
           }
