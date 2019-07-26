@@ -6,6 +6,7 @@ export default {
   name: 'SToolbar',
   props: {
     id: String,
+    resizable: Object,
     setting: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.setting },
     buttons: { type: Array, default: () => GlobalConfig.toolbar.buttons },
     size: String,
@@ -19,7 +20,7 @@ export default {
   },
   data () {
     return {
-      tableCustoms: [],
+      tableFullColumn: [],
       settingStore: {
         visible: false
       }
@@ -35,24 +36,22 @@ export default {
     vSize () {
       return this.size || this.$parent.size || this.$parent.vSize
     },
-    isStorage () {
-      return this.setting && this.setting.storage
+    resizableOpts () {
+      return Object.assign({ storageKey: 'VXE_TABLE_CUSTOM_COLUMN_WIDTH' }, GlobalConfig.toolbar.resizable, this.resizable)
     },
-    storageKey () {
-      return GlobalConfig.toolbar.storageKey || 'VXE_TABLE_CUSTOM_HIDDEN'
+    settingOpts () {
+      return Object.assign({ storageKey: 'VXE_TABLE_CUSTOM_COLUMN_HIDDEN' }, GlobalConfig.toolbar.setting, this.setting)
     }
   },
   created () {
-    let { isStorage, id, customs, setting } = this
+    let { settingOpts, id, customs } = this
     if (customs) {
-      this.tableCustoms = customs
+      this.tableFullColumn = customs
     }
-    if (isStorage && !id) {
+    if (settingOpts.storage && !id) {
       throw new Error('[s-table] Toolbar must have a unique primary id.')
     }
-    if (setting) {
-      this.$nextTick(() => this.loadStorage())
-    }
+    this.$nextTick(() => this.loadStorage())
     GlobalEvent.on(this, 'mousedown', this.handleGlobalMousedownEvent)
     GlobalEvent.on(this, 'blur', this.handleGlobalBlurEvent)
   },
@@ -61,7 +60,7 @@ export default {
     GlobalEvent.off(this, 'blur')
   },
   render (h) {
-    let { $scopedSlots, settingStore, setting, buttons = [], vSize, tableCustoms } = this
+    let { $scopedSlots, settingStore, setting, buttons = [], vSize, tableFullColumn } = this
     let customBtnOns = {}
     let customWrapperOns = {}
     let $buttons = $scopedSlots.buttons
@@ -113,7 +112,7 @@ export default {
           h('div', {
             class: 's-custom--option',
             on: customWrapperOns
-          }, tableCustoms.map(column => {
+          }, tableFullColumn.map(column => {
             let { property, visible, own } = column
             let headerTitle = own.title || own.label
             return property && headerTitle ? h('s-checkbox', {
@@ -148,63 +147,109 @@ export default {
       }
     },
     loadStorage () {
-      if (this.isStorage) {
-        let customStorageMap = this.getStorageMap()
-        let customStorage = customStorageMap[this.id]
-        if (customStorage) {
-          this.updateCustoms(customStorage.split(',').map(prop => ({ prop, visible: false })))
+      let { $grid, $table, id, resizable, setting, resizableOpts, settingOpts } = this
+      if (resizable || setting) {
+        if ($grid || $table) {
+          ($grid || $table).connect({ toolbar: this })
         } else {
-          this.updateCustoms(this.tableCustoms)
+          throw new Error('[vxe-toolbar] Not found vxe-table.')
         }
-      } else {
-        this.updateCustoms(this.tableCustoms)
+        let customMap = {}
+        if (resizableOpts.storage) {
+          let columnWidthStorage = this.getStorageMap(resizableOpts.storageKey)[id]
+          if (columnWidthStorage) {
+            XEUtils.each(columnWidthStorage, (resizeWidth, field) => {
+              customMap[field] = { field, resizeWidth }
+            })
+          }
+        }
+        if (settingOpts.storage) {
+          let columnHideStorage = this.getStorageMap(settingOpts.storageKey)[id]
+          if (columnHideStorage) {
+            columnHideStorage.split(',').forEach(field => {
+              if (customMap[field]) {
+                customMap[field].visible = false
+              } else {
+                customMap[field] = { field, visible: false }
+              }
+            })
+          }
+        }
+        let customList = Object.values(customMap)
+        this.updateCustoms(customList.length ? customList : this.tableFullColumn)
       }
+    },
+    updateColumn (fullColumn) {
+      this.tableFullColumn = fullColumn
     },
     updateCustoms (customs) {
       let { $grid, $table } = this
       let comp = $grid || $table
       if (comp) {
-        comp.reloadCustoms(customs).then(customs => {
-          this.tableCustoms = customs
+        comp.reloadCustoms(customs).then(fullColumn => {
+          this.tableFullColumn = fullColumn
         })
       }
     },
-    getStorageMap () {
+    getStorageMap (key) {
       let version = GlobalConfig.version
-      let rest = XEUtils.toStringJSON(localStorage.getItem(this.storageKey))
+      let rest = XEUtils.toStringJSON(localStorage.getItem(key))
       return rest && rest._v === version ? rest : { _v: version }
     },
-    saveStorageMap () {
-      let { id, tableCustoms, isStorage, storageKey } = this
-      if (isStorage) {
-        let customStorageMap = this.getStorageMap()
-        customStorageMap[id] = tableCustoms.filter(column => !column.visible).map(column => column.property).join(',') || undefined
-        localStorage.setItem(storageKey, XEUtils.toJSONString(customStorageMap))
+    saveColumnHide () {
+      let { id, tableFullColumn, settingOpts } = this
+      if (settingOpts.storage) {
+        let columnHideStorageMap = this.getStorageMap(settingOpts.storageKey)
+        let colHides = tableFullColumn.filter(column => column.property && !column.visible)
+        columnHideStorageMap[id] = colHides.length ? colHides.map(column => column.property).join(',') : undefined
+        localStorage.setItem(settingOpts.storageKey, XEUtils.toJSONString(columnHideStorageMap))
+      }
+      return this.$nextTick()
+    },
+    saveColumnWidth (isReset) {
+      let { id, tableFullColumn, resizableOpts } = this
+      if (resizableOpts.storage) {
+        let columnWidthStorageMap = this.getStorageMap(resizableOpts.storageKey)
+        let columnWidthStorage
+        if (!isReset) {
+          columnWidthStorage = XEUtils.isPlainObject(columnWidthStorageMap[id]) ? columnWidthStorageMap[id] : {}
+          tableFullColumn.forEach(({ property, resizeWidth, renderWidth }) => {
+            if (property && resizeWidth) {
+              columnWidthStorage[property] = renderWidth
+            }
+          })
+        }
+        columnWidthStorageMap[id] = XEUtils.isEmpty(columnWidthStorage) ? undefined : columnWidthStorage
+        localStorage.setItem(resizableOpts.storageKey, XEUtils.toJSONString(columnWidthStorageMap))
       }
       return this.$nextTick()
     },
     hideColumn (column) {
+      console.warn('[vxe-table] The function hideColumn is deprecated')
       column.visible = false
       return this.updateSetting()
     },
     showColumn (column) {
-      let { tableCustoms } = this
-      if (column) {
-        column.visible = true
-      } else {
-        tableCustoms.forEach(column => {
-          column.visible = true
-        })
-      }
+      console.warn('[vxe-table] The function showColumn is deprecated')
+      column.visible = true
       return this.updateSetting()
     },
-    updateSetting () {
+    resetCustoms () {
+      return this.updateSetting()
+    },
+    resetResizable () {
+      this.updateResizable(this)
+    },
+    updateResizable (isReset) {
       let { $grid, $table } = this
-      if ($grid || $table) {
-        ($grid || $table).refreshColumn()
-        return this.saveStorageMap()
-      }
-      throw new Error('[s-toolbar] Not found s-table.')
+      let comp = $grid || $table
+      this.saveColumnWidth(isReset)
+      comp.analyColumnWidth()
+      return comp.recalculate(true)
+    },
+    updateSetting () {
+      (this.$grid || this.$table).refreshColumn()
+      return this.saveColumnHide()
     },
     handleGlobalMousedownEvent (evnt) {
       if (!DomTools.getEventTargetNode(evnt, this.$refs.customWrapper).flag) {

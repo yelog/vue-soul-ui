@@ -124,11 +124,6 @@
     .s-footer--column {
       border-right: 1px solid $s-table-border-color;
     }
-    .s-body--column {
-      &:last-child {
-        border-right-color: $s-table-background-color;
-      }
-    }
     &.scroll--y {
       .s-header--column,
       .s-body--column,

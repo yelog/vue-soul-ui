@@ -106,13 +106,13 @@ export default {
       fixedType,
       headerColumn,
       tableColumn,
-      resizeMousedown,
       fixedColumn
     } = this
     let {
       $listeners: tableListeners,
       resizable,
       border,
+      columnKey,
       headerRowClassName,
       headerCellClassName,
       showHeaderOverflow: allColumnHeaderOverflow,
@@ -175,7 +175,6 @@ export default {
             class: ['s-header--row', headerRowClassName ? XEUtils.isFunction(headerRowClassName) ? headerRowClassName({ $table, $rowIndex, fixed: fixedType }) : headerRowClassName : '']
           }, cols.map((column, $columnIndex) => {
             let {
-              columnKey,
               showHeaderOverflow,
               headerAlign,
               align,
@@ -221,6 +220,7 @@ export default {
             return h('th', {
               class: ['s-header--column', column.id, {
                 [`col--${headAlign}`]: headAlign,
+                'col--fixed': column.fixed,
                 'col--index': column.type === 'index',
                 'col--group': isColGroup,
                 'col--ellipsis': hasEllipsis,
@@ -228,13 +228,12 @@ export default {
                 'filter--active': column.filters.some(item => item.checked)
               }, headerCellClassName ? XEUtils.isFunction(headerCellClassName) ? headerCellClassName({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }) : headerCellClassName : ''],
               attrs: {
-                'data-index': columnIndex,
                 'data-colid': column.id,
                 colspan: column.colSpan,
                 rowspan: column.rowSpan
               },
               on: thOns,
-              key: columnKey || (isColGroup ? column.id : columnIndex)
+              key: columnKey || isColGroup ? column.id : columnIndex
             }, [
               h('div', {
                 class: ['s-cell', {
@@ -254,7 +253,7 @@ export default {
                   'is--line': !border
                 }],
                 on: {
-                  mousedown: evnt => resizeMousedown(evnt, column)
+                  mousedown: evnt => this.resizeMousedown(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn })
                 }
               }) : null
             ])
@@ -278,7 +277,8 @@ export default {
     uploadColumn () {
       this.headerColumn = this.isGroup ? convertToRows(this.collectColumn) : [this.$parent.scrollXLoad && this.fixedType ? this.fixedColumn : this.tableColumn]
     },
-    resizeMousedown (evnt, column) {
+    resizeMousedown (evnt, params) {
+      let { column } = params
       let { $parent: $table, $el, fixedType } = this
       let { tableBody, leftContainer, rightContainer, resizeBar: resizeBarElem } = $table.$refs
       let { target: dragBtnElem, clientX: dragClientX } = evnt
@@ -345,6 +345,10 @@ export default {
         $table.analyColumnWidth()
         $table.recalculate(true)
         DomTools.removeClass($table.$el, 'c--resize')
+        if ($table._toolbar) {
+          $table._toolbar.updateResizable()
+        }
+        UtilTools.emitEvent($table, 'resizable-change', [params])
       }
       updateEvent(evnt)
     }

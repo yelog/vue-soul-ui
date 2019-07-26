@@ -6,7 +6,7 @@ class ColumnConfig {
   constructor (_vm, { renderHeader, renderCell, renderData } = {}) {
     Object.assign(this, {
       // 基本属性
-      id: `col--${++columnUniqueId}`,
+      id: `cid_${++columnUniqueId}`,
       type: _vm.type,
       prop: _vm.prop,
       property: _vm.field || _vm.prop,
@@ -30,7 +30,6 @@ class ColumnConfig {
       filterMethod: _vm.filterMethod,
       filterRender: _vm.filterRender,
       treeNode: _vm.treeNode,
-      columnKey: _vm.columnKey,
       editRender: _vm.editRender,
       // 自定义参数
       params: _vm.params,
@@ -59,16 +58,13 @@ export const UtilTools = {
   getSize ({ size, $parent }) {
     return size || ($parent && ['medium', 'small', 'mini'].indexOf($parent.size) > -1 ? $parent.size : null)
   },
-  getRowKey ($table) {
-    // let { rowKey, selectConfig = {}, treeConfig = {}, expandConfig = {}, editConfig = {} } = $table
-    // if (!rowKey) {
-    //   rowKey = selectConfig.key || treeConfig.key || expandConfig.key || editConfig.key
-    // }
-    // return rowKey
-    return $table.rowKey || $table.rowId
+  // 行主键 key
+  getRowkey ($table) {
+    return $table.rowId
   },
-  getRowPrimaryKey ($table, row) {
-    let rowId = XEUtils.get(row, UtilTools.getRowKey($table))
+  // 行主键 value
+  getRowid ($table, row) {
+    let rowId = XEUtils.get(row, UtilTools.getRowkey($table))
     return rowId ? encodeURIComponent(rowId) : ''
   },
   // 触发事件
@@ -98,15 +94,27 @@ export const UtilTools = {
   getCellLabel (row, column, params) {
     let { formatter } = column
     let cellValue = UtilTools.getCellValue(row, column)
+    let cellLabel = cellValue
     if (params && formatter) {
-      if (XEUtils.isString(formatter)) {
-        return XEUtils[formatter](cellValue)
-      } else if (XEUtils.isArray(formatter)) {
-        return XEUtils[formatter[0]].apply(XEUtils, [cellValue].concat(formatter.slice(1)))
+      let { $table } = params
+      if ($table) {
+        let formatData = $table.fullDataRowMap.get(row).formatData
+        if (formatData && formatData.value === cellValue) {
+          return formatData.label
+        }
       }
-      return formatter(Object.assign({ cellValue }, params))
+      if (XEUtils.isString(formatter)) {
+        cellLabel = XEUtils[formatter](cellValue)
+      } else if (XEUtils.isArray(formatter)) {
+        cellLabel = XEUtils[formatter[0]].apply(XEUtils, [cellValue].concat(formatter.slice(1)))
+      } else {
+        cellLabel = formatter(Object.assign({ cellValue }, params))
+      }
+      if ($table) {
+        $table.fullDataRowMap.get(row).formatData = { value: cellValue, label: cellLabel }
+      }
     }
-    return cellValue
+    return cellLabel
   },
   setCellValue (row, column, value) {
     return XEUtils.set(row, column.property, value)

@@ -92,7 +92,9 @@ export default {
       if (value !== this.visible) {
         this.visible = value
         this.isUpdate = true
-        this.$emit('input', this.visible)
+        if (this.$listeners.input) {
+          this.$emit('input', this.visible)
+        }
       }
     },
     toVisible (target, message) {
@@ -103,6 +105,7 @@ export default {
         let parentNode = $el.parentNode
         let tipLeft = left
         tipStore.placement = 'top'
+        tipStore.style = { width: 'auto' }
         tipStore.arrowStyle = { left: '50%' }
         if (!parentNode) {
           document.body.appendChild($el)

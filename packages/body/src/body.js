@@ -2,6 +2,30 @@ import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
 import { UtilTools } from '../../tools'
 
+function renderBorder (h, type) {
+  return h('div', {
+    class: `vxe-table-${type}ed-borders`,
+    ref: `${type}Borders`
+  }, [
+    h('span', {
+      class: 'vxe-table-border-top',
+      ref: `${type}Top`
+    }),
+    h('span', {
+      class: 'vxe-table-border-right',
+      ref: `${type}Right`
+    }),
+    h('span', {
+      class: 'vxe-table-border-bottom',
+      ref: `${type}Bottom`
+    }),
+    h('span', {
+      class: 'vxe-table-border-left',
+      ref: `${type}Left`
+    })
+  ])
+}
+
 /**
  * 渲染列
  */
@@ -11,6 +35,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     $listeners: tableListeners,
     tableData,
     height,
+    columnKey,
     overflowX,
     scrollXLoad,
     scrollYLoad,
@@ -32,8 +57,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let {
     editRender,
     align,
-    showOverflow,
-    columnKey
+    showOverflow
   } = column
   let { actived } = editStore
   let fixedHiddenColumn = fixedType ? column.fixed !== fixedType : column.fixed && overflowX
@@ -47,7 +71,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let cellAlign = align || allAlign
   let validError = validStore.row === row && validStore.column === column
   let hasDefaultTip = editRules && (validOpts.message === 'default' ? (height || tableData.length > 1) : validOpts.message === 'inline')
-  let attrs = { 'data-index': columnIndex }
+  let attrs = { 'data-colid': column.id }
   let triggerDblclick = (editRender && editConfig && editConfig.trigger === 'dblclick')
   let params = { $table, $seq, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, data: tableData }
   // 滚动的渲染不支持动态行高
@@ -129,7 +153,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
       'col--actived': editConfig && editRender && (actived.row === row && (actived.column === column || editConfig.mode === 'row')),
       'col--valid-error': validError
     }, cellClassName ? XEUtils.isFunction(cellClassName) ? cellClassName(params) : cellClassName : ''],
-    key: columnKey || columnIndex,
+    key: columnKey ? column.id : columnIndex,
     attrs,
     on: tdOns
   }, allColumnOverflow && fixedHiddenColumn ? [] : [
@@ -184,7 +208,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         $table.triggerHoverEvent(evnt, { row, rowIndex })
       }
     }
-    let rowPrimaryKey = UtilTools.getRowPrimaryKey($table, row)
+    let rowid = UtilTools.getRowid($table, row)
     rows.push(
       h('tr', {
         class: ['s-body--row', {
@@ -192,9 +216,9 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
           'row--new': editStore.insertList.indexOf(row) > -1
         }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, seq, row, rowIndex }) : rowClassName : ''],
         attrs: {
-          'data-rowid': rowPrimaryKey
+          'data-rowid': rowid
         },
-        key: treeConfig ? rowPrimaryKey : (rowKey ? XEUtils.get(row, rowKey) : $rowIndex),
+        key: rowKey || treeConfig ? rowid : $rowIndex,
         on: trOn
       }, tableColumn.map((column, $columnIndex) => {
         let columnIndex = getColumnIndex(column)
@@ -215,7 +239,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         rows.push(
           h('tr', {
             class: 's-body--expanded-row',
-            key: `expand_${rowPrimaryKey}`,
+            key: `expand_${rowid}`,
             on: trOn
           }, [
             h('td', {
@@ -329,9 +353,6 @@ export default {
     }
     return h('div', {
       class: ['s-table--body-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
-      attrs: {
-        fixed: fixedType
-      },
       on: {
         mouseleave: $table.clearHoverRow
       }
@@ -379,48 +400,8 @@ export default {
       !fixedType && (mouseConfig.checked || keyboardConfig.isCut) ? h('div', {
         class: 's-table--borders'
       }, [
-        mouseConfig.checked ? h('div', {
-          class: 's-table-checked-borders',
-          ref: 'checkBorders'
-        }, [
-          h('span', {
-            class: 's-table-border-top',
-            ref: 'checkTop'
-          }),
-          h('span', {
-            class: 's-table-border-right',
-            ref: 'checkRight'
-          }),
-          h('span', {
-            class: 's-table-border-bottom',
-            ref: 'checkBottom'
-          }),
-          h('span', {
-            class: 's-table-border-left',
-            ref: 'checkLeft'
-          })
-        ]) : null,
-        keyboardConfig.isCut ? h('div', {
-          class: 's-table-copyed-borders',
-          ref: 'copyBorders'
-        }, [
-          h('span', {
-            class: 's-table-border-top',
-            ref: 'copyTop'
-          }),
-          h('span', {
-            class: 's-table-border-right',
-            ref: 'copyRight'
-          }),
-          h('span', {
-            class: 's-table-border-bottom',
-            ref: 'copyBottom'
-          }),
-          h('span', {
-            class: 's-table-border-left',
-            ref: 'copyLeft'
-          })
-        ]) : null
+        mouseConfig.checked ? renderBorder(h, 'check') : null,
+        keyboardConfig.isCut ? renderBorder(h, 'copy') : null
       ]) : null,
       !fixedType && !tableData.length ? h('div', {
         class: 's-table--empty-block',
