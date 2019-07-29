@@ -49,11 +49,19 @@ export default {
           {
             code: 'hideColumn',
             name: '隐藏列'
+          },
+          {
+            code: 'showAllColumn',
+            name: '取消所有隐藏列'
           }
         ]
       ],
       bodyMenus: [
         [
+          {
+            code: 'expandOrFold',
+            name: '展开或折叠'
+          },
           {
             code: 'insertAt',
             name: '插入一行'
@@ -96,11 +104,19 @@ export default {
                   {
                     code: 'hideColumn',
                     name: '隐藏列'
+                  },
+                  {
+                    code: 'showAllColumn',
+                    name: '取消所有隐藏列'
                   }
                 ]
               ],
               bodyMenus: [
                 [
+                  {
+                    code: 'expandOrFold',
+                    name: '展开或折叠'
+                  },
                   {
                     code: 'insertAt',
                     name: '插入一行'
@@ -137,8 +153,14 @@ export default {
                 case 'hideColumn':
                   xTree.hideColumn(column)
                   break
+                case 'showAllColumn':
+                  xTree.resetCustoms()
+                  break
                 case 'insertAt':
                   this.insertAtEvent(row, column)
+                  break
+                case 'expandOrFold':
+                  xTree.toggleTreeExpansion(row)
                   break
               }
             }
@@ -181,8 +203,14 @@ export default {
         case 'hideColumn':
           xTree.hideColumn(column)
           break
+        case 'showAllColumn':
+          xTree.resetCustoms()
+          break
         case 'insertAt':
           this.insertAtEvent(row, column)
+          break
+        case 'expandOrFold':
+          xTree.toggleTreeExpansion(row)
           break
       }
     }

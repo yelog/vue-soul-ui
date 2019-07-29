@@ -846,7 +846,7 @@ export default {
           if (scrollYLoad) {
             throw new Error('[s-table] Virtual scroller does not support this operation.')
           }
-          if (row === -1) {
+          if (!row || row === -1) {
             tableData.push.apply(tableData, newRecords)
             tableFullData.push.apply(tableFullData, newRecords)
           } else {
@@ -890,7 +890,6 @@ export default {
       let { removeList, insertList } = editStore
       let { checkField: property } = selectConfig
       let rest = []
-      this._isUpdateData = true
       if (rows) {
         if (!XEUtils.isArray(rows)) {
           rows = [rows]
@@ -1942,11 +1941,12 @@ export default {
         for (let index = 0; index < layoutList.length; index++) {
           let layout = layoutList[index]
           let columnTargetNode = this.getEventTargetNode(evnt, this.$el, `s-${layout}--column`)
+          let params = { type: layout, $table: this }
           if (columnTargetNode.flag) {
             let cell = columnTargetNode.targetElem
             let column = this.getColumnNode(cell).item
-            let params = { type: layout, column, columnIndex: this.getColumnIndex(column), cell, $table: this }
             let typePrefix = `${layout}-`
+            Object.assign(params, { column, columnIndex: this.getColumnIndex(column), cell })
             if (layout === 'body') {
               let row = this.getRowNode(cell.parentNode).item
               typePrefix = ''
@@ -1957,7 +1957,7 @@ export default {
             UtilTools.emitEvent(this, `${typePrefix}cell-context-menu`, [params, evnt])
             return
           } else if (this.getEventTargetNode(evnt, this.$el, `s-table--${layout}-wrapper`).flag) {
-            evnt.preventDefault()
+            this.openContextMenu(evnt, layout, params)
             return
           }
         }
@@ -1971,8 +1971,9 @@ export default {
     openContextMenu (evnt, type, params) {
       let { ctxMenuStore, ctxMenuConfig } = this
       let config = ctxMenuConfig[type]
+      let visibleMethod = ctxMenuConfig.visibleMethod
       if (config) {
-        let { options, visibleMethod, disabled } = config
+        let { options, disabled } = config
         if (disabled) {
           evnt.preventDefault()
         } else if (options && options.length) {
@@ -2392,23 +2393,28 @@ export default {
      * 单选，行选中事件
      */
     triggerRadioRowEvent (evnt, params) {
+      let isChange = this.selectRow !== params.row
       this.setRadioRow(params.row)
-      UtilTools.emitEvent(this, 'radio-change', [params, evnt])
+      if (isChange) {
+        UtilTools.emitEvent(this, 'radio-change', [params, evnt])
+      }
     },
     triggerCurrentRowEvent (evnt, params) {
+      let isChange = this.currentRow !== params.row
       this.setCurrentRow(params.row)
-      UtilTools.emitEvent(this, 'current-change', [params, evnt])
+      if (isChange) {
+        UtilTools.emitEvent(this, 'current-change', [params, evnt])
+      }
     },
     /**
      * 高亮行，设置某一行为高亮状态，如果调不加参数，则会取消目前高亮行的选中状态
      */
     setCurrentRow (row) {
-      let rowid = UtilTools.getRowid(this, row)
       this.clearCurrentRow()
       this.clearCurrentColumn()
       this.currentRow = row
       if (this.highlightCurrentRow) {
-        XEUtils.arrayEach(this.$el.querySelectorAll(`[data-rowid="${rowid}"]`), elem => DomTools.addClass(elem, 'row--current'))
+        DomTools.addClass(this.$el.querySelectorAll(`[data-rowid="${UtilTools.getRowid(this, row)}"]`), 'row--current')
       }
       return this.$nextTick()
     },
@@ -2685,41 +2691,44 @@ export default {
       let { $el, highlightCurrentRow, editStore, radioConfig = {}, selectConfig = {}, treeConfig = {}, editConfig, mouseConfig = {} } = this
       let { actived } = editStore
       let { column, columnIndex, cell } = params
-      if (highlightCurrentRow) {
-        if (radioConfig.trigger === 'row' || (!this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag && !this.getEventTargetNode(evnt, $el, 's-checkbox').flag && !this.getEventTargetNode(evnt, $el, 's-radio').flag)) {
-          this.triggerCurrentRowEvent(evnt, params)
-        }
-      }
-      // 如果是单选
-      if ((radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, $el, 's-radio').flag) {
-        this.triggerRadioRowEvent(evnt, params)
-      }
-      // 如果是多选
-      if ((selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, params.cell, 's-checkbox').flag) {
-        this.handleToggleCheckRowEvent(params, evnt)
-      }
       // 如果是树形表格
       if ((treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
         this.triggerTreeExpandEvent(evnt, params)
       }
-      // 如果设置了单元格选中功能，则不会使用点击事件去处理（只能支持双击模式）
-      if (!mouseConfig.checked) {
-        if (editConfig) {
-          if (!actived.args || cell !== actived.args.cell) {
-            if (editConfig.mode === 'row' && actived.args) {
-              Object.assign(actived.args, { cell, columnIndex, column })
-              actived.column = column
-            }
-            if (editConfig.trigger === 'click') {
-              this.triggerValidate('blur')
-                .catch(e => e)
-                .then(() => {
-                  this.handleActived(params, evnt)
-                    .then(() => this.triggerValidate('change'))
-                    .catch(e => e)
-                })
-            } else if (editConfig.trigger === 'dblclick') {
-              this.handleSelected(params, evnt)
+      if (!column.treeNode || !this.getEventTargetNode(evnt, $el, 's-tree-wrapper').flag) {
+        // 如果是高亮行
+        if (highlightCurrentRow) {
+          if (radioConfig.trigger === 'row' || (!this.getEventTargetNode(evnt, $el, 's-checkbox').flag && !this.getEventTargetNode(evnt, $el, 's-radio').flag)) {
+            this.triggerCurrentRowEvent(evnt, params)
+          }
+        }
+        // 如果是单选
+        if ((radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, $el, 's-radio').flag) {
+          this.triggerRadioRowEvent(evnt, params)
+        }
+        // 如果是多选
+        if ((selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) && !this.getEventTargetNode(evnt, params.cell, 's-checkbox').flag) {
+          this.handleToggleCheckRowEvent(params, evnt)
+        }
+        // 如果设置了单元格选中功能，则不会使用点击事件去处理（只能支持双击模式）
+        if (!mouseConfig.checked) {
+          if (editConfig) {
+            if (!actived.args || cell !== actived.args.cell) {
+              if (editConfig.mode === 'row' && actived.args) {
+                Object.assign(actived.args, { cell, columnIndex, column })
+                actived.column = column
+              }
+              if (editConfig.trigger === 'click') {
+                this.triggerValidate('blur')
+                  .catch(e => e)
+                  .then(() => {
+                    this.handleActived(params, evnt)
+                      .then(() => this.triggerValidate('change'))
+                      .catch(e => e)
+                  })
+              } else if (editConfig.trigger === 'dblclick') {
+                this.handleSelected(params, evnt)
+              }
             }
           }
         }
@@ -3240,7 +3249,7 @@ export default {
             this.tableData = this.getTableData(true).tableData
           }
           // 在 v3.0 中废弃 prop
-          UtilTools.emitEvent(this, 'sort-change', [{ column, prop: field, field, order }])
+          UtilTools.emitEvent(this, 'sort-change', [{ column, property: field, prop: field, field, order }])
         }
         return this.$nextTick().then(this.updateStyle)
       }
@@ -3250,7 +3259,7 @@ export default {
       this.tableFullColumn.forEach(column => {
         column.order = null
       })
-      this.tableFullData = this.data || []
+      this.tableFullData = this.data ? this.data.slice(0) : []
       this.tableData = this.getTableData(true).tableData
       return this.$nextTick()
     },
@@ -3294,6 +3303,7 @@ export default {
     confirmFilterEvent (evnt) {
       let { visibleColumn, filterStore, remoteFilter, scrollXLoad, scrollYLoad } = this
       let { column } = filterStore
+      let { property } = column
       let values = []
       column.filters.forEach(item => {
         if (item.checked) {
@@ -3316,11 +3326,11 @@ export default {
             }
           })
           // 在 v3.0 中废弃 prop
-          filterList.push({ column, field: property, prop: property, values: valueList })
+          filterList.push({ column, property, field: property, prop: property, values: valueList })
         }
       })
       // 在 v3.0 中废弃 prop
-      UtilTools.emitEvent(this, 'filter-change', [{ column, field: column.property, prop: column.property, values, filters: filterList }])
+      UtilTools.emitEvent(this, 'filter-change', [{ column, property, field: property, prop: property, values, filters: filterList }])
       if (scrollXLoad || scrollYLoad) {
         this.clearScroll()
       }
@@ -3446,10 +3456,12 @@ export default {
      * 展开树节点事件
      */
     triggerTreeExpandEvent (evnt, { row }) {
-      let { selectColumn } = this
+      let { selectRow, selectColumn } = this
       let rest = this.toggleTreeExpansion(row)
       UtilTools.emitEvent(this, 'toggle-tree-change', [{ row, rowIndex: this.getRowIndex(row), $table: this }, evnt])
-      if (selectColumn) {
+      if (selectRow) {
+        this.$nextTick(() => this.setCurrentRow(selectRow))
+      } else if (selectColumn) {
         this.$nextTick(() => this.setCurrentColumn(selectColumn))
       }
       return rest
