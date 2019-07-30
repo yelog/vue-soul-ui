@@ -4,23 +4,23 @@
   text-align: center;
   background-color: #fff;
   outline: 0;
-  font-size: $vxe-font-size;
-  color: $vxe-font-color;
+  font-size: $s-font-size;
+  color: $s-font-color;
   user-select: none;
   appearance: none;
   cursor: pointer;
   &.type--text {
-    color: $vxe-primary-color;
+    color: $s-primary-color;
     text-decoration: none;
     border: 0;
     background-color: transparent;
     &[disabled] {
-      color: $vxe-disabled-color;
+      color: $s-disabled-color;
       cursor: no-drop;
     }
     &:not([disabled]) {
       &:hover {
-        color: lighten($vxe-primary-color, 10%);
+        color: lighten($s-primary-color, 10%);
       }
     }
   }

@@ -88,7 +88,7 @@ const _storeMap = {
     renderEdit (h, editRender, params) {
       return [
         h('select', {
-          class: 'vxe-default-select',
+          class: 's-default-select',
           on: getEvents(editRender, params)
         },
         editRender.optionGroups ? renderOptgroups(h, editRender, params) : renderOptions(h, editRender.options, editRender, params))
