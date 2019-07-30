@@ -35,7 +35,7 @@
 
     .nav-item {
       a {
-        font-size: 16px;
+        font-size: 18px;
         color: #333;
         line-height: 40px;
         height: 40px;
@@ -56,7 +56,7 @@
         a {
           display: block;
           height: 25px;
-          font-size: 13px;
+          font-size: 15px;
           color: #999;
           line-height: 25px;
           overflow: hidden;
@@ -105,7 +105,7 @@
 
     .nav-group__title {
       color: #444;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       margin-top: 5px;
       cursor: pointer;
