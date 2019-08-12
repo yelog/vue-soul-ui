@@ -1,6 +1,11 @@
 import XEUtils from 'xe-utils'
 import GlobalConfig from '../../conf'
-import { UtilTools } from '../../tools'
+import { UtilTools, DomTools } from '../../tools'
+
+// 滚动、拖动过程中不需要触发
+function isOperateMouse ($table) {
+  return $table._isResize || ($table.lastScrollTime && Date.now() < $table.lastScrollTime + 100)
+}
 
 function renderBorder (h, type) {
   return h('div', {
@@ -79,15 +84,16 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     showEllipsis = true
   }
   // hover 进入事件
-  if (showTooltip || tableListeners['cell-mouseenter']) {
+  if (showTitle || showTooltip || tableListeners['cell-mouseenter']) {
     tdOns.mouseenter = evnt => {
-      // 拖动过程中不需要触发
-      if ($table._isResize) {
+      if (isOperateMouse($table)) {
         return
       }
       let evntParams = { $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }
-      // 如果配置了显示 tooltip
-      if (showTooltip) {
+      if (showTitle) {
+        DomTools.updateCellTitle(evnt)
+      } else if (showTooltip) {
+        // 如果配置了显示 tooltip
         $table.triggerTooltipEvent(evnt, evntParams)
       }
       UtilTools.emitEvent($table, 'cell-mouseenter', [evntParams, evnt])
@@ -96,11 +102,12 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   // hover 退出事件
   if (showTooltip || tableListeners['cell-mouseleave']) {
     tdOns.mouseleave = evnt => {
-      // 拖动过程中不需要触发
-      if ($table._isResize) {
+      if (isOperateMouse($table)) {
         return
       }
-      $table.clostTooltip()
+      if (showTooltip) {
+        $table.clostTooltip()
+      }
       UtilTools.emitEvent($table, 'cell-mouseleave', [{ $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }, evnt])
     }
   }
@@ -175,7 +182,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     }, [
       h('span', {
         class: 's-cell--valid-msg'
-      }, XEUtils.isFunction(validStore.content) ? validStore.content.call($table, h) : validStore.content)
+      }, validStore.content)
     ]) : _e() : null
   ])
 }
@@ -205,6 +212,9 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
     // 事件绑定
     if (highlightHoverRow) {
       trOn.mouseenter = evnt => {
+        if (isOperateMouse($table)) {
+          return
+        }
         $table.triggerHoverEvent(evnt, { row, rowIndex })
       }
     }
@@ -403,8 +413,8 @@ export default {
         mouseConfig.checked ? renderBorder(h, 'check') : null,
         keyboardConfig.isCut ? renderBorder(h, 'copy') : null
       ]) : null,
-      !fixedType && !tableData.length ? h('div', {
-        class: 's-table--empty-block',
+      !fixedType ? h('div', {
+        class: `s-table--empty-block${tableData.length ? '' : ' is--visible'}`,
         ref: 'emptyBlock'
       }, [
         h('span', {
@@ -433,6 +443,7 @@ export default {
       let isY = scrollTop !== lastScrollTop
       $table.lastScrollTop = scrollTop
       $table.lastScrollLeft = scrollLeft
+      $table.lastScrollTime = Date.now()
       if (leftElem && fixedType === 'left') {
         scrollTop = leftElem.scrollTop
         syncBodyScroll(scrollTop, bodyElem, rightElem)
@@ -443,7 +454,6 @@ export default {
         if (isX && headerElem) {
           headerElem.scrollLeft = bodyElem.scrollLeft
         }
-        // 缓解 IE 卡顿
         if (leftElem || rightElem) {
           $table.checkScrolling()
           if (isY) {
@@ -453,7 +463,16 @@ export default {
       }
       if (scrollXLoad && isX) {
         $table.triggerScrollXEvent(evnt)
-      } else if (scrollYLoad && isY) {
+        if (headerElem && scrollLeft + bodyElem.clientWidth >= bodyElem.scrollWidth) {
+          // 修复拖动滚动条时可能存在不同步问题
+          this.$nextTick(() => {
+            if (bodyElem.scrollLeft !== headerElem.scrollLeft) {
+              headerElem.scrollLeft = bodyElem.scrollLeft
+            }
+          })
+        }
+      }
+      if (scrollYLoad && isY) {
         $table.triggerScrollYEvent(evnt)
       }
       UtilTools.emitEvent($table, 'scroll', [{ type: 'body', fixed: fixedType, scrollTop, scrollLeft, isX, isY, $table }, evnt])

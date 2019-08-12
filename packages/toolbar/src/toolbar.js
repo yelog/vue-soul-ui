@@ -6,7 +6,8 @@ export default {
   name: 'SToolbar',
   props: {
     id: String,
-    resizable: Object,
+    resizable: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.resizable },
+    refresh: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.refresh },
     setting: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.setting },
     buttons: { type: Array, default: () => GlobalConfig.toolbar.buttons },
     size: String,
@@ -20,6 +21,8 @@ export default {
   },
   data () {
     return {
+      $table: null,
+      isRefresh: false,
       tableFullColumn: [],
       settingStore: {
         visible: false
@@ -27,20 +30,17 @@ export default {
     }
   },
   computed: {
-    $table () {
-      let { $parent, data } = this
-      let { $children } = $parent
-      let selfIndex = $children.indexOf(this)
-      return $children.find((comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 's-table'))
-    },
     vSize () {
       return this.size || this.$parent.size || this.$parent.vSize
     },
+    refreshOpts () {
+      return Object.assign({}, GlobalConfig.toolbar.refresh, this.refresh)
+    },
     resizableOpts () {
-      return Object.assign({ storageKey: 'VXE_TABLE_CUSTOM_COLUMN_WIDTH' }, GlobalConfig.toolbar.resizable, this.resizable)
+      return Object.assign({ storageKey: 'S_TABLE_CUSTOM_COLUMN_WIDTH' }, GlobalConfig.toolbar.resizable, this.resizable)
     },
     settingOpts () {
-      return Object.assign({ storageKey: 'VXE_TABLE_CUSTOM_COLUMN_HIDDEN' }, GlobalConfig.toolbar.setting, this.setting)
+      return Object.assign({ storageKey: 'S_TABLE_CUSTOM_COLUMN_HIDDEN' }, GlobalConfig.toolbar.setting, this.setting)
     }
   },
   created () {
@@ -51,7 +51,10 @@ export default {
     if (settingOpts.storage && !id) {
       throw new Error('[s-table] Toolbar must have a unique primary id.')
     }
-    this.$nextTick(() => this.loadStorage())
+    this.$nextTick(() => {
+      this.updateConf()
+      this.loadStorage()
+    })
     GlobalEvent.on(this, 'mousedown', this.handleGlobalMousedownEvent)
     GlobalEvent.on(this, 'blur', this.handleGlobalBlurEvent)
   },
@@ -60,14 +63,14 @@ export default {
     GlobalEvent.off(this, 'blur')
   },
   render (h) {
-    let { $scopedSlots, settingStore, setting, buttons = [], vSize, tableFullColumn } = this
+    let { $scopedSlots, $grid, $table, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
     let customBtnOns = {}
     let customWrapperOns = {}
     let $buttons = $scopedSlots.buttons
     if (setting) {
-      if (setting.trigger === 'manual') {
+      if (settingOpts.trigger === 'manual') {
         // 手动触发
-      } else if (setting.trigger === 'hover') {
+      } else if (settingOpts.trigger === 'hover') {
         // hover 触发
         customBtnOns.mouseenter = this.handleMouseenterSettingEvent
         customBtnOns.mouseleave = this.handleMouseleaveSettingEvent
@@ -85,12 +88,12 @@ export default {
     }, [
       h('div', {
         class: 's-button--wrapper'
-      }, $buttons ? $buttons() : buttons.map(item => {
+      }, $buttons ? $buttons.call($grid || $table || this, { $grid, $table }, h) : buttons.map(item => {
         return h('s-button', {
           on: {
             click: evnt => this.btnEvent(item, evnt)
           }
-        }, XEUtils.isFunction(item.name) ? item.name() : item.name)
+        }, UtilTools.getFuncText(item.name))
       })),
       setting ? h('div', {
         class: ['s-custom--wrapper', {
@@ -103,7 +106,7 @@ export default {
           on: customBtnOns
         }, [
           h('i', {
-            class: 's-icon--menu'
+            class: GlobalConfig.icon.custom
           })
         ]),
         h('div', {
@@ -114,7 +117,7 @@ export default {
             on: customWrapperOns
           }, tableFullColumn.map(column => {
             let { property, visible, own } = column
-            let headerTitle = own.title || own.label
+            let headerTitle = UtilTools.getFuncText(own.title || own.label)
             return property && headerTitle ? h('s-checkbox', {
               props: {
                 value: visible
@@ -122,7 +125,7 @@ export default {
               on: {
                 change: value => {
                   column.visible = value
-                  if (setting && setting.immediate) {
+                  if (setting && settingOpts.immediate) {
                     this.updateSetting()
                   }
                 }
@@ -130,10 +133,32 @@ export default {
             }, headerTitle) : null
           }))
         ])
+      ]) : null,
+      refresh ? h('div', {
+        class: 's-refresh--wrapper'
+      }, [
+        h('div', {
+          class: 's-refresh--btn',
+          on: {
+            click: this.refreshEvent
+          }
+        }, [
+          h('i', {
+            class: [GlobalConfig.icon.refresh, {
+              roll: this.isRefresh
+            }]
+          })
+        ])
       ]) : null
     ])
   },
   methods: {
+    updateConf () {
+      let { $parent, data } = this
+      let { $children } = $parent
+      let selfIndex = $children.indexOf(this)
+      this.$table = $children.find((comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 's-table'))
+    },
     openSetting () {
       this.settingStore.visible = true
     },
@@ -141,18 +166,23 @@ export default {
       let { setting, settingStore } = this
       if (settingStore.visible) {
         settingStore.visible = false
-        if (setting && !setting.immediate) {
+        if (setting && !settingStore.immediate) {
           this.updateSetting()
         }
       }
     },
     loadStorage () {
-      let { $grid, $table, id, resizable, setting, resizableOpts, settingOpts } = this
+      let { $grid, $table, id, refresh, resizable, setting, refreshOpts, resizableOpts, settingOpts } = this
+      if (refresh && !$grid) {
+        if (!refreshOpts.query) {
+          console.warn('[s-toolbar] refresh.query function does not exist')
+        }
+      }
       if (resizable || setting) {
         if ($grid || $table) {
           ($grid || $table).connect({ toolbar: this })
         } else {
-          throw new Error('[vxe-toolbar] Not found vxe-table.')
+          throw new Error('[s-toolbar] Not found s-table.')
         }
         let customMap = {}
         if (resizableOpts.storage) {
@@ -225,12 +255,12 @@ export default {
       return this.$nextTick()
     },
     hideColumn (column) {
-      console.warn('[vxe-table] The function hideColumn is deprecated')
+      console.warn('[s-table] The function hideColumn is deprecated')
       column.visible = false
       return this.updateSetting()
     },
     showColumn (column) {
-      console.warn('[vxe-table] The function showColumn is deprecated')
+      console.warn('[s-table] The function showColumn is deprecated')
       column.visible = true
       return this.updateSetting()
     },
@@ -294,6 +324,22 @@ export default {
       if ($grid) {
         $grid.commitProxy(item.code)
         UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid }, evnt])
+      }
+    },
+    refreshEvent () {
+      let { $grid, refreshOpts } = this
+      if (!this.isRefresh) {
+        if ($grid) {
+          this.isRefresh = true
+          $grid.commitProxy('reload').catch(e => e).then(() => {
+            this.isRefresh = false
+          })
+        } else if (refreshOpts.query) {
+          this.isRefresh = true
+          refreshOpts.query().catch(e => e).then(() => {
+            this.isRefresh = false
+          })
+        }
       }
     }
   }

@@ -22,11 +22,6 @@
   .s-table--expand-icon{
     @include animatTransition(all);
   }
-  .s-header--column,
-  .s-body--column,
-  .s-body--row {
-    @include animatTransition(background-color);
-  }
   .s-input--wrapper {
     .s-input {
       @include animatTransition(border);

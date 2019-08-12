@@ -9,8 +9,27 @@ var browse = DomTools.browse
 var isWebkit = browse['-webkit'] && !browse['-ms']
 var debounceScrollYDuration = browse.msie ? 40 : 20
 
+class Rule {
+  constructor (rule) {
+    Object.assign(this, {
+      $options: rule,
+      required: rule.required,
+      min: rule.min,
+      max: rule.min,
+      type: rule.type,
+      pattern: rule.pattern,
+      validator: rule.validator,
+      trigger: rule.trigger,
+      maxWidth: rule.maxWidth
+    })
+  }
+  get message () {
+    return UtilTools.getFuncText(this.$options.message)
+  }
+}
+
 function getRowUniqueId () {
-  return `rid_${++rowUniqueId}`
+  return `row_${++rowUniqueId}`
 }
 
 /**
@@ -106,21 +125,21 @@ export default {
     // 表格加载动画设置
     loadingConfig: Object,
     // 所有的列对其方式
-    align: String,
+    align: { type: String, default: () => GlobalConfig.align },
     // 所有的表头列的对齐方式
-    headerAlign: String,
+    headerAlign: { type: String, default: () => GlobalConfig.headerAlign },
     // 是否显示表头
     showHeader: { type: Boolean, default: () => GlobalConfig.showHeader },
     // 只对 type=index 时有效，自定义序号的起始值
     startIndex: { type: Number, default: 0 },
     // 是否要高亮当前选中行
-    highlightCurrentRow: Boolean,
+    highlightCurrentRow: { type: Boolean, default: () => GlobalConfig.highlightCurrentRow },
     // 鼠标移到行是否要高亮显示
-    highlightHoverRow: Boolean,
+    highlightHoverRow: { type: Boolean, default: () => GlobalConfig.highlightHoverRow },
     // 是否要高亮当前选中列
-    highlightCurrentColumn: Boolean,
+    highlightCurrentColumn: { type: Boolean, default: () => GlobalConfig.highlightCurrentColumn },
     // 鼠标移到列是否要高亮显示
-    highlightHoverColumn: Boolean,
+    highlightHoverColumn: { type: Boolean, default: () => GlobalConfig.highlightHoverColumn },
     // 激活单元格编辑时是否高亮显示
     highlightCell: Boolean,
     // 是否显示表尾合计
@@ -157,6 +176,8 @@ export default {
     rowId: { type: String, default: () => GlobalConfig.rowId },
     // 是否自动根据父容器响应式调整表格宽高
     autoResize: Boolean,
+    // 排序配置项
+    sortConfig: Object,
     // 单选配置
     radioConfig: Object,
     // 多选配置项
@@ -309,15 +330,16 @@ export default {
       return this.size || this.$parent.size || this.$parent.vSize
     },
     validOpts () {
-      return Object.assign({
-        message: 'default'
-      }, GlobalConfig.validConfig, this.validConfig)
+      return Object.assign({ message: 'default' }, GlobalConfig.validConfig, this.validConfig)
     },
     optimizeOpts () {
       return Object.assign({}, GlobalConfig.optimization, this.optimization)
     },
     vaildTipOpts () {
       return Object.assign({ isArrow: false }, this.tooltipConfig)
+    },
+    sortOpts () {
+      return Object.assign({}, GlobalConfig.sortConfig, this.sortConfig)
     },
     // 是否使用了分组表头
     isGroup () {
@@ -336,15 +358,15 @@ export default {
       return this.tableColumn.some(column => column.filters && column.filters.length)
     },
     headerCtxMenu () {
-      return this.ctxMenuConfig.header && this.ctxMenuConfig.header.options ? this.ctxMenuConfig.header.options : []
+      return this.ctxMenuOpts.header && this.ctxMenuOpts.header.options ? this.ctxMenuOpts.header.options : []
     },
     bodyCtxMenu () {
-      return this.ctxMenuConfig.body && this.ctxMenuConfig.body.options ? this.ctxMenuConfig.body.options : []
+      return this.ctxMenuOpts.body && this.ctxMenuOpts.body.options ? this.ctxMenuOpts.body.options : []
     },
     isCtxMenu () {
       return this.headerCtxMenu.length || this.bodyCtxMenu.length
     },
-    ctxMenuConfig () {
+    ctxMenuOpts () {
       return Object.assign({}, GlobalConfig.menu, this.contextMenu)
     },
     _loadingConfig () {
@@ -381,10 +403,11 @@ export default {
         this.mergeCustomColumn(this.customs)
       }
       this.refreshColumn()
+      this.tableData = this.getTableData(true).tableData
       if (this._toolbar) {
         this._toolbar.updateColumn(tableFullColumn)
       }
-      // 在 v3.0 中废弃
+      // 在 v3.0 中废弃 prop、label
       if (tableFullColumn.length) {
         let cIndex = Math.floor((tableFullColumn.length - 1) / 2)
         if (tableFullColumn[cIndex].prop) {
@@ -427,7 +450,7 @@ export default {
       // 表尾高度
       footerHeight: 0,
       // 单选属性，选中列
-      // selectColumn: null,
+      // currentColumn: null,
       // 当前 hover 行
       // hoverRow: null,
       // 最后滚动位置
@@ -455,6 +478,9 @@ export default {
         renderSize: scrollY.rSize,
         offsetSize: scrollY.oSize
       })
+    }
+    if (!UtilTools.getRowkey(this)) {
+      console.error('[s-table] The property row-id is not allowed to be empty')
     }
     this.loadData(data, true).then(() => {
       this.handleDefault()
@@ -522,6 +548,8 @@ export default {
       highlightHoverColumn,
       highlightCell,
       vSize,
+      showOverflow,
+      showHeaderOverflow,
       editConfig,
       validOpts,
       mouseConfig = {},
@@ -552,6 +580,8 @@ export default {
         'scroll--x': overflowX,
         'fixed--left': leftList.length,
         'fixed--right': rightList.length,
+        'all-overflow': showOverflow,
+        'all-head-overflow': showHeaderOverflow,
         'c--highlight': highlightCell,
         't--animat': optimizeOpts.animat,
         't--stripe': stripe,
@@ -635,7 +665,7 @@ export default {
         props: Object.assign({ visible: loading }, _loadingConfig)
       }) : _e(),
       h('div', {
-        class: `s-table${id}-wrapper`,
+        class: `s-table${id}-wrapper ${this.$vnode.data.staticClass || ''}`,
         ref: 'tableWrapper'
       }, [
         /**
@@ -698,6 +728,13 @@ export default {
         return this.$nextTick().then(() => this.loadData(this.tableFullData))
       })
     },
+    updateData () {
+      return this.handleData(true).then(this.recalculate)
+    },
+    handleData (force) {
+      this.tableData = this.getTableData(force).tableData
+      return this.$nextTick()
+    },
     loadData (datas, notRefresh) {
       let { height, maxHeight, editStore, optimizeOpts, recalculate } = this
       let { scrollY } = optimizeOpts
@@ -715,7 +752,7 @@ export default {
       if (scrollYLoad && !(height || maxHeight)) {
         throw new Error('[s-table] The height/max-height must be set for the scroll load.')
       }
-      this.tableData = this.getTableData(true).tableData
+      this.handleData(true)
       this.reserveCheckSelection()
       this.checkSelectionStatus()
       let rest = this.$nextTick()
@@ -745,7 +782,7 @@ export default {
     updateCache (source) {
       let { treeConfig, tableFullData, fullDataRowIdData, fullDataRowMap, fullAllDataRowMap, fullAllDataRowIdData } = this
       let rowkey = UtilTools.getRowkey(this)
-      let handleData = (row, index) => {
+      let handleCache = (row, index) => {
         let rowid = UtilTools.getRowid(this, row)
         if (!rowid) {
           rowid = getRowUniqueId()
@@ -766,9 +803,9 @@ export default {
       fullAllDataRowIdData = this.fullAllDataRowIdData = {}
       fullAllDataRowMap.clear()
       if (treeConfig) {
-        XEUtils.eachTree(tableFullData, handleData, treeConfig)
+        XEUtils.eachTree(tableFullData, handleCache, treeConfig)
       } else {
-        tableFullData.forEach(handleData)
+        tableFullData.forEach(handleCache)
       }
     },
     // 更新列的 Map
@@ -822,6 +859,9 @@ export default {
     getColumnIndex (column) {
       return this.fullColumnMap.has(column) ? this.fullColumnMap.get(column).index : -1
     },
+    hasIndexColumn (column) {
+      return column && column.type === 'index'
+    },
     insert (records) {
       return this.insertAt(records)
     },
@@ -834,8 +874,7 @@ export default {
       if (!XEUtils.isArray(records)) {
         records = [records]
       }
-      let newRecords = records.map(this.createRow)
-      return new Promise(resolve => {
+      return this.createRow(records).then(newRecords => {
         if (args.length === 1) {
           tableData.unshift.apply(tableData, newRecords)
           tableFullData.unshift.apply(tableFullData, newRecords)
@@ -860,25 +899,40 @@ export default {
         [].unshift.apply(editStore.insertList, newRecords)
         this.updateCache()
         this.checkSelectionStatus()
-        this.$nextTick(() => {
+        return this.$nextTick().then(() => {
           this.recalculate()
-          resolve({ row: newRecords.length ? newRecords[newRecords.length - 1] : null, rows: newRecords })
+          return {
+            row: newRecords.length ? newRecords[newRecords.length - 1] : null,
+            rows: newRecords
+          }
         })
       })
     },
-    createRow (record) {
-      let recordItem = Object.assign({}, record)
+    defineField (row) {
       let rowkey = UtilTools.getRowkey(this)
       this.visibleColumn.forEach(column => {
-        if (column.property && !XEUtils.has(recordItem, column.property)) {
-          XEUtils.set(recordItem, column.property, null)
+        if (column.property && !XEUtils.has(row, column.property)) {
+          XEUtils.set(row, column.property, null)
         }
       })
-      // 如果设置了 Key 就必须要唯一，可以自行设置；如果为空，则默认生成一个随机数
-      if (rowkey && !XEUtils.get(recordItem, rowkey)) {
-        XEUtils.set(recordItem, rowkey, getRowUniqueId())
+      // 必须有行数据的唯一主键，可以自行设置；也可以默认生成一个随机数
+      if (!XEUtils.get(row, rowkey)) {
+        XEUtils.set(row, rowkey, getRowUniqueId())
       }
-      return recordItem
+      return row
+    },
+    createData (records) {
+      return this.$nextTick().then(() => records.map(this.defineField))
+    },
+    createRow (records) {
+      let isArr = XEUtils.isArray(records)
+      if (!isArr) {
+        records = [records]
+      }
+      return this.$nextTick().then(() => {
+        let rows = records.map(record => this.defineField(Object.assign({}, record)))
+        return isArr ? rows : rows[0]
+      })
     },
     /**
      * 删除指定行数据
@@ -1005,8 +1059,8 @@ export default {
       return this.editStore.insertList.indexOf(row) > -1
     },
     hasRowChange (row, field) {
-      let oRow
-      let { treeConfig, tableSourceData, fullDataRowIdData } = this
+      let oRow, property
+      let { visibleColumn, treeConfig, tableSourceData, fullDataRowIdData } = this
       let rowid = UtilTools.getRowid(this, row)
       // 新增的数据不需要检测
       if (!fullDataRowIdData[rowid]) {
@@ -1023,10 +1077,18 @@ export default {
         let oRowIndex = fullDataRowIdData[rowid].index
         oRow = tableSourceData[oRowIndex]
       }
-      if (arguments.length > 1) {
-        return oRow && !XEUtils.isEqual(XEUtils.get(oRow, field), XEUtils.get(row, field))
+      if (oRow) {
+        if (arguments.length > 1) {
+          return !XEUtils.isEqual(XEUtils.get(oRow, field), XEUtils.get(row, field))
+        }
+        for (let index = 0, len = visibleColumn.length; index < len; index++) {
+          property = visibleColumn[index].property
+          if (property && !XEUtils.isEqual(XEUtils.get(oRow, property), XEUtils.get(row, property))) {
+            return true
+          }
+        }
       }
-      return oRow && !XEUtils.isEqual(oRow, row)
+      return false
     },
     /**
      * 获取表格所有列
@@ -1038,6 +1100,9 @@ export default {
     getColumnById (colid) {
       let fullColumnIdData = this.fullColumnIdData
       return fullColumnIdData[colid] ? fullColumnIdData[colid].column : null
+    },
+    getColumnByField (field) {
+      return this.visibleColumn.find(column => column.property === field)
     },
     /**
      * 获取表格可视列
@@ -1261,7 +1326,8 @@ export default {
       let isColspan
       let letIndex = 0
       let leftList = []
-      let rightIndex = 0
+      let leftStartIndex = null
+      let rightEndIndex = null
       let centerList = []
       let rightList = []
       let { tableFullColumn, isGroup, columnStore, scrollXStore, optimizeOpts } = this
@@ -1277,6 +1343,9 @@ export default {
       // 重新分配列
       tableFullColumn.filter(column => column.visible).forEach((column, columnIndex) => {
         if (column.fixed === 'left') {
+          if (leftStartIndex === null) {
+            leftStartIndex = letIndex
+          }
           if (!isColspan) {
             if (columnIndex - letIndex !== 0) {
               isColspan = true
@@ -1287,13 +1356,13 @@ export default {
           leftList.push(column)
         } else if (column.fixed === 'right') {
           if (!isColspan) {
-            if (!rightIndex) {
-              rightIndex = columnIndex
+            if (rightEndIndex === null) {
+              rightEndIndex = columnIndex
             }
-            if (columnIndex - rightIndex !== 0) {
+            if (columnIndex - rightEndIndex !== 0) {
               isColspan = true
             } else {
-              rightIndex++
+              rightEndIndex++
             }
           }
           rightList.push(column)
@@ -1304,7 +1373,7 @@ export default {
       let visibleColumn = leftList.concat(centerList).concat(rightList)
       let scrollXLoad = scrollX && scrollX.gt && scrollX.gt < tableFullColumn.length
       Object.assign(columnStore, { leftList, centerList, rightList })
-      if ((isColspan && isGroup) || (rightIndex && rightIndex !== visibleColumn.length)) {
+      if (isGroup && (isColspan || leftStartIndex || (rightEndIndex !== null && rightEndIndex !== visibleColumn.length))) {
         throw new Error('[s-table] Fixed column must to the left and right sides.')
       }
       if (scrollXLoad) {
@@ -1415,7 +1484,7 @@ export default {
         column.renderWidth = width
       })
       remainWidth -= tableWidth
-      meanWidth = remainWidth > 0 ? Math.max(Math.floor(remainWidth / (scaleMinList.length + pxMinList.length + autoList.length)), minCellWidth) : minCellWidth
+      meanWidth = remainWidth > 0 ? Math.floor(remainWidth / (scaleMinList.length + pxMinList.length + autoList.length)) : 0
       if (fit) {
         if (remainWidth > 0) {
           scaleMinList.concat(pxMinList).forEach(column => {
@@ -1428,8 +1497,9 @@ export default {
       }
       // 自适应
       autoList.forEach((column, index) => {
-        column.renderWidth = meanWidth
-        tableWidth += meanWidth
+        let width = Math.max(meanWidth, minCellWidth)
+        column.renderWidth = width
+        tableWidth += width
         if (fit && index === autoList.length - 1) {
           // 如果所有列足够放的情况下，修补列之间的误差
           let odiffer = bodyWidth - tableWidth
@@ -1732,7 +1802,7 @@ export default {
      * 全局键盘事件
      */
     handleGlobalKeydownEvent (evnt) {
-      let { isCtxMenu, ctxMenuStore, editStore, mouseConfig = {}, keyboardConfig = {} } = this
+      let { isCtxMenu, ctxMenuStore, editStore, mouseConfig = {}, keyboardConfig = {}, treeConfig, highlightCurrentRow, currentRow } = this
       let { selected, actived } = editStore
       let keyCode = evnt.keyCode
       let isBack = keyCode === 8
@@ -1745,6 +1815,7 @@ export default {
       let isRightArrow = keyCode === 39
       let isDwArrow = keyCode === 40
       let isDel = keyCode === 46
+      let isA = keyCode === 65
       let isC = keyCode === 67
       let isV = keyCode === 86
       let isX = keyCode === 88
@@ -1766,9 +1837,22 @@ export default {
             this.handleSelected(params, evnt)
           }
         }
-      } else if (isEnter && (keyboardConfig.isArrow || keyboardConfig.isTab) && (selected.row || actived.row)) {
+      } else if (isEnter && (keyboardConfig.isArrow || keyboardConfig.isTab) && (selected.row || actived.row || (treeConfig && highlightCurrentRow && currentRow))) {
         // 如果是激活状态，退则出到下一行
-        this.moveSelected(selected.row ? selected.args : actived.args, isLeftArrow, isUpArrow, isRightArrow, true, evnt)
+        if (selected.row || actived.row) {
+          this.moveSelected(selected.row ? selected.args : actived.args, isLeftArrow, isUpArrow, isRightArrow, true, evnt)
+        } else if (treeConfig && highlightCurrentRow && currentRow) {
+          // 如果是树形表格当前行回车移动到子节点
+          let childrens = currentRow[treeConfig.children]
+          if (childrens && childrens.length) {
+            evnt.preventDefault()
+            let targetRow = childrens[0]
+            params = { $table: this, row: targetRow }
+            this.setTreeExpansion(currentRow, true)
+              .then(() => this.scrollToRow(targetRow))
+              .then(() => this.triggerCurrentRowEvent(evnt, params))
+          }
+        }
       } else if (operCtxMenu) {
         // 如果配置了右键菜单; 支持方向键操作、回车
         evnt.preventDefault()
@@ -1780,34 +1864,47 @@ export default {
       } else if (isF2) {
         // 如果按下了 F2 键
         if (selected.row && selected.column) {
+          evnt.preventDefault()
           this.handleActived(selected.args, evnt)
         }
       } else if (operArrow && keyboardConfig.isArrow) {
         // 如果按下了方向键
         if (selected.row && selected.column) {
-          evnt.preventDefault()
           this.moveSelected(selected.args, isLeftArrow, isUpArrow, isRightArrow, isDwArrow, evnt)
+        } else if ((isUpArrow || isDwArrow) && highlightCurrentRow && currentRow) {
+          // 当前行按键上下移动
+          this.moveCurrentRow(isUpArrow, isDwArrow, evnt)
         }
       } else if (isTab && keyboardConfig.isTab) {
         // 如果按下了 Tab 键切换
         if (selected.row || selected.column) {
-          evnt.preventDefault()
           this.moveTabSelected(selected.args, evnt)
         } else if (actived.row || actived.column) {
-          evnt.preventDefault()
           this.moveTabSelected(actived.args, evnt)
         }
-      } else if (isDel || isBack) {
+      } else if (isDel || (treeConfig && highlightCurrentRow && currentRow ? isBack && keyboardConfig.isArrow : isBack)) {
         // 如果是删除键
         if (keyboardConfig.isDel && (selected.row || selected.column)) {
           UtilTools.setCellValue(selected.row, selected.column, null)
           if (isBack) {
             this.handleActived(selected.args, evnt)
           }
+        } else if (isBack && keyboardConfig.isArrow && treeConfig && highlightCurrentRow && currentRow) {
+          // 如果树形表格回退键关闭当前行返回父节点
+          let { parent: parentRow } = XEUtils.findTree(this.afterFullData, item => item === currentRow, treeConfig)
+          if (parentRow) {
+            evnt.preventDefault()
+            params = { $table: this, row: parentRow }
+            this.setTreeExpansion(parentRow, false)
+              .then(() => this.scrollToRow(parentRow))
+              .then(() => this.triggerCurrentRowEvent(evnt, params))
+          }
         }
-      } else if (keyboardConfig.isCut && isCtrlKey && (isX || isC || isV)) {
+      } else if (keyboardConfig.isCut && isCtrlKey && (isA || isX || isC || isV)) {
         // 如果开启复制功能
-        if (isX || isC) {
+        if (isA) {
+          this.handleAllChecked(evnt)
+        } else if (isX || isC) {
           this.handleCopyed(isX, evnt)
         } else {
           this.handlePaste(evnt)
@@ -1824,42 +1921,68 @@ export default {
     },
     // 处理 Tab 键移动
     moveTabSelected (args, evnt) {
-      let { tableData, visibleColumn, editConfig } = this
-      let nextRow
-      let nextRowIndex
-      let nextColumn
-      let nextColumnIndex
+      let { tableData, visibleColumn, editConfig, hasIndexColumn } = this
+      let targetRow
+      let targetRowIndex
+      let targetColumn
+      let targetColumnIndex
+      let isShiftKey = evnt.shiftKey
       let params = Object.assign({}, args)
       let rowIndex = tableData.indexOf(params.row)
       let columnIndex = visibleColumn.indexOf(params.column)
-      for (let index = columnIndex + 1; index < visibleColumn.length; index++) {
-        if (visibleColumn[index]) {
-          nextColumnIndex = index
-          nextColumn = visibleColumn[index]
-          break
-        }
-      }
-      if (!nextColumn && rowIndex < tableData.length - 1) {
-        // 如果找不到从下一行开始找，如果一行都找不到就不需要继续找了，可能不存在可编辑的列
-        nextRowIndex = rowIndex + 1
-        nextRow = tableData[nextRowIndex]
-        for (let index = 0; index < visibleColumn.length; index++) {
-          if (visibleColumn[index]) {
-            nextColumnIndex = index
-            nextColumn = visibleColumn[index]
+      evnt.preventDefault()
+      if (isShiftKey) {
+        // 向左
+        for (let len = columnIndex - 1; len >= 0; len--) {
+          if (!hasIndexColumn(visibleColumn[len])) {
+            targetColumnIndex = len
+            targetColumn = visibleColumn[len]
             break
           }
         }
+        if (!targetColumn && rowIndex > 0) {
+          // 如果找不到从上一行开始找，如果一行都找不到就不需要继续找了，可能不存在可编辑的列
+          targetRowIndex = rowIndex - 1
+          targetRow = tableData[targetRowIndex]
+          for (let len = visibleColumn.length - 1; len >= 0; len--) {
+            if (!hasIndexColumn(visibleColumn[len])) {
+              targetColumnIndex = len
+              targetColumn = visibleColumn[len]
+              break
+            }
+          }
+        }
+      } else {
+        // 向右
+        for (let index = columnIndex + 1; index < visibleColumn.length; index++) {
+          if (!hasIndexColumn(visibleColumn[index])) {
+            targetColumnIndex = index
+            targetColumn = visibleColumn[index]
+            break
+          }
+        }
+        if (!targetColumn && rowIndex < tableData.length - 1) {
+          // 如果找不到从下一行开始找，如果一行都找不到就不需要继续找了，可能不存在可编辑的列
+          targetRowIndex = rowIndex + 1
+          targetRow = tableData[targetRowIndex]
+          for (let index = 0; index < visibleColumn.length; index++) {
+            if (!hasIndexColumn(visibleColumn[index])) {
+              targetColumnIndex = index
+              targetColumn = visibleColumn[index]
+              break
+            }
+          }
+        }
       }
-      if (nextColumn) {
-        if (nextRow) {
-          params.rowIndex = nextRowIndex
-          params.row = nextRow
+      if (targetColumn) {
+        if (targetRow) {
+          params.rowIndex = targetRowIndex
+          params.row = targetRow
         } else {
           params.rowIndex = rowIndex
         }
-        params.columnIndex = nextColumnIndex
-        params.column = nextColumn
+        params.columnIndex = targetColumnIndex
+        params.column = targetColumn
         params.cell = DomTools.getCell(this, params)
         if (editConfig) {
           if (editConfig.trigger === 'click' || editConfig.trigger === 'dblclick') {
@@ -1867,16 +1990,43 @@ export default {
               this.handleActived(params, evnt)
             } else {
               this.handleSelected(params, evnt)
-              this.scrollToColumn(params.column)
+              this.scrollToRow(params.row, params.column)
             }
           }
         }
       }
     },
-    // 处理方向键移动
+    // 处理当前行方向键移动
+    moveCurrentRow (isUpArrow, isDwArrow, evnt) {
+      let { currentRow, treeConfig, afterFullData } = this
+      let targetRow
+      evnt.preventDefault()
+      if (treeConfig) {
+        let { index, items } = XEUtils.findTree(afterFullData, item => item === currentRow, treeConfig)
+        if (isUpArrow && index > 0) {
+          targetRow = items[index - 1]
+        } else if (isDwArrow && index < items.length - 1) {
+          targetRow = items[index + 1]
+        }
+      } else {
+        let rowIndex = afterFullData.indexOf(currentRow)
+        if (isUpArrow && rowIndex > 0) {
+          targetRow = afterFullData[rowIndex - 1]
+        } else if (isDwArrow && rowIndex < afterFullData.length - 1) {
+          targetRow = afterFullData[rowIndex + 1]
+        }
+      }
+      if (targetRow) {
+        let params = { $table: this, row: targetRow }
+        this.scrollToRow(targetRow)
+          .then(() => this.triggerCurrentRowEvent(evnt, params))
+      }
+    },
+    // 处理可编辑方向键移动
     moveSelected (args, isLeftArrow, isUpArrow, isRightArrow, isDwArrow, evnt) {
-      let { tableData, visibleColumn } = this
+      let { tableData, visibleColumn, hasIndexColumn } = this
       let params = Object.assign({}, args)
+      evnt.preventDefault()
       if (isUpArrow && params.rowIndex) {
         params.rowIndex -= 1
         params.row = tableData[params.rowIndex]
@@ -1885,7 +2035,7 @@ export default {
         params.row = tableData[params.rowIndex]
       } else if (isLeftArrow && params.columnIndex) {
         for (let len = params.columnIndex - 1; len >= 0; len--) {
-          if (visibleColumn[len]) {
+          if (!hasIndexColumn(visibleColumn[len])) {
             params.columnIndex = len
             params.column = visibleColumn[len]
             break
@@ -1893,7 +2043,7 @@ export default {
         }
       } else if (isRightArrow) {
         for (let index = params.columnIndex + 1; index < visibleColumn.length; index++) {
-          if (visibleColumn[index]) {
+          if (!hasIndexColumn(visibleColumn[index])) {
             params.columnIndex = index
             params.column = visibleColumn[index]
             break
@@ -1902,10 +2052,11 @@ export default {
       }
       params.cell = DomTools.getCell(this, params)
       this.handleSelected(params, evnt)
-      this.scrollToColumn(params.column)
+      this.scrollToRow(params.row, params.column)
     },
     // 处理菜单的移动
     moveCtxMenu (evnt, keyCode, ctxMenuStore, property, operKey, operRest, menuList) {
+      let selectItem
       let selectIndex = XEUtils.findIndexOf(menuList, item => ctxMenuStore[property] === item)
       if (keyCode === operKey) {
         if (operRest && UtilTools.hasChildrenList(ctxMenuStore.selected)) {
@@ -1915,9 +2066,21 @@ export default {
           ctxMenuStore.selectChild = null
         }
       } else if (keyCode === 38) {
-        ctxMenuStore[property] = menuList[selectIndex - 1] || menuList[menuList.length - 1]
+        for (let len = selectIndex - 1; len >= 0; len--) {
+          if (menuList[len].visible !== false) {
+            selectItem = menuList[len]
+            break
+          }
+        }
+        ctxMenuStore[property] = selectItem || menuList[menuList.length - 1]
       } else if (keyCode === 40) {
-        ctxMenuStore[property] = menuList[selectIndex + 1] || menuList[0]
+        for (let index = selectIndex + 1; index < menuList.length; index++) {
+          if (menuList[index].visible !== false) {
+            selectItem = menuList[index]
+            break
+          }
+        }
+        ctxMenuStore[property] = selectItem || menuList[0]
       } else if (ctxMenuStore[property] && (keyCode === 13 || keyCode === 32)) {
         this.ctxMenuLinkEvent(evnt, ctxMenuStore[property])
       }
@@ -1929,7 +2092,7 @@ export default {
      * 快捷菜单事件处理
      */
     handleGlobalContextmenuEvent (evnt) {
-      let { isCtxMenu, ctxMenuStore } = this
+      let { isCtxMenu, ctxMenuStore, ctxMenuOpts } = this
       let layoutList = ['header', 'body', 'footer']
       if (isCtxMenu) {
         if (ctxMenuStore.visible) {
@@ -1957,7 +2120,11 @@ export default {
             UtilTools.emitEvent(this, `${typePrefix}cell-context-menu`, [params, evnt])
             return
           } else if (this.getEventTargetNode(evnt, this.$el, `s-table--${layout}-wrapper`).flag) {
-            this.openContextMenu(evnt, layout, params)
+            if (ctxMenuOpts.trigger === 'cell') {
+              evnt.preventDefault()
+            } else {
+              this.openContextMenu(evnt, layout, params)
+            }
             return
           }
         }
@@ -1969,9 +2136,9 @@ export default {
      * 显示快捷菜单
      */
     openContextMenu (evnt, type, params) {
-      let { ctxMenuStore, ctxMenuConfig } = this
-      let config = ctxMenuConfig[type]
-      let visibleMethod = ctxMenuConfig.visibleMethod
+      let { ctxMenuStore, ctxMenuOpts } = this
+      let config = ctxMenuOpts[type]
+      let visibleMethod = ctxMenuOpts.visibleMethod
       if (config) {
         let { options, disabled } = config
         if (disabled) {
@@ -2055,21 +2222,22 @@ export default {
     /**
      * 触发表头 tooltip 事件
      */
-    triggerHeaderTooltipEvent (evnt, { column }) {
+    triggerHeaderTooltipEvent (evnt, params) {
       let { tooltipStore } = this
-      let { own } = column
+      let { column } = params
       if (tooltipStore.column !== column || !tooltipStore.visible) {
         // 在 v3.0 中废弃 label
-        this.showTooltip(evnt, own.title || own.label, column)
+        this.showTooltip(evnt, column)
       }
     },
     /**
      * 触发表尾 tooltip 事件
      */
-    triggerFooterTooltipEvent (evnt, { $rowIndex, column, columnIndex }) {
-      let { tooltipStore, footerData } = this
+    triggerFooterTooltipEvent (evnt, params) {
+      let { column } = params
+      let tooltipStore = this.tooltipStore
       if (tooltipStore.column !== column || !tooltipStore.visible) {
-        this.showTooltip(evnt, footerData[$rowIndex][columnIndex], column)
+        this.showTooltip(evnt, column)
       }
     },
     /**
@@ -2085,14 +2253,15 @@ export default {
         }
       }
       if (tooltipStore.column !== column || tooltipStore.row !== row || !tooltipStore.visible) {
-        this.showTooltip(evnt, UtilTools.getCellLabel(row, column, params), column, row)
+        this.showTooltip(evnt, column, row)
       }
     },
     // 显示 tooltip
-    showTooltip (evnt, content, column, row) {
+    showTooltip (evnt, column, row) {
       let cell = evnt.currentTarget
       let tooltip = this.$refs.tooltip
       let wrapperElem = cell.children[0]
+      let content = cell.innerText
       if (content && wrapperElem.scrollWidth > wrapperElem.clientWidth) {
         Object.assign(this.tooltipStore, {
           row,
@@ -2414,7 +2583,7 @@ export default {
       this.clearCurrentColumn()
       this.currentRow = row
       if (this.highlightCurrentRow) {
-        DomTools.addClass(this.$el.querySelectorAll(`[data-rowid="${UtilTools.getRowid(this, row)}"]`), 'row--current')
+        XEUtils.arrayEach(this.$el.querySelectorAll(`[data-rowid="${UtilTools.getRowid(this, row)}"]`), elem => DomTools.addClass(elem, 'row--current'))
       }
       return this.$nextTick()
     },
@@ -2444,21 +2613,24 @@ export default {
     /**
      * 行 hover 事件
      */
-    triggerHoverEvent (evnt, { row, rowIndex }) {
-      let { $el } = this
+    triggerHoverEvent (evnt, { row }) {
+      this.setHoverRow(row)
+    },
+    setHoverRow (row) {
       let rowid = UtilTools.getRowid(this, row)
       this.clearHoverRow()
-      XEUtils.arrayEach($el.querySelectorAll(`[data-rowid="${rowid}"]`), elem => DomTools.addClass(elem, 'row--hover'))
+      XEUtils.arrayEach(this.$el.querySelectorAll(`[data-rowid="${rowid}"]`), elem => DomTools.addClass(elem, 'row--hover'))
       this.hoverRow = row
     },
     clearHoverRow () {
-      XEUtils.arrayEach(this.$el.querySelectorAll('.row--hover'), elem => DomTools.removeClass(elem, 'row--hover'))
+      XEUtils.arrayEach(this.$el.querySelectorAll('.s-body--row.row--hover'), elem => DomTools.removeClass(elem, 'row--hover'))
+      this.hoverRow = null
     },
     /**
      * 表头按下事件
      */
     triggerHeaderCellMousedownEvent (evnt, params) {
-      let { $el, tableData, visibleColumn, mouseConfig = {}, elemStore, handleChecked, handleHeaderChecked, handleIndexChecked } = this
+      let { $el, tableData, mouseConfig = {}, elemStore, handleChecked, handleHeaderChecked } = this
       let { button } = evnt
       let { column, cell } = params
       let isLeftBtn = button === 0
@@ -2467,18 +2639,7 @@ export default {
         let headerList = elemStore['main-header-list'].children
         let bodyList = elemStore['main-body-list'].children
         if (isIndex) {
-          let firstTrElem = bodyList[0]
-          let lastTrElem = bodyList[bodyList.length - 1]
-          let firstCell = firstTrElem.querySelector(`.${column.id}`)
-          params.rowIndex = 0
-          params.row = tableData[0]
-          params.column = visibleColumn.find(column => column.property)
-          params.columnIndex = this.getColumnIndex(params.column)
-          params.cell = DomTools.getCell(this, params)
-          this.handleSelected(params, evnt)
-          handleHeaderChecked(DomTools.getRowNodes(headerList, DomTools.getCellNodeIndex(cell.nextElementSibling), DomTools.getCellNodeIndex(cell.parentNode.lastElementChild)))
-          handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(lastTrElem.querySelector(`.${column.id}`))))
-          handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(lastTrElem.lastElementChild)))
+          this.handleAllChecked(evnt)
         } else {
           evnt.preventDefault()
           evnt.stopPropagation()
@@ -2553,73 +2714,74 @@ export default {
       } = params
       let { button } = evnt
       let isLeftBtn = button === 0
-      // let isRightBtn = button === 2
-      // if (isLeftBtn || isRightBtn) {
-      // if (editConfig && editConfig.trigger === 'dblclick') {
-      // 可编辑表格才能支持选中模式
-      if (editConfig && (editConfig.mode === 'row' ? actived.row !== row : actived.column !== column)) {
-        if (isLeftBtn && mouseConfig.checked) {
-          evnt.preventDefault()
-          evnt.stopPropagation()
-          this.clearHeaderChecked()
-          this.clearIndexChecked()
-          let domMousemove = document.onmousemove
-          let domMouseup = document.onmouseup
-          let startCellNode = DomTools.getCellNodeIndex(cell)
-          let isIndex = column.type === 'index'
-          let bodyList = elemStore['main-body-list'].children
-          let headerList = elemStore['main-header-list'].children
-          let cellLastElementChild = cell.parentNode.lastElementChild
-          let cellFirstElementChild = cell.parentNode.firstElementChild
-          let colIndex = [].indexOf.call(cell.parentNode.children, cell)
-          let headStart = headerList[0].children[colIndex]
-          let updateEvent = XEUtils.throttle(function (evnt) {
+      if (editConfig) {
+        if (actived.row !== row || !(editConfig.mode === 'cell' && actived.column === column)) {
+          if (isLeftBtn && mouseConfig.checked) {
             evnt.preventDefault()
-            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
-            if (flag) {
-              if (isIndex) {
-                let firstCell = targetElem.parentNode.firstElementChild
-                handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
-                handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
-              } else if (!DomTools.hasClass(targetElem, 'col--index')) {
-                let firstCell = targetElem.parentNode.firstElementChild
-                let colIndex = [].indexOf.call(targetElem.parentNode.children, targetElem)
-                let head = headerList[0].children[colIndex]
-                handleHeaderChecked(DomTools.getRowNodes(headerList, DomTools.getCellNodeIndex(head), DomTools.getCellNodeIndex(headStart)))
-                handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cellFirstElementChild)))
-                handleChecked(DomTools.getRowNodes(bodyList, startCellNode, DomTools.getCellNodeIndex(targetElem)))
+            evnt.stopPropagation()
+            this.clearHeaderChecked()
+            this.clearIndexChecked()
+            let domMousemove = document.onmousemove
+            let domMouseup = document.onmouseup
+            let startCellNode = DomTools.getCellNodeIndex(cell)
+            let isIndex = column.type === 'index'
+            let bodyList = elemStore['main-body-list'].children
+            let headerList = elemStore['main-header-list'].children
+            let cellLastElementChild = cell.parentNode.lastElementChild
+            let cellFirstElementChild = cell.parentNode.firstElementChild
+            let colIndex = [].indexOf.call(cell.parentNode.children, cell)
+            let headStart = headerList[0].children[colIndex]
+            let updateEvent = XEUtils.throttle(function (evnt) {
+              evnt.preventDefault()
+              let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
+              if (flag) {
+                if (isIndex) {
+                  let firstCell = targetElem.parentNode.firstElementChild
+                  handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
+                  handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
+                } else if (!DomTools.hasClass(targetElem, 'col--index')) {
+                  let firstCell = targetElem.parentNode.firstElementChild
+                  let colIndex = [].indexOf.call(targetElem.parentNode.children, targetElem)
+                  let head = headerList[0].children[colIndex]
+                  handleHeaderChecked(DomTools.getRowNodes(headerList, DomTools.getCellNodeIndex(head), DomTools.getCellNodeIndex(headStart)))
+                  handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cellFirstElementChild)))
+                  handleChecked(DomTools.getRowNodes(bodyList, startCellNode, DomTools.getCellNodeIndex(targetElem)))
+                }
+              }
+            }, 80, { leading: true, trailing: true })
+            document.onmousemove = updateEvent
+            document.onmouseup = function (evnt) {
+              document.onmousemove = domMousemove
+              document.onmouseup = domMouseup
+            }
+            if (isIndex) {
+              let firstCell = cell.parentNode.firstElementChild
+              params.columnIndex++
+              params.column = visibleColumn[params.columnIndex]
+              params.cell = cell.nextElementSibling
+              handleSelected(params, evnt)
+              handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
+              handleHeaderChecked([headerList[0].querySelectorAll('.s-header--column:not(.col--index)')])
+              handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
+            } else {
+              handleSelected(params, evnt)
+            }
+            this.closeFilter()
+            this.closeMenu()
+          } else if (mouseConfig.selected) {
+            // 除了双击其他都没有选中状态
+            if (editConfig.trigger === 'dblclick') {
+              // 如果不在所有选中的范围之内则重新选中
+              let select = DomTools.getCellIndexs(cell)
+              if (checked.rows.indexOf(tableData[select.rowIndex]) === -1 || checked.columns.indexOf(visibleColumn[select.columnIndex]) === -1) {
+                handleSelected(params, evnt)
               }
             }
-          }, 80, { leading: true, trailing: true })
-          document.onmousemove = updateEvent
-          document.onmouseup = function (evnt) {
-            document.onmousemove = domMousemove
-            document.onmouseup = domMouseup
-          }
-          if (isIndex) {
-            let firstCell = cell.parentNode.firstElementChild
-            params.columnIndex++
-            params.column = visibleColumn[params.columnIndex]
-            params.cell = cell.nextElementSibling
-            this.handleSelected(params, evnt)
-            handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
-            handleHeaderChecked([headerList[0].querySelectorAll('.s-header--column:not(.col--index)')])
-            handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
-          } else {
-            this.handleSelected(params, evnt)
-          }
-          this.closeFilter()
-          this.closeMenu()
-        } else {
-          // 如果不在所有选中的范围之内则重新选中
-          let select = DomTools.getCellIndexs(cell)
-          if (checked.rows.indexOf(tableData[select.rowIndex]) === -1 || checked.columns.indexOf(visibleColumn[select.columnIndex]) === -1) {
-            handleSelected(params, evnt)
           }
         }
+      } else if (mouseConfig.selected) {
+        handleSelected(params, evnt)
       }
-      // }
-      // }
     },
     /**
      * 边角事件
@@ -2658,13 +2820,15 @@ export default {
     //   }
     // },
     triggerHeaderCellClickEvent (evnt, params) {
-      let { _lastResizeTime } = this
+      let { _lastResizeTime, sortOpts } = this
       let { column, cell } = params
-      UtilTools.emitEvent(this, 'header-cell-click', [Object.assign({
-        triggerResizable: _lastResizeTime && _lastResizeTime > Date.now() - 300,
-        triggerSort: this.getEventTargetNode(evnt, cell, 's-sort-wrapper').flag,
-        triggerFilter: this.getEventTargetNode(evnt, cell, 's-filter-wrapper').flag
-      }, params), evnt])
+      let triggerResizable = _lastResizeTime && _lastResizeTime > Date.now() - 300
+      let triggerSort = this.getEventTargetNode(evnt, cell, 's-sort-wrapper').flag
+      let triggerFilter = this.getEventTargetNode(evnt, cell, 's-filter-wrapper').flag
+      if (sortOpts.trigger === 'cell' && !(triggerResizable || triggerSort || triggerFilter)) {
+        this.sort(column.property)
+      }
+      UtilTools.emitEvent(this, 'header-cell-click', [Object.assign({ triggerResizable, triggerSort, triggerFilter }, params), evnt])
       if (this.highlightCurrentColumn) {
         return this.setCurrentColumn(column, true)
       }
@@ -2673,12 +2837,12 @@ export default {
     setCurrentColumn (column) {
       this.clearCurrentRow()
       this.clearCurrentColumn()
-      this.selectColumn = column
+      this.currentColumn = column
       XEUtils.arrayEach(this.$el.querySelectorAll(`.${column.id}`), elem => DomTools.addClass(elem, 'col--current'))
       return this.$nextTick()
     },
     clearCurrentColumn () {
-      this.selectColumn = null
+      this.currentColumn = null
       XEUtils.arrayEach(this.$el.querySelectorAll('.col--current'), elem => DomTools.removeClass(elem, 'col--current'))
       return this.$nextTick()
     },
@@ -2690,7 +2854,7 @@ export default {
     triggerCellClickEvent (evnt, params) {
       let { $el, highlightCurrentRow, editStore, radioConfig = {}, selectConfig = {}, treeConfig = {}, editConfig, mouseConfig = {} } = this
       let { actived } = editStore
-      let { column, columnIndex, cell } = params
+      let { column, cell } = params
       // 如果是树形表格
       if ((treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
         this.triggerTreeExpandEvent(evnt, params)
@@ -2714,10 +2878,6 @@ export default {
         if (!mouseConfig.checked) {
           if (editConfig) {
             if (!actived.args || cell !== actived.args.cell) {
-              if (editConfig.mode === 'row' && actived.args) {
-                Object.assign(actived.args, { cell, columnIndex, column })
-                actived.column = column
-              }
               if (editConfig.trigger === 'click') {
                 this.triggerValidate('blur')
                   .catch(e => e)
@@ -2727,7 +2887,17 @@ export default {
                       .catch(e => e)
                   })
               } else if (editConfig.trigger === 'dblclick') {
-                this.handleSelected(params, evnt)
+                if (editConfig.mode === 'row' && actived.row === params.row) {
+                  this.triggerValidate('blur')
+                    .catch(e => e)
+                    .then(() => {
+                      this.handleActived(params, evnt)
+                        .then(() => this.triggerValidate('change'))
+                        .catch(e => e)
+                    })
+                } else {
+                  this.handleSelected(params, evnt)
+                }
               }
             }
           }
@@ -2742,22 +2912,20 @@ export default {
     triggerCellDBLClickEvent (evnt, params) {
       let { editStore, editConfig } = this
       let { actived } = editStore
-      if (editConfig) {
-        if (editConfig.trigger === 'dblclick') {
-          if (!actived.args || evnt.currentTarget !== actived.args.cell) {
-            if (editConfig.mode === 'row') {
-              this.triggerValidate('blur')
-                .catch(e => e)
-                .then(() => {
-                  this.handleActived(params, evnt)
-                    .then(() => this.triggerValidate('change'))
-                    .catch(e => e)
-                })
-            } else if (editConfig.mode === 'cell') {
-              this.handleActived(params, evnt)
-                .then(() => this.triggerValidate('change'))
-                .catch(e => e)
-            }
+      if (editConfig && editConfig.trigger === 'dblclick') {
+        if (!actived.args || evnt.currentTarget !== actived.args.cell) {
+          if (editConfig.mode === 'row') {
+            this.triggerValidate('blur')
+              .catch(e => e)
+              .then(() => {
+                this.handleActived(params, evnt)
+                  .then(() => this.triggerValidate('change'))
+                  .catch(e => e)
+              })
+          } else if (editConfig.mode === 'cell') {
+            this.handleActived(params, evnt)
+              .then(() => this.triggerValidate('change'))
+              .catch(e => e)
           }
         }
       }
@@ -2772,9 +2940,8 @@ export default {
       let { actived } = editStore
       let { row, column, cell } = params
       let { model, editRender } = column
-      if (editRender) {
-        let isRowMode = editConfig.mode === 'row'
-        if (isRowMode ? actived.row !== row : (actived.row !== row || actived.column !== column)) {
+      if (editRender && cell) {
+        if (actived.row !== row || (editConfig.mode === 'cell' ? actived.column !== column : false)) {
           // 判断是否禁用编辑
           let type = 'edit-disabled'
           if (!activeMethod || activeMethod(params)) {
@@ -2788,7 +2955,7 @@ export default {
             actived.args = params
             actived.row = row
             actived.column = column
-            if (isRowMode) {
+            if (editConfig.mode === 'row') {
               tableColumn.forEach(column => {
                 if (column.editRender) {
                   column.model.value = UtilTools.getCellValue(row, column)
@@ -2874,33 +3041,35 @@ export default {
      * 处理选中源
      */
     handleSelected (params, evnt) {
-      let { mouseConfig = {}, editStore, elemStore } = this
-      let { selected } = editStore
+      let { mouseConfig = {}, editConfig, editStore, elemStore } = this
+      let { actived, selected } = editStore
       let { row, column, cell } = params
       let selectMethod = () => {
         if (selected.row !== row || selected.column !== column) {
-          this.clearChecked(evnt)
-          this.clearIndexChecked()
-          this.clearHeaderChecked()
-          this.clearSelected(evnt)
-          this.clearActived(evnt)
-          selected.args = params
-          selected.row = row
-          selected.column = column
-          if (mouseConfig.selected) {
-            let listElem = elemStore['main-body-list']
-            let rowid = UtilTools.getRowid(this, row)
-            let trElem = listElem.querySelector(`[data-rowid="${rowid}"]`)
-            let tdElem = trElem.querySelector(`.${column.id}`)
-            DomTools.addClass(tdElem, 'col--selected')
+          if (actived.row !== row || (editConfig.mode === 'cell' ? actived.column !== column : false)) {
+            this.clearChecked(evnt)
+            this.clearIndexChecked()
+            this.clearHeaderChecked()
+            this.clearSelected(evnt)
+            this.clearActived(evnt)
+            selected.args = params
+            selected.row = row
+            selected.column = column
+            if (mouseConfig.selected) {
+              let listElem = elemStore['main-body-list']
+              let rowid = UtilTools.getRowid(this, row)
+              let trElem = listElem.querySelector(`[data-rowid="${rowid}"]`)
+              let tdElem = trElem.querySelector(`.${column.id}`)
+              DomTools.addClass(tdElem, 'col--selected')
+            }
+            // 如果配置了批量选中功能，则为批量选中状态
+            if (mouseConfig.checked) {
+              let headerElem = elemStore['main-header-list']
+              this.handleChecked([[cell]])
+              this.handleHeaderChecked([[headerElem.querySelector(`.${column.id}`)]])
+              this.handleIndexChecked([[cell.parentNode.querySelector('.col--index')]])
+            }
           }
-        }
-        // 如果配置了批量选中功能，则为批量选中状态
-        if (mouseConfig.checked) {
-          let headerElem = elemStore['main-header-list']
-          this.handleChecked([[cell]])
-          this.handleHeaderChecked([[headerElem.querySelector(`.${column.id}`)]])
-          this.handleIndexChecked([[cell.parentNode.querySelector('.col--index')]])
         }
         return this.$nextTick()
       }
@@ -2974,6 +3143,32 @@ export default {
         height: `${cHeight}px`
       })
       checked.rowNodes = rowNodes
+    },
+    handleAllChecked (evnt) {
+      let { tableData, visibleColumn, mouseConfig = {}, elemStore } = this
+      if (mouseConfig.checked) {
+        evnt.preventDefault()
+        let headerListElem = elemStore['main-header-list']
+        let headerList = headerListElem.children
+        let bodyList = elemStore['main-body-list'].children
+        let column = visibleColumn.find(column => column.type === 'index') || visibleColumn[0]
+        let cell = headerListElem.querySelector(`.${column.id}`)
+        let firstTrElem = bodyList[0]
+        let lastTrElem = bodyList[bodyList.length - 1]
+        let firstCell = firstTrElem.querySelector(`.${column.id}`)
+        let params = {
+          $table: this,
+          rowIndex: 0,
+          row: tableData[0],
+          column: visibleColumn.find(column => column.property)
+        }
+        params.columnIndex = this.getColumnIndex(params.column)
+        params.cell = DomTools.getCell(this, params)
+        this.handleSelected(params, evnt)
+        this.handleHeaderChecked(DomTools.getRowNodes(headerList, DomTools.getCellNodeIndex(cell.nextElementSibling), DomTools.getCellNodeIndex(cell.parentNode.lastElementChild)))
+        this.handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(lastTrElem.querySelector(`.${column.id}`))))
+        this.handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(lastTrElem.lastElementChild)))
+      }
     },
     handleIndexChecked (rowNodes) {
       let { indexs } = this.editStore
@@ -3246,7 +3441,7 @@ export default {
           column.order = order
           // 如果是服务端排序，则跳过本地排序处理
           if (!isRemote) {
-            this.tableData = this.getTableData(true).tableData
+            this.handleData(true)
           }
           // 在 v3.0 中废弃 prop
           UtilTools.emitEvent(this, 'sort-change', [{ column, property: field, prop: field, field, order }])
@@ -3260,8 +3455,10 @@ export default {
         column.order = null
       })
       this.tableFullData = this.data ? this.data.slice(0) : []
-      this.tableData = this.getTableData(true).tableData
-      return this.$nextTick()
+      return this.handleData(true)
+    },
+    filter (field) {
+      return Promise.resolve(this.getColumnByField(field).filters)
     },
     /**
      * 点击筛选事件
@@ -3291,7 +3488,7 @@ export default {
           visible: true
         })
         filterStore.isAllSelected = filterStore.options.every(item => item.checked)
-        filterStore.isIndeterminate = !this.isAllSelected && filterStore.options.some(item => item.checked)
+        filterStore.isIndeterminate = !filterStore.isAllSelected && filterStore.options.some(item => item.checked)
         this.$nextTick(() => {
           let filterWrapperElem = filterWrapper.$el
           filterStore.style.top = `${top + targetElem.clientHeight + 6}px`
@@ -3305,34 +3502,41 @@ export default {
       let { column } = filterStore
       let { property } = column
       let values = []
+      let datas = []
       column.filters.forEach(item => {
         if (item.checked) {
           values.push(item.value)
+          datas.push(item.data)
         }
       })
       filterStore.visible = false
       // 如果是服务端筛选，则跳过本地筛选处理
       if (!remoteFilter) {
-        this.tableData = this.getTableData(true).tableData
+        this.handleData(true)
       }
       let filterList = []
       visibleColumn.filter(column => {
         let { property, filters } = column
         let valueList = []
+        let dataList = []
         if (filters && filters.length) {
           filters.forEach(item => {
             if (item.checked) {
               valueList.push(item.value)
+              dataList.push(item.data)
             }
           })
           // 在 v3.0 中废弃 prop
-          filterList.push({ column, property, field: property, prop: property, values: valueList })
+          filterList.push({ column, property, field: property, prop: property, values: valueList, datas: dataList })
         }
       })
       // 在 v3.0 中废弃 prop
-      UtilTools.emitEvent(this, 'filter-change', [{ column, property, field: property, prop: property, values, filters: filterList }])
+      UtilTools.emitEvent(this, 'filter-change', [{ column, property, field: property, prop: property, values, datas, filters: filterList }])
       if (scrollXLoad || scrollYLoad) {
         this.clearScroll()
+        if (scrollYLoad) {
+          this.updateScrollYSpace()
+        }
       }
       this.closeFilter()
       this.$nextTick(this.recalculate)
@@ -3355,27 +3559,35 @@ export default {
       })
       this.confirmFilterEvent(evnt)
     },
-    clearFilter () {
-      let { visibleColumn } = this
-      visibleColumn.forEach(column => {
+    clearFilter (field) {
+      let column = arguments.length ? this.getColumnByField(field) : null
+      let filterStore = this.filterStore
+      let handleClear = column => {
         let { filters } = column
         if (filters && filters.length) {
           filters.forEach(item => {
             item.checked = false
+            item.data = item._data
           })
         }
-      })
-      Object.assign(this.filterStore, {
-        isAllSelected: false,
-        isIndeterminate: false,
-        style: null,
-        options: [],
-        column: null,
-        multiple: false,
-        visible: false
-      })
-      this.tableData = this.getTableData(true).tableData
-      return this.$nextTick()
+      }
+      if (column) {
+        handleClear(column)
+      } else {
+        this.visibleColumn.forEach(handleClear)
+      }
+      if (!column || column !== filterStore.column) {
+        Object.assign(filterStore, {
+          isAllSelected: false,
+          isIndeterminate: false,
+          style: null,
+          options: [],
+          column: null,
+          multiple: false,
+          visible: false
+        })
+      }
+      return this.handleData(true).then(this.recalculate)
     },
     /**
      * 展开行事件
@@ -3456,13 +3668,13 @@ export default {
      * 展开树节点事件
      */
     triggerTreeExpandEvent (evnt, { row }) {
-      let { selectRow, selectColumn } = this
+      let { currentRow, currentColumn } = this
       let rest = this.toggleTreeExpansion(row)
       UtilTools.emitEvent(this, 'toggle-tree-change', [{ row, rowIndex: this.getRowIndex(row), $table: this }, evnt])
-      if (selectRow) {
-        this.$nextTick(() => this.setCurrentRow(selectRow))
-      } else if (selectColumn) {
-        this.$nextTick(() => this.setCurrentColumn(selectColumn))
+      if (currentRow) {
+        this.$nextTick(() => this.setCurrentRow(currentRow))
+      } else if (currentColumn) {
+        this.$nextTick(() => this.setCurrentColumn(currentColumn))
       }
       return rest
     },
@@ -3665,6 +3877,7 @@ export default {
           this.updateScrollYData()
           this.$nextTick(() => {
             // scrollBodyElem.scrollTop = scrollTop
+            this.clearHoverRow()
             this.updateStyle()
           })
         }
@@ -3755,15 +3968,13 @@ export default {
       })
     },
     updateScrollYData () {
-      let { tableData } = this.getTableData()
-      this.tableData = tableData
+      this.handleData()
       this.updateScrollYSpace()
     },
     // 更新纵向 Y 可视渲染上下剩余空间大小
     updateScrollYSpace () {
-      let { elemStore, scrollYStore, scrollYLoad } = this
-      let { fullData } = this.getTableData()
-      let bodyHeight = fullData.length * scrollYStore.rowHeight
+      let { elemStore, scrollYStore, scrollYLoad, afterFullData } = this
+      let bodyHeight = afterFullData.length * scrollYStore.rowHeight
       let topSpaceHeight = Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0)
       let containerList = ['main', 'left', 'right']
       let marginTop = ''
@@ -3803,41 +4014,19 @@ export default {
         }
         bodyElem.scrollTop = scrollTop
       }
+      return this.$nextTick()
     },
-    scrollToRow (row) {
-      let { scrollYLoad, scrollYStore, afterFullData, fullDataRowMap, elemStore } = this
-      let rowid = UtilTools.getRowid(this, row)
-      if (scrollYLoad) {
-        if (row === -1 && afterFullData.length) {
-          row = afterFullData[afterFullData.length - 1]
-        }
-        if (fullDataRowMap.has(row)) {
-          let { rowHeight } = scrollYStore
-          let rowIndex = afterFullData.indexOf(row)
-          this.scrollTo(null, (rowIndex - 1) * rowHeight)
-        }
-      } else {
-        let bodyElem = elemStore['main-body-list']
-        DomTools.scrollIntoElem(bodyElem.querySelector(`[data-rowid="${rowid}"]`))
+    scrollToRow (row, column) {
+      if (row && this.fullDataRowMap.has(row)) {
+        DomTools.rowToVisible(this, row)
       }
+      return this.scrollToColumn(column)
     },
     scrollToColumn (column) {
-      let { scrollXLoad, elemStore, visibleColumn, fullColumnMap } = this
-      if (scrollXLoad) {
-        if (column === -1 || fullColumnMap.has(column)) {
-          let scrollLeft = 0
-          for (let index = 0; index < visibleColumn.length; index++) {
-            if (visibleColumn[index] === column) {
-              break
-            }
-            scrollLeft += visibleColumn[index].renderWidth
-          }
-          this.scrollTo(scrollLeft)
-        }
-      } else {
-        let bodyElem = elemStore['main-body-list']
-        DomTools.scrollIntoElem(bodyElem.querySelector(`.${column.id}`))
+      if (column && this.fullColumnMap.has(column)) {
+        DomTools.colToVisible(this, column)
       }
+      return this.$nextTick()
     },
     clearScroll () {
       Object.assign(this.scrollXStore, {
@@ -3865,9 +4054,9 @@ export default {
      * 更新表尾合计
      */
     updateFooter () {
-      let { showFooter, visibleColumn, afterFullData, footerMethod } = this
+      let { showFooter, tableColumn, footerMethod } = this
       if (showFooter && footerMethod) {
-        this.footerData = visibleColumn.length ? footerMethod({ columns: visibleColumn, data: this.editStore.insertList.concat(afterFullData) }) : []
+        this.footerData = tableColumn.length ? footerMethod({ columns: tableColumn, data: this.tableFullData }) : []
       }
       return this.$nextTick()
     },
@@ -4072,8 +4261,8 @@ export default {
                   if (XEUtils.isFunction(rule.validator)) {
                     rule.validator(rule, cellValue, e => {
                       if (XEUtils.isError(e)) {
-                        let cusRule = { type: 'custom', trigger: rule.trigger, message: e.message, rule }
-                        errorRules.push(cusRule)
+                        let cusRule = { type: 'custom', trigger: rule.trigger, message: e.message, rule: new Rule(rule) }
+                        errorRules.push(new Rule(cusRule))
                       }
                       return resolve()
                     }, { rules, row, column, rowIndex: this.getRowIndex(row), columnIndex: this.getColumnIndex(column) })
@@ -4088,14 +4277,14 @@ export default {
                       len = XEUtils.getSize(restVal)
                     }
                     if (isRequired && isEmpty) {
-                      errorRules.push(rule)
+                      errorRules.push(new Rule(rule))
                     } else if (
                       (isNumber && isNaN(cellValue)) ||
                       (XEUtils.isRegExp(rule.pattern) && !rule.pattern.test(cellValue)) ||
                       (XEUtils.isNumber(rule.min) && (isNumber ? restVal < rule.min : len < rule.min)) ||
                       (XEUtils.isNumber(rule.max) && (isNumber ? restVal > rule.max : len > rule.max))
                     ) {
-                      errorRules.push(rule)
+                      errorRules.push(new Rule(rule))
                     }
                     resolve()
                   }
@@ -4168,6 +4357,7 @@ export default {
         filename: 'table.csv',
         original: !!treeConfig,
         isHeader: true,
+        isFooter: true,
         download: true,
         data: null,
         columns: null,
@@ -4177,15 +4367,18 @@ export default {
       if (opts.filename.indexOf('.csv') === -1) {
         opts.filename += '.csv'
       }
-      if (scrollXLoad || scrollYLoad) {
-        opts.original = true
+      if (!opts.original) {
+        if (scrollXLoad || scrollYLoad) {
+          opts.original = true
+          console.warn('[s-table] Virtual scrolling can only export source data, please set original=true.')
+        }
       }
       let columns = visibleColumn
-      let oData = this.getTableData().fullData
+      let oData = this.tableFullData
       if (treeConfig) {
         oData = XEUtils.toTreeArray(oData, treeConfig)
       }
-      return ExportTools.downloadCsc(opts, ExportTools.getCsvContent(opts, oData, columns, this.$el))
+      return ExportTools.downloadCsc(opts, ExportTools.getCsvContent(this, opts, columns, oData))
     },
 
     /*************************

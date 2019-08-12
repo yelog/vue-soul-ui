@@ -41,7 +41,7 @@
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.2);
   font-size: 13px;
   font-family: $s-font-family;
-  z-index: $s-zindex;
+  z-index: 99;
   &.filter--active {
     display: block;
   }
@@ -71,7 +71,7 @@
       }
       .s-checkbox {
         display: block;
-        .checkbox--label {
+        .s-checkbox--label {
           max-width: 360px;
           overflow: hidden;
           text-overflow: ellipsis;

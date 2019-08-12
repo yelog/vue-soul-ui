@@ -1,12 +1,13 @@
 import { UtilTools, DomTools } from '../../tools'
 
 export default {
-  getCsvContent (opts, oData, oColumns, tableElem) {
+  getCsvContent ($table, opts, oColumns, oData) {
     let isOriginal = opts.original
+    let tableElem = $table.$el
     let { columns, datas } = getCsvData(opts, oData, oColumns, tableElem)
     let content = '\ufeff'
     if (opts.isHeader) {
-      content += columns.map(({ own }) => own.title || own.label).join(',') + '\n'
+      content += columns.map(({ own }) => UtilTools.getFuncText(own.title || own.label)).join(',') + '\n'
     }
     datas.forEach((row, rowIndex) => {
       if (isOriginal) {
@@ -20,6 +21,11 @@ export default {
         content += columns.map(column => `"${row[column.id]}"`).join(',') + '\n'
       }
     })
+    if (opts.isFooter) {
+      $table.footerData.forEach(rows => {
+        content += rows.join(',') + '\n'
+      })
+    }
     return content
   },
   downloadCsc (opts, content) {

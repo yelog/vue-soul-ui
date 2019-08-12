@@ -12,6 +12,39 @@
   display: none;
 }
 
+/*默认的渲染*/
+.s-table,
+.s-table--filter-wrapper {
+  .s-default-input,
+  .s-default-textarea,
+  .s-default-select {
+    outline: 0;
+    padding: 0 2px;
+    height: 40px;
+    width: 100%;
+    color: $s-font-color;
+    border-radius: 4px;
+    border: 1px solid $s-input-border-color;
+    &:focus {
+      border: 1px solid $s-primary-color;
+    }
+  }
+  .s-input--wrapper {
+    width: 100%;
+    display: block;
+    .s-input,
+    .s-textarea {
+      padding: 0 2px;
+    }
+  }
+}
+.s-table--filter-wrapper {
+  .s-default-input,
+  .s-default-textarea {
+    padding: 0 10px;
+  }
+}
+
 /*table*/
 .s-table {
   position: relative;
@@ -44,7 +77,6 @@
   }
   .s-table--header-wrapper,
   .s-table--footer-wrapper {
-    position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
     border-top: 1px solid $s-table-border-color;
@@ -75,28 +107,17 @@
   }
   &.t--stripe {
     .s-body--row {
-      &:nth-child(2n) {
-        background-color: $s-table-row-striped-background-color;
-      }
-      &.row--current {
-        background-color: $s-table-row-current-background-color;
-      }
-    }
-  }
-  &.row--highlight {
-    .s-body--row {
-      &:hover {
-        background-color: $s-table-row-hover-background-color;
-      }
-      &.row--current {
-        background-color: $s-table-row-current-background-color;
+      &:not(.row--current) {
+        &:nth-child(2n) {
+          background-color: $s-table-row-striped-background-color;
+        }
       }
     }
   }
   &.column--highlight {
     .s-header--column {
-      &:hover {
-        &:not(.col--index) {
+      &:not(.col--index) {
+        &:hover {
           background-color: $s-table-column-hover-background-color;
         }
       }
@@ -232,7 +253,7 @@
     word-break: break-word;
     padding: 0 10px;
     .s-checkbox {
-      vertical-align: middle;
+      vertical-align: bottom;
     }
   }
   .s-header--column,
@@ -247,29 +268,6 @@
           }
         }
       }
-    }
-  }
-  /*默认的渲染*/
-  .s-default-input,
-  .s-default-textarea,
-  .s-default-select {
-    outline: 0;
-    padding: 0 2px;
-    height: 40px;
-    width: 100%;
-    color: $s-font-color;
-    border-radius: 4px;
-    border: 1px solid $s-input-border-color;
-    &:focus {
-      border: 1px solid $s-primary-color;
-    }
-  }
-  .s-input--wrapper {
-    width: 100%;
-    display: block;
-    .s-input,
-    .s-textarea {
-      padding: 0 2px;
     }
   }
   .fixed--hidden {
@@ -402,7 +400,7 @@
   }
   .s-tree-wrapper {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: bottom;
     width: 18px;
     cursor: pointer;
     &.is--active {
@@ -475,19 +473,30 @@
   /*暂无数据*/
   &.is--loading {
     .s-table--empty-block {
-      display: none;
+      visibility: hidden;
     }
   }
   .s-table--empty-block {
+    display: none;
     height: 100%;
     min-height: 60px;
-    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    &.is--visible {
+      display: flex;
+    }
     .s-table--empty-text {
       display: block;
       width: 50%;
+    }
+  }
+
+  .s-body--column {
+    &.col--selected {
+      &:not(.col--checked) {
+        box-shadow: inset 0px 0px 0px 2px $s-primary-color;
+      }
     }
   }
 
@@ -569,11 +578,6 @@
       padding: 0;
       &.col--actived {
         padding: 0;
-      }
-      &.col--selected {
-        &:not(.col--checked) {
-          box-shadow: inset 0px 0px 0px 2px $s-primary-color;
-        }
       }
       &.col--dirty {
         &:before {

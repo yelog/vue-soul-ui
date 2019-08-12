@@ -53,20 +53,28 @@ export const Cell = {
       return slots.header(params, h)
     }
     // 在 v3.0 中废弃 label
-    return [UtilTools.formatText(own.title || own.label, 1)]
+    return [UtilTools.formatText(UtilTools.getFuncText(own.title || own.label), 1)]
   },
   renderCell (h, params) {
     let cellValue
-    let { row, column } = params
-    let { slots } = column
+    let { $table, row, column } = params
+    let { slots, own } = column
+    let editRender = own.editRender || own.cellRender
     if (slots && slots.default) {
       return slots.default(params, h)
+    }
+    if (editRender) {
+      let funName = own.editRender ? 'renderCell' : 'renderDefault'
+      let compConf = Renderer.get(editRender.name)
+      if (compConf && compConf[funName]) {
+        return compConf[funName].call($table, h, editRender, params, { $excel: $table.$parent, $table, $column: column })
+      }
     }
     cellValue = UtilTools.getCellLabel(row, column, params)
     return [UtilTools.formatText(cellValue, 1)]
   },
   renderTreeCell (h, params) {
-    return Cell.renderTreeIcon(h, params).concat(Cell.renderCell(h, params))
+    return Cell.renderTreeIcon(h, params).concat(Cell.renderCell.call(this, h, params))
   },
 
   /**
@@ -113,7 +121,7 @@ export const Cell = {
       return slots.header(params, h)
     }
     // 在 v3.0 中废弃 label
-    return [UtilTools.formatText(own.title || own.label || '#', 1)]
+    return [UtilTools.formatText(UtilTools.getFuncText(own.title || own.label || '#'), 1)]
   },
   renderIndexCell (h, params) {
     let { $table, column } = params
@@ -139,7 +147,7 @@ export const Cell = {
       return slots.header(params, h)
     }
     // 在 v3.0 中废弃 label
-    return [UtilTools.formatText(own.title || own.label, 1)]
+    return [UtilTools.formatText(UtilTools.getFuncText(own.title || own.label), 1)]
   },
   renderRadioCell (h, params) {
     let { $table, column, isHidden } = params
@@ -175,10 +183,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'radio--icon'
+          class: 'vxe-radio--icon'
         }),
         labelField ? h('span', {
-          class: 'radio--label'
+          class: 'vxe-radio--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]
@@ -223,11 +231,11 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'checkbox--icon'
+          class: 'vxe-checkbox--icon'
         }),
         headerTitle ? h('span', {
-          class: 'checkbox--label'
-        }, headerTitle) : null
+          class: 'vxe-checkbox--label'
+        }, UtilTools.getFuncText(headerTitle)) : null
       ])
     ]
   },
@@ -273,10 +281,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'checkbox--icon'
+          class: 'vxe-checkbox--icon'
         }),
         labelField ? h('span', {
-          class: 'checkbox--label'
+          class: 'vxe-checkbox--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]
@@ -326,10 +334,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'checkbox--icon'
+          class: 'vxe-checkbox--icon'
         }),
         labelField ? h('span', {
-          class: 'checkbox--label'
+          class: 'vxe-checkbox--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]
@@ -493,15 +501,14 @@ export const Cell = {
   },
   runRenderer (h, params, _vm, isEdit) {
     let { $table, row, column } = params
-    let { slots, formatter } = column
-    let editRender = _vm ? _vm.editRender : column.editRender
+    let { slots, own, formatter } = column
+    let editRender = own.editRender
     let compConf = Renderer.get(editRender.name)
-    let context = { $excel: $table.$parent, $table, $column: column }
     if (editRender.type === 'visible' || isEdit) {
       if (slots && slots.edit) {
         return slots.edit(params, h)
       }
-      return compConf && compConf.renderEdit ? compConf.renderEdit.call($table, h, editRender, params, context) : []
+      return compConf && compConf.renderEdit ? compConf.renderEdit.call($table, h, editRender, params, { $excel: $table.$parent, $table, $column: column }) : []
     }
     if (slots && slots.default) {
       return slots.default(params, h)
@@ -509,7 +516,7 @@ export const Cell = {
     if (formatter) {
       return [UtilTools.formatText(UtilTools.getCellLabel(row, column, params), 1)]
     }
-    return compConf && compConf.renderCell ? compConf.renderCell.call($table, h, editRender, params, context) : Cell.renderCell(h, params)
+    return Cell.renderCell.call(_vm, h, params)
   }
 }
 

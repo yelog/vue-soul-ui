@@ -6,31 +6,13 @@ const htmlElem = document.querySelector('html')
 const bodyElem = document.body
 
 function rClass (cls) {
-  return new RegExp(`(?:^|\\s)${cls}(?!\\S)`, 'g')
+  if (!rClsMap[cls]) {
+    rClsMap[cls] = new RegExp(`(?:^|\\s)${cls}(?!\\S)`, 'g')
+  }
+  return rClsMap[cls]
 }
 
 const rClsMap = {}
-// 预编译正则，提升速度
-const preClss = [
-  'c--resize',
-  'c--checked',
-  'row--new',
-  'row--hover',
-  'row--current',
-  'col--group',
-  'col--current',
-  'col--checked',
-  'col--copyed',
-  'col--selected',
-  'col--index-checked',
-  'col--title-checked',
-  'fixed--hidden',
-  'scrolling--middle'
-]
-
-preClss.forEach(cls => {
-  rClsMap[cls] = rClass(cls)
-})
 
 export const DomTools = {
   browse,
@@ -41,15 +23,11 @@ export const DomTools = {
     return val && /^\d+%$/.test(val)
   },
   hasClass (elem, cls) {
-    if (elem) {
-      let className = elem.className
-      return (preClss[cls] || rClass(cls)).test(className)
-    }
-    return false
+    return elem && elem.className && elem.className.match && elem.className.match(rClass(cls))
   },
   removeClass (elem, cls) {
     if (elem && DomTools.hasClass(elem, cls)) {
-      elem.className = elem.className.replace(rClsMap[cls] || rClass(cls), '')
+      elem.className = elem.className.replace(rClass(cls), '')
     }
   },
   addClass (elem, cls) {
@@ -58,21 +36,71 @@ export const DomTools = {
       elem.className = `${elem.className} ${cls}`
     }
   },
-  scrollIntoElem (elem) {
-    if (elem) {
-      if (elem.scrollIntoViewIfNeeded) {
-        elem.scrollIntoViewIfNeeded()
-      } else if (elem.scrollIntoView) {
-        elem.scrollIntoView()
+  updateCellTitle (evnt) {
+    let cellElem = evnt.currentTarget.querySelector('.vxe-cell')
+    let content = cellElem.innerText
+    if (cellElem.getAttribute('title') !== content) {
+      cellElem.setAttribute('title', content)
+    }
+  },
+  rowToVisible ($table, row) {
+    let bodyElem = $table.$refs.tableBody.$el
+    let trElem = bodyElem.querySelector(`[data-rowid="${UtilTools.getRowid($table, row)}"]`)
+    if (trElem) {
+      let bodyHeight = bodyElem.clientHeight
+      let bodySrcollTop = bodyElem.scrollTop
+      let trOffsetTop = trElem.offsetTop + (trElem.offsetParent ? trElem.offsetParent.offsetTop : 0)
+      let trHeight = trElem.clientHeight
+      if (trOffsetTop < bodySrcollTop || trOffsetTop > bodySrcollTop + bodyHeight) {
+        // 如果跨行滚动
+        bodyElem.scrollTop = trOffsetTop
+      } else if (trOffsetTop + trHeight >= bodyHeight + bodySrcollTop) {
+        bodyElem.scrollTop = bodySrcollTop + trHeight
+      }
+    } else {
+      // 如果是虚拟渲染跨行滚动
+      if ($table.scrollYLoad) {
+        bodyElem.scrollTop = ($table.afterFullData.indexOf(row) - 1) * $table.scrollYStore.rowHeight
+      }
+    }
+  },
+  colToVisible ($table, column) {
+    let bodyElem = $table.$refs.tableBody.$el
+    let tdElem = bodyElem.querySelector(`.${column.id}`)
+    if (tdElem) {
+      let bodyWidth = bodyElem.clientWidth
+      let bodySrcollLeft = bodyElem.scrollLeft
+      let tdOffsetLeft = tdElem.offsetLeft + (tdElem.offsetParent ? tdElem.offsetParent.offsetLeft : 0)
+      let tdWidth = tdElem.clientWidth
+      if (tdOffsetLeft < bodySrcollLeft || tdOffsetLeft > bodySrcollLeft + bodyWidth) {
+        // 如果跨列滚动
+        bodyElem.scrollLeft = tdOffsetLeft
+      } else if (tdOffsetLeft + tdWidth >= bodyWidth + bodySrcollLeft) {
+        bodyElem.scrollLeft = bodySrcollLeft + tdWidth
+      }
+    } else {
+      // 如果是虚拟渲染跨行滚动
+      if ($table.scrollXLoad) {
+        let visibleColumn = $table.visibleColumn
+        let scrollLeft = 0
+        for (let index = 0; index < visibleColumn.length; index++) {
+          if (visibleColumn[index] === column) {
+            break
+          }
+          scrollLeft += visibleColumn[index].renderWidth
+        }
+        bodyElem.scrollLeft = scrollLeft
       }
     }
   },
   getDomNode () {
+    let documentElement = document.documentElement
+    let bodyElem = document.body
     return {
-      scrollTop: document.documentElement.scrollTop || document.body.scrollTop,
-      scrollLeft: document.documentElement.scrollLeft || document.body.scrollLeft,
-      visibleHeight: document.documentElement.clientHeight || document.body.clientHeight,
-      visibleWidth: document.documentElement.clientWidth || document.body.clientWidth
+      scrollTop: documentElement.scrollTop || bodyElem.scrollTop,
+      scrollLeft: documentElement.scrollLeft || bodyElem.scrollLeft,
+      visibleHeight: documentElement.clientHeight || bodyElem.clientHeight,
+      visibleWidth: documentElement.clientWidth || bodyElem.clientWidth
     }
   },
   /**

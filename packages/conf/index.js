@@ -13,6 +13,7 @@ const GlobalConfig = {
   // stripe: false,
   // border: false,
   fit: true,
+  emptyCell: '　',
   showHeader: true,
   rowId: '_XID', // 行数据的唯一主键字段名
   version: 0, // 版本号，对于某些带数据缓存的功能有用到，上升版本号可以用于重置数据
@@ -38,6 +39,8 @@ const GlobalConfig = {
     filter: 's-icon--funnel',
     edit: 's-icon--edit-outline',
     tree: 's-icon--caret-right',
+    refresh: 's-icon--refresh',
+    custom: 's-icon--menu',
     jumpPrev: 's-icon--d-arrow-left',
     jumpNext: 's-icon--d-arrow-right',
     prevPage: 's-icon--arrow-left',
@@ -47,6 +50,7 @@ const GlobalConfig = {
     msgSuccess: 's-icon--success',
     msgWarning: 's-icon--warning',
     msgError: 's-icon--error',
+    msgQuestion: 's-icon--question',
     msgLoading: 's-icon--refresh roll'
   },
   loadingConfig: {
@@ -58,7 +62,8 @@ const GlobalConfig = {
   grid: {},
   menu: {},
   tooltip: {
-    // zIndex: 99,
+    // zIndex: 3000,
+    trigger: 'hover',
     theme: 'dark'
   },
   pager: {

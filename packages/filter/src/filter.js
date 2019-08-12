@@ -24,10 +24,11 @@ export default {
   },
   methods: {
     renderOptions (h) {
-      let { $parent: $table, filterStore, filterCheckAllEvent, changeRadioOption, changeMultipleOption } = this
+      let { $parent: $table, filterStore } = this
       let { vSize } = $table
       let { args, column, multiple } = filterStore
-      let { slots, filterRender } = column
+      let { slots, own } = column
+      let filterRender = own.filterRender
       let compConf = filterRender ? Renderer.get(filterRender.name) : null
       if (slots && slots.filter) {
         return slots.filter.call($table, Object.assign({ context: this }, args), h)
@@ -55,16 +56,14 @@ export default {
                   checked: filterStore.isAllSelected
                 },
                 on: {
-                  change (evnt) {
-                    filterCheckAllEvent(evnt, evnt.target.checked)
-                  }
+                  change: evnt => this.filterCheckAllEvent(evnt, evnt.target.checked)
                 }
               }),
               h('span', {
-                class: ['checkbox--icon']
+                class: 's-checkbox--icon'
               }),
               h('span', {
-                class: ['checkbox--label']
+                class: 's-checkbox--label'
               }, GlobalConfig.i18n('soul.table.allFilter'))
             ])
             : h('span', {
@@ -97,24 +96,20 @@ export default {
                     checked: item.checked
                   },
                   on: {
-                    change (evnt) {
-                      changeMultipleOption(evnt, evnt.target.checked, item)
-                    }
+                    change: evnt => this.changeMultipleOption(evnt, evnt.target.checked, item)
                   }
                 }),
                 h('span', {
-                  class: 'checkbox--icon'
+                  class: 's-checkbox--icon'
                 }),
                 h('span', {
-                  class: 'checkbox--label'
+                  class: 's-checkbox--label'
                 }, item.label)
               ])
               : h('span', {
                 class: 's-table--filter-label',
                 on: {
-                  click (evnt) {
-                    changeRadioOption(evnt, !item.checked, item)
-                  }
+                  click: evnt => this.changeRadioOption(evnt, !item.checked, item)
                 }
               }, item.label)
           ])
@@ -177,6 +172,14 @@ export default {
     changeMultipleOption (evnt, checked, item) {
       item.checked = checked
       this.checkOptions()
+    },
+    // 筛选发生改变
+    changeOption (evnt, checked, item) {
+      if (this.filterStore.multiple) {
+        this.changeMultipleOption(evnt, checked, item)
+      } else {
+        this.changeRadioOption(evnt, checked, item)
+      }
     },
     // 确认筛选
     confirmFilter () {

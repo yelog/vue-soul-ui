@@ -9,6 +9,10 @@ const _storeMap = {
 }
 
 export const Interceptor = {
+  mixin (map) {
+    XEUtils.each(map, (callback, type) => Interceptor.add(type, callback))
+    return Interceptor
+  },
   get (type) {
     return _storeMap[type] || []
   },
@@ -17,12 +21,14 @@ export const Interceptor = {
     if (eList && callback && eList.indexOf(callback) === -1) {
       eList.push(callback)
     }
+    return Interceptor
   },
   delete (type, callback) {
     let eList = _storeMap[type]
     if (eList) {
       XEUtils.remove(eList, cb => cb === callback)
     }
+    return Interceptor
   }
 }
 

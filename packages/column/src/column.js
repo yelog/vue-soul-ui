@@ -6,9 +6,9 @@ export default {
   props: {
     // 渲染类型 index,radio,selection,expand
     type: String,
-    // 在 v3.0 中废弃
+    // 在 v3.0 中废弃 prop
     prop: String,
-    // 在 v3.0 中废弃
+    // 在 v3.0 中废弃 label
     label: String,
     // 列属性
     field: String,
@@ -50,7 +50,9 @@ export default {
     filterRender: Object,
     // 指定为树节点
     treeNode: Boolean,
-    // 列编辑配置项
+    // 单元格渲染配置项
+    cellRender: Object,
+    // 单元格编辑渲染配置项
     editRender: Object,
     // 额外的参数
     params: Object

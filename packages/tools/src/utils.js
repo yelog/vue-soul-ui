@@ -1,12 +1,16 @@
 import XEUtils from 'xe-utils'
+import GlobalConfig from '../../conf'
 
 var columnUniqueId = 0
 
 class ColumnConfig {
   constructor (_vm, { renderHeader, renderCell, renderData } = {}) {
+    if (_vm.cellRender && _vm.editRender) {
+      console.warn('[vxe-table] Properties cell-render and edit-render cannot be used together.')
+    }
     Object.assign(this, {
       // 基本属性
-      id: `cid_${++columnUniqueId}`,
+      id: `col_${++columnUniqueId}`,
       type: _vm.type,
       prop: _vm.prop,
       property: _vm.field || _vm.prop,
@@ -25,11 +29,12 @@ class ColumnConfig {
       sortable: _vm.sortable,
       sortBy: _vm.sortBy,
       remoteSort: _vm.remoteSort,
-      filters: (_vm.filters || []).map(({ label, value, data }) => ({ label, value, data, _data: data, checked: false })),
+      filters: (_vm.filters || []).map(({ label, value, data, checked }) => ({ label, value, data, _data: data, checked: !!checked })),
       filterMultiple: XEUtils.isBoolean(_vm.filterMultiple) ? _vm.filterMultiple : true,
       filterMethod: _vm.filterMethod,
       filterRender: _vm.filterRender,
       treeNode: _vm.treeNode,
+      cellRender: _vm.cellRender,
       editRender: _vm.editRender,
       // 自定义参数
       params: _vm.params,
@@ -58,6 +63,9 @@ export const UtilTools = {
   getSize ({ size, $parent }) {
     return size || ($parent && ['medium', 'small', 'mini'].indexOf($parent.size) > -1 ? $parent.size : null)
   },
+  getFuncText (content) {
+    return XEUtils.isFunction(content) ? content() : (GlobalConfig.translate ? GlobalConfig.translate(content) : content)
+  },
   // 行主键 key
   getRowkey ($table) {
     return $table.rowId
@@ -77,16 +85,12 @@ export const UtilTools = {
   getColumnList (columns) {
     let result = []
     columns.forEach(column => {
-      if (column.children && column.children.length) {
-        result.push.apply(result, UtilTools.getColumnList(column.children))
-      } else {
-        result.push(column)
-      }
+      result.push.apply(result, column.children && column.children.length ? UtilTools.getColumnList(column.children) : [column])
     })
     return result
   },
   formatText (value, placeholder) {
-    return '' + (value === null || value === void 0 ? (placeholder ? '　' : '') : value)
+    return '' + (value === null || value === void 0 ? (placeholder ? GlobalConfig.emptyCell : '') : value)
   },
   getCellValue (row, column) {
     return XEUtils.get(row, column.property)
@@ -96,12 +100,20 @@ export const UtilTools = {
     let cellValue = UtilTools.getCellValue(row, column)
     let cellLabel = cellValue
     if (params && formatter) {
+      let rest, formatData
       let { $table } = params
+      let colid = column.id
       let cacheFormat = $table && $table.fullAllDataRowMap.has(row)
       if (cacheFormat) {
-        let formatData = $table.fullAllDataRowMap.get(row).formatData
-        if (formatData && formatData.value === cellValue) {
-          return formatData.label
+        rest = $table.fullAllDataRowMap.get(row)
+        formatData = rest.formatData
+        if (!formatData) {
+          formatData = $table.fullAllDataRowMap.get(row).formatData = {}
+        }
+      }
+      if (rest && formatData[colid]) {
+        if (formatData[colid].value === cellValue) {
+          return formatData[colid].label
         }
       }
       if (XEUtils.isString(formatter)) {
@@ -111,8 +123,8 @@ export const UtilTools = {
       } else {
         cellLabel = formatter(Object.assign({ cellValue }, params))
       }
-      if (cacheFormat) {
-        $table.fullAllDataRowMap.get(row).formatData = { value: cellValue, label: cellLabel }
+      if (formatData) {
+        formatData[colid] = { value: cellValue, label: cellLabel }
       }
     }
     return cellLabel
