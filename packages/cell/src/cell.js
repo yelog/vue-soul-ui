@@ -183,10 +183,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'vxe-radio--icon'
+          class: 's-radio--icon'
         }),
         labelField ? h('span', {
-          class: 'vxe-radio--label'
+          class: 's-radio--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]
@@ -231,10 +231,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'vxe-checkbox--icon'
+          class: 's-checkbox--icon'
         }),
         headerTitle ? h('span', {
-          class: 'vxe-checkbox--label'
+          class: 's-checkbox--label'
         }, UtilTools.getFuncText(headerTitle)) : null
       ])
     ]
@@ -281,10 +281,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'vxe-checkbox--icon'
+          class: 's-checkbox--icon'
         }),
         labelField ? h('span', {
-          class: 'vxe-checkbox--label'
+          class: 's-checkbox--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]
@@ -334,10 +334,10 @@ export const Cell = {
       }, [
         h('input', options),
         h('span', {
-          class: 'vxe-checkbox--icon'
+          class: 's-checkbox--icon'
         }),
         labelField ? h('span', {
-          class: 'vxe-checkbox--label'
+          class: 's-checkbox--label'
         }, XEUtils.get(row, labelField)) : null
       ])
     ]

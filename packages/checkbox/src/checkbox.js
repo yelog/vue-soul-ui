@@ -40,10 +40,10 @@ export default {
         }
       }),
       h('span', {
-        class: 'vxe-checkbox--icon'
+        class: 's-checkbox--icon'
       }),
       this.$slots.default ? h('span', {
-        class: 'vxe-checkbox--label'
+        class: 's-checkbox--label'
       }, this.$slots.default) : null
     ])
   }

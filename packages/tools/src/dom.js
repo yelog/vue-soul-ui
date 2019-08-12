@@ -37,7 +37,7 @@ export const DomTools = {
     }
   },
   updateCellTitle (evnt) {
-    let cellElem = evnt.currentTarget.querySelector('.vxe-cell')
+    let cellElem = evnt.currentTarget.querySelector('.s-cell')
     let content = cellElem.innerText
     if (cellElem.getAttribute('title') !== content) {
       cellElem.setAttribute('title', content)
