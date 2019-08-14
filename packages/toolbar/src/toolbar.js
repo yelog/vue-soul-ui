@@ -6,6 +6,7 @@ export default {
   name: 'SToolbar',
   props: {
     id: String,
+    loading: false,
     resizable: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.resizable },
     refresh: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.refresh },
     setting: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.setting },
@@ -63,7 +64,7 @@ export default {
     GlobalEvent.off(this, 'blur')
   },
   render (h) {
-    let { $scopedSlots, $grid, $table, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
+    let { $scopedSlots, $grid, $table, loading, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
     let customBtnOns = {}
     let customWrapperOns = {}
     let $buttons = $scopedSlots.buttons
@@ -83,7 +84,8 @@ export default {
     }
     return h('div', {
       class: ['s-toolbar', {
-        [`size--${vSize}`]: vSize
+        [`size--${vSize}`]: vSize,
+        'is--loading': loading
       }]
     }, [
       h('div', {
@@ -91,8 +93,18 @@ export default {
       }, $buttons ? $buttons.call($grid || $table || this, { $grid, $table }, h) : buttons.map(item => {
         return h('s-button', {
           on: {
-            click: evnt => this.btnEvent(item, evnt)
-          }
+            click: evnt => this.btnEvent(evnt, item)
+          },
+          scopedSlots: item.dropdowns && item.dropdowns.length ? {
+            default: () => UtilTools.getFuncText(item.name),
+            dropdowns: () => item.dropdowns.map(child => {
+              return h('s-button', {
+                on: {
+                  click: evnt => this.btnEvent(evnt, child)
+                }
+              }, UtilTools.getFuncText(child.name))
+            })
+          } : null
         }, UtilTools.getFuncText(item.name))
       })),
       setting ? h('div', {
@@ -319,27 +331,27 @@ export default {
         }
       }, 300)
     },
-    btnEvent (item, evnt) {
-      let { $grid } = this
-      if ($grid) {
-        $grid.commitProxy(item.code)
-        UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid }, evnt])
-      }
-    },
     refreshEvent () {
-      let { $grid, refreshOpts } = this
-      if (!this.isRefresh) {
-        if ($grid) {
-          this.isRefresh = true
-          $grid.commitProxy('reload').catch(e => e).then(() => {
-            this.isRefresh = false
-          })
-        } else if (refreshOpts.query) {
+      let { $grid, refreshOpts, isRefresh } = this
+      if (!isRefresh) {
+        if (refreshOpts.query) {
           this.isRefresh = true
           refreshOpts.query().catch(e => e).then(() => {
             this.isRefresh = false
           })
+        } else if ($grid) {
+          this.isRefresh = true
+          $grid.commitProxy('reload').catch(e => e).then(() => {
+            this.isRefresh = false
+          })
         }
+      }
+    },
+    btnEvent (evnt, item) {
+      let { $grid } = this
+      if (item.code && $grid) {
+        $grid.commitProxy(item.code)
+        UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid }, evnt])
       }
     }
   }

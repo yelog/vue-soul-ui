@@ -51,7 +51,8 @@ const GlobalConfig = {
     msgWarning: 's-icon--warning',
     msgError: 's-icon--error',
     msgQuestion: 's-icon--question',
-    msgLoading: 's-icon--refresh roll'
+    msgLoading: 's-icon--refresh roll',
+    caretBottom: 's-icon--caret-bottom'
   },
   loadingConfig: {
     type: 1,

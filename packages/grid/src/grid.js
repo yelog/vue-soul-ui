@@ -143,7 +143,9 @@ export default {
     }, [
       toolbar ? h('s-toolbar', {
         ref: 'toolbar',
-        props: toolbar,
+        props: Object.assign({
+          loading: loading || tableLoading
+        }, toolbar),
         scopedSlots: $buttons ? {
           buttons: $buttons
         } : null
@@ -201,6 +203,9 @@ export default {
             break
           case 'export':
             this.exportCsv()
+            break
+          case 'reset_custom':
+            this.resetAll()
             break
           case 'reload':
           case 'query': {

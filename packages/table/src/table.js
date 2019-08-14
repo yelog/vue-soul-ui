@@ -747,6 +747,7 @@ export default {
       // 缓存数据
       this.updateCache(true)
       // 原始数据
+      this.tableSynchData = datas
       this.tableSourceData = XEUtils.clone(tableFullData, true)
       this.scrollYLoad = scrollYLoad
       if (scrollYLoad && !(height || maxHeight)) {
@@ -869,23 +870,16 @@ export default {
      * 从指定行插入数据
      */
     insertAt (records, row) {
-      let { tableData, editStore, scrollYLoad, tableFullData, treeConfig } = this
-      let args = arguments
+      let { tableData, editStore, scrollYLoad, tableFullData, treeConfig, remoteSort } = this
       if (!XEUtils.isArray(records)) {
         records = [records]
       }
       return this.createRow(records).then(newRecords => {
-        if (args.length === 1) {
+        if (!row) {
           tableData.unshift.apply(tableData, newRecords)
           tableFullData.unshift.apply(tableFullData, newRecords)
-          if (scrollYLoad) {
-            this.updateAfterFullData()
-          }
         } else {
-          if (scrollYLoad) {
-            throw new Error('[s-table] Virtual scroller does not support this operation.')
-          }
-          if (!row || row === -1) {
+          if (row === -1) {
             tableData.push.apply(tableData, newRecords)
             tableFullData.push.apply(tableFullData, newRecords)
           } else {
@@ -897,6 +891,9 @@ export default {
           }
         }
         [].unshift.apply(editStore.insertList, newRecords)
+        if (scrollYLoad || !remoteSort) {
+          this.updateData(true)
+        }
         this.updateCache()
         this.checkSelectionStatus()
         return this.$nextTick().then(() => {
@@ -940,7 +937,7 @@ export default {
      * 如果传 rows 则删除多行
      */
     remove (rows) {
-      let { tableData, tableFullData, editStore, treeConfig, selectConfig = {}, selection, hasRowInsert } = this
+      let { tableData, tableFullData, editStore, treeConfig, selectConfig = {}, selection, hasRowInsert, scrollYLoad } = this
       let { removeList, insertList } = editStore
       let { checkField: property } = selectConfig
       let rest = []
@@ -983,6 +980,9 @@ export default {
           XEUtils.remove(tableData, row => rows.indexOf(row) > -1)
         }
         XEUtils.remove(insertList, row => rows.indexOf(row) > -1)
+      }
+      if (scrollYLoad) {
+        this.updateData(true)
       }
       this.updateCache()
       this.checkSelectionStatus()
@@ -1119,8 +1119,8 @@ export default {
      * 获取表格所有数据
      */
     getData (rowIndex) {
-      let tableFullData = this.tableFullData
-      return arguments.length ? tableFullData[rowIndex] : tableFullData.slice(0)
+      let tableSynchData = this.data || this.tableSynchData
+      return arguments.length ? tableSynchData[rowIndex] : tableSynchData.slice(0)
     },
     // 在 v3.0 中废弃 getAllRecords
     getAllRecords () {
@@ -3388,8 +3388,8 @@ export default {
      * 激活单元格编辑
      */
     setActiveCell (row, field) {
-      return new Promise(resolve => {
-        setTimeout(() => {
+      return this.scrollToRow(row).then(() => {
+        return new Promise(resolve => {
           if (row && field) {
             let column = this.visibleColumn.find(column => column.property === field)
             if (column && column.editRender) {
@@ -4017,7 +4017,7 @@ export default {
       return this.$nextTick()
     },
     scrollToRow (row, column) {
-      if (row && this.fullDataRowMap.has(row)) {
+      if (row && this.fullAllDataRowMap.has(row)) {
         DomTools.rowToVisible(this, row)
       }
       return this.scrollToColumn(column)
@@ -4026,7 +4026,10 @@ export default {
       if (column && this.fullColumnMap.has(column)) {
         DomTools.colToVisible(this, column)
       }
-      return this.$nextTick()
+      if (this.scrollYLoad) {
+        return new Promise(resolve => setTimeout(() => resolve(this.$nextTick()), 50))
+      }
+      return new Promise(resolve => resolve(this.$nextTick()))
     },
     clearScroll () {
       Object.assign(this.scrollXStore, {
@@ -4142,7 +4145,7 @@ export default {
     beginValidate (rows, cb, isAll) {
       let validRest = {}
       let status = true
-      let { editRules, tableData, tableFullData, scrollYLoad, scrollYStore } = this
+      let { editRules, tableData, tableFullData, scrollYLoad } = this
       let vaildDatas = scrollYLoad ? tableFullData : tableData
       if (rows) {
         if (XEUtils.isFunction(rows)) {
@@ -4192,7 +4195,6 @@ export default {
         }).catch(params => {
           let args = isAll ? validRest : { [params.column.property]: params }
           return new Promise((resolve, reject) => {
-            let { rowIndex } = params
             let finish = () => {
               params.cell = DomTools.getCell(this, params)
               this.handleValidError(params)
@@ -4204,14 +4206,10 @@ export default {
               }
             }
             if (scrollYLoad) {
-              let { startIndex, renderSize, rowHeight } = scrollYStore
-              if (rowIndex < startIndex || rowIndex > startIndex + renderSize) {
-                let bodyElem = this.$refs.tableBody.$el
-                bodyElem.scrollTop = (rowIndex - 1) * rowHeight
-                return setTimeout(finish, debounceScrollYDuration * 2)
-              }
+              this.scrollToRow(params.row).then(finish)
+            } else {
+              finish()
             }
-            finish()
           })
         })
       } else {

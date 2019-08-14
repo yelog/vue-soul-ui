@@ -169,7 +169,7 @@ export default {
         }, [
           h('span', `${pageSize}${GlobalConfig.i18n('soul.pager.pagesize')}`),
           h('i', {
-            class: 's-pager--sizes-arrow s-icon--caret-bottom'
+            class: `s-pager--sizes-arrow ${GlobalConfig.icon.caretBottom}`
           })
         ]),
         h('div', {
