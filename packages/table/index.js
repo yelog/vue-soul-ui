@@ -1,11 +1,11 @@
 import STable from './src/table'
-import VXETable from '../v-x-e-table'
+import SoulUI from '../table-core'
 
 export const Table = STable
 
 STable.install = function (Vue) {
-  VXETable.Vue = Vue
-  VXETable.Table = Table
+  SoulUI.Vue = Vue
+  SoulUI.Table = Table
   Vue.component(STable.name, STable)
 }
 

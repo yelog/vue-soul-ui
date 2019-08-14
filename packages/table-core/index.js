@@ -8,11 +8,11 @@ const installedPlugins = []
 function use (Plugin, options) {
   if (Plugin && Plugin.install) {
     if (installedPlugins.indexOf(Plugin) === -1) {
-      Plugin.install(VXETable, options)
+      Plugin.install(SoulUI, options)
       installedPlugins.push(Plugin)
     }
   }
-  return VXETable
+  return SoulUI
 }
 
 export const SoulUI = {
