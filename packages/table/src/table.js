@@ -497,7 +497,11 @@ export default {
     if (this.autoResize) {
       ResizeEvent.on(this, this.$el.parentNode, this.recalculate)
     }
-    document.body.appendChild(this.$refs.tableWrapper)
+    if (DomTools.getParents(this.$el, '.s-table-complete-outline').length > 0) {
+      DomTools.getParents(this.$el, '.s-table-complete-outline')[0].children[0].appendChild(this.$refs.tableWrapper)
+    } else {
+      document.body.appendChild(this.$refs.tableWrapper)
+    }
   },
   activated () {
     this.scrollTo(this.lastScrollLeft, this.lastScrollTop)
@@ -687,6 +691,29 @@ export default {
           },
           ref: 'ctxWrapper'
         }) : _e(),
+        /**
+         * 单元格补全
+         */
+        h('div', {
+          class: 's-table--complete-wrapper',
+          ref: 's-table-complete'
+        }, [
+          h('div', {
+            class: 's-table--complete'
+          }, [
+            h('div', {
+              class: 's-table--complete-main'
+            }),
+            h('i', {
+              class: 's-icon--close',
+              on: {
+                click (evnt) {
+                  evnt.currentTarget.parentNode.parentNode.style.display = 'none'
+                }
+              }
+            })
+          ])
+        ]),
         /**
          * Ellipsis tooltip
          */
@@ -1685,8 +1712,9 @@ export default {
                 }
                 let showEllipsis = cellOverflow === 'ellipsis'
                 let showTitle = cellOverflow === 'title'
+                let showComplete = cellOverflow === 'complete'
                 let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
-                let hasEllipsis = showTitle || showTooltip || showEllipsis
+                let hasEllipsis = showTitle || showComplete || showTooltip || showEllipsis
                 let listElem = elemStore[`${name}-${layout}-list`]
                 if (listElem && hasEllipsis) {
                   XEUtils.arrayEach(listElem.querySelectorAll(`.${column.id}`), thElem => {
@@ -2217,6 +2245,59 @@ export default {
       if (!menu.disabled && (!menu.children || !menu.children.length)) {
         UtilTools.emitEvent(this, 'context-menu-click', [Object.assign({ menu }, this.ctxMenuStore.args), evnt])
         this.closeMenu()
+      }
+    },
+    /**
+     * 触发 complete 补全事件
+     */
+    triggerCompleteEvent (evnt, params) {
+      let { editConfig, editStore, tooltipStore } = this
+      let { actived } = editStore
+      let { row, column } = params
+      if (editConfig) {
+        if ((editConfig.mode === 'row' && actived.row === row) || (actived.row === row && actived.column === column)) {
+          return
+        }
+      }
+      if (tooltipStore.column !== column || tooltipStore.row !== row || !tooltipStore.visible) {
+        this.showComplete(evnt, column, row)
+      }
+    },
+    showComplete (evnt, column, row) {
+      if (evnt.currentTarget.querySelector('.s-table-grid-down')) {
+        return this.$nextTick()
+      }
+      let complete = this.$refs['s-table-complete']
+      let cell = evnt.currentTarget
+      let _this = this
+      let wrapperElem = cell.children[0]
+      let content = cell.innerText
+      let html = wrapperElem.innerHTML
+      if (content && wrapperElem.scrollWidth > wrapperElem.clientWidth) {
+        let gridDownDiv = document.createElement('div')
+        gridDownDiv.className = 's-table-grid-down'
+        gridDownDiv.innerHTML = '<i class="s-icon--arrow-bottom"></i>'
+        cell.appendChild(gridDownDiv)
+
+        gridDownDiv.addEventListener('click', function () {
+          complete.style.display = 'block'
+          let cellOffSet
+          if (DomTools.getParents(_this.$el, '.s-table-complete-outline').length > 0) {
+            cellOffSet = DomTools.getOffsetPos(cell, DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0])
+            cellOffSet.top -= _this.$refs.tableBody.$el.scrollTop
+          } else {
+            cellOffSet = DomTools.getAbsolutePos(cell)
+          }
+          complete.style.top = cellOffSet.top + 'px'
+          complete.style.left = cellOffSet.left + 'px'
+          complete.querySelector('.s-table--complete-main').innerHTML = html
+        }, false)
+      }
+    },
+    closeComplete (evnt) {
+      let curGridDown = evnt.currentTarget.querySelector('.s-table-grid-down')
+      if (curGridDown) {
+        curGridDown.parentNode.removeChild(curGridDown)
       }
     },
     /**

@@ -69,8 +69,9 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
   let showEllipsis = cellOverflow === 'ellipsis'
   let showTitle = cellOverflow === 'title'
+  let showComplete = cellOverflow === 'complete'
   let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
-  let hasEllipsis = showTitle || showTooltip || showEllipsis
+  let hasEllipsis = showTitle || showComplete || showTooltip || showEllipsis
   let isDirty
   let tdOns = {}
   let cellAlign = align || allAlign
@@ -84,7 +85,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     showEllipsis = true
   }
   // hover 进入事件
-  if (showTitle || showTooltip || tableListeners['cell-mouseenter']) {
+  if (showTitle || showTooltip || showComplete || tableListeners['cell-mouseenter']) {
     tdOns.mouseenter = evnt => {
       if (isOperateMouse($table)) {
         return
@@ -92,6 +93,8 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
       let evntParams = { $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }
       if (showTitle) {
         DomTools.updateCellTitle(evnt)
+      } else if (showComplete) {
+        $table.triggerCompleteEvent(evnt, evntParams)
       } else if (showTooltip) {
         // 如果配置了显示 tooltip
         $table.triggerTooltipEvent(evnt, evntParams)
@@ -100,13 +103,16 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     }
   }
   // hover 退出事件
-  if (showTooltip || tableListeners['cell-mouseleave']) {
+  if (showTooltip || showComplete || tableListeners['cell-mouseleave']) {
     tdOns.mouseleave = evnt => {
       if (isOperateMouse($table)) {
         return
       }
       if (showTooltip) {
         $table.clostTooltip()
+      }
+      if (showComplete) {
+        $table.closeComplete(evnt)
       }
       UtilTools.emitEvent($table, 'cell-mouseleave', [{ $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }, evnt])
     }
@@ -167,6 +173,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     h('div', {
       class: ['s-cell', {
         'c--title': showTitle,
+        'c--complete': showComplete,
         'c--tooltip': showTooltip,
         'c--ellipsis': showEllipsis
       }],
@@ -441,6 +448,10 @@ export default {
       let scrollLeft = bodyElem.scrollLeft
       let isX = scrollLeft !== lastScrollLeft
       let isY = scrollTop !== lastScrollTop
+      if ($table.$refs['s-table-complete']) {
+        // 隐藏complete
+        $table.$refs['s-table-complete'].style.display = 'none'
+      }
       $table.lastScrollTop = scrollTop
       $table.lastScrollLeft = scrollLeft
       $table.lastScrollTime = Date.now()

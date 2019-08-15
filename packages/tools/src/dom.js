@@ -169,6 +169,44 @@ export const DomTools = {
   getCell ($table, { row, column }) {
     let rowid = UtilTools.getRowid($table, row)
     return $table.$refs.tableBody.$el.querySelector(`.s-body--row[data-rowid="${rowid}"] .${column.id}`)
+  },
+  /**
+   * 查询所有符合css选择器的父类元素
+   * @param elem 当前元素
+   * @param selector css选择器 如 '.class' '#id' '[name=user]'
+   * @returns {Array} 所有符合条件的父类元素
+   */
+  getParents (elem, selector) {
+    let parents = []; let p = elem.parentNode
+    while (p !== document) {
+      let o = p
+      if (isMatch(p, selector)) {
+        parents.push(o)
+      }
+      p = o.parentNode
+    }
+    parents.push(document) // Push that parentSelector you wanted to stop at
+    return parents
+  }
+}
+
+/**
+ * 检查当前元素是否匹配 css选择器
+ * @param p
+ * @param selector css选择器 如 '.class' '#id' '[name=user]'
+ * @returns {*}
+ */
+function isMatch (p, selector) {
+  if (selector.startsWith('.')) {
+    // class
+    return DomTools.hasClass(p, selector.substring(1))
+  } else if (selector.startsWith('#')) {
+    // id
+    return p.getAttribute('id') === selector.substring(1)
+  } else if (/\[*=*\]/g.test(selector)) {
+    // 属性选择器
+    let split = selector.replace(/\[|\]/g, '').split('=')
+    return p.getAttribute(split[0]) === split[1]
   }
 }
 

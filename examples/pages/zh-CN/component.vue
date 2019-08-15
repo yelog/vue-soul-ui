@@ -135,7 +135,7 @@
       <el-scrollbar class="page-component__nav">
         <side-nav :data="navsData[lang]" :base="`/${ lang }/component`" />
       </el-scrollbar>
-      <div class="page-component__content">
+      <div class="page-component__content s-table-complete-outline">
         <router-view class="content" />
       </div>
     </div>

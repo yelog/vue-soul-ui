@@ -98,7 +98,21 @@ gulp.task('build_style', gulp.series('build_modules', 'build_locale', () => {
           basename: 'style',
           extname: '.css'
         }))
-        .pipe(gulp.dest(`lib/${name}/style`))
+        .pipe(gulp.dest(`lib/${name}/style`)),
+      gulp.src(`styles/theme-layui/index.scss`)
+        .pipe(replace(/(\/\*\*Variable\*\*\/)/, `@import './variable.scss';\n`))
+        .pipe(sass())
+        .pipe(prefixer({
+          borwsers: ['last 1 version', '> 1%', 'not ie <= 8'],
+          cascade: true,
+          remove: true
+        }))
+        .pipe(cleanCSS())
+        .pipe(rename({
+          basename: 'index',
+          extname: '.css'
+        }))
+        .pipe(gulp.dest(`lib/theme-layui`))
     ])
   }))
 }))

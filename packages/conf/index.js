@@ -91,7 +91,8 @@ const GlobalConfig = {
     animat: true
   },
   i18n: key => key,
-  _tip: 0 // 是否按需加载了 tooltip
+  _tip: 0, // 是否按需加载了 tooltip
+  _complete: 0
 }
 
 export default GlobalConfig

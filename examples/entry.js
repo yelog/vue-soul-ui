@@ -11,7 +11,7 @@ import title from './i18n/title'
 import './mockData'
 
 import 'element-ui/lib/theme-chalk/index.css';
-import '../styles/index.scss'
+import '../styles/theme-layui/index.scss'
 import './assets/styles/common.scss'
 import './assets/styles/fonts/style.css'
 import icon from './icon.json'
