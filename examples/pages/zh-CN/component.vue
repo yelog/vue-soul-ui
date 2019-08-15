@@ -148,7 +148,7 @@ import throttle from 'throttle-debounce/throttle'
 
 export default {
   name: '',
-  data() {
+  data () {
     return {
       lang: this.$route.meta.lang,
       navsData,
@@ -159,12 +159,12 @@ export default {
     }
   },
   computed: {
-    showBackToTop() {
+    showBackToTop () {
       return !this.$route.path.match(/backtop/)
     }
   },
   watch: {
-    '$route.path'() {
+    '$route.path' () {
       // 触发伪滚动条更新
       this.componentScrollBox.scrollTop = 0
       this.$nextTick(() => {
@@ -172,12 +172,12 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     bus.$on('navFade', val => {
       this.navFaded = val
     })
   },
-  mounted() {
+  mounted () {
     this.componentScrollBar = this.$refs.componentScrollBar
     this.componentScrollBox = this.componentScrollBar.$el.querySelector('.el-scrollbar__wrap')
     this.throttledScrollHandler = throttle(300, this.handleScroll)
@@ -186,14 +186,14 @@ export default {
     this.goAnchor()
     document.body.classList.add('is-component')
   },
-  destroyed() {
+  destroyed () {
     document.body.classList.remove('is-component')
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.componentScrollBox.removeEventListener('scroll', this.throttledScrollHandler)
   },
   methods: {
-    renderAnchorHref() {
+    renderAnchorHref () {
       if (/changelog/g.test(location.href)) return
       const anchors = document.querySelectorAll('h2 a,h3 a,h4 a,h5 a')
       const basePath = location.href.split('#').splice(0, 2).join('#');
@@ -204,7 +204,7 @@ export default {
       })
     },
 
-    goAnchor() {
+    goAnchor () {
       if (location.href.match(/#/g).length > 1) {
         const anchor = location.href.match(/#[^#]+$/g)
         if (!anchor) return
@@ -217,7 +217,7 @@ export default {
       }
     },
 
-    handleScroll() {
+    handleScroll () {
       const scrollTop = this.componentScrollBox.scrollTop
       if (this.showHeader !== this.scrollTop > scrollTop) {
         this.showHeader = this.scrollTop > scrollTop
@@ -231,7 +231,7 @@ export default {
       this.scrollTop = scrollTop
     }
   },
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate (to, from, next) {
     next()
     setTimeout(() => {
       if (location.href.match(/#/g).length < 2) {
