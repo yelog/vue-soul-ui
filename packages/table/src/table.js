@@ -2284,7 +2284,10 @@ export default {
           let cellOffSet
           if (DomTools.getParents(_this.$el, '.s-table-complete-outline').length > 0) {
             cellOffSet = DomTools.getOffsetPos(cell, DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0])
-            cellOffSet.top -= _this.$refs.tableBody.$el.scrollTop
+            if (!column.fixed) {
+              cellOffSet.top -= _this.$refs.tableBody.$el.scrollTop
+              cellOffSet.left -= _this.$refs.tableBody.$el.scrollLeft
+            }
           } else {
             cellOffSet = DomTools.getAbsolutePos(cell)
           }

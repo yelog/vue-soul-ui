@@ -12,11 +12,12 @@
         height="300"
         highlight-hover-row
         :data.sync="tableData">
-        <s-table-column type="index" width="60"></s-table-column>
-        <s-table-column field="address" width="200" title="超过隐藏时显示为省略号————————————" ></s-table-column>
+        <s-table-column type="index" width="60" fixed="left"></s-table-column>
+        <s-table-column field="address" width="200" fixed="left" title="超过隐藏时显示为省略号————————————" ></s-table-column>
         <s-table-column field="date" width="200" title="内容超过隐藏时显示为省略号并用原生 title 显示"></s-table-column>
          <s-table-column field="role" title="Role" width="300"></s-table-column>
         <s-table-column field="age" width="200" title="表头超过隐藏时显示为省略号并 tooltip 显示——————————————"></s-table-column>
+        <s-table-column field="address" title="Address" width="200"></s-table-column>
         <s-table-column field="address" title="Address" width="200" fixed="right"></s-table-column>
     </s-table>
 </template>
