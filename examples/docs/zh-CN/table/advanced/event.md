@@ -15,7 +15,7 @@
   @cell-dblclick="cellDBLClickEvent"
   @cell-mouseenter="cellMouseenterEvent"
   @cell-mouseleave="cellMouseleaveEvent"
-  @body-scroll="bodyScrollEvent">
+  @scroll="bodyScrollEvent">
   <s-table-column type="index" title="序号" width="60" fixed="left"></s-table-column>
   <s-table-column field="name" title="Name" width="300"></s-table-column>
   <s-table-column field="role" title="Role" width="300"></s-table-column>
