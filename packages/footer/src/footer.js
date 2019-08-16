@@ -99,23 +99,30 @@ export default {
             let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
             let showEllipsis = cellOverflow === 'ellipsis'
             let showTitle = cellOverflow === 'title'
-            let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
-            let hasEllipsis = showTitle || showTooltip || showEllipsis
+            let showTooltip = cellOverflow === 'tooltip'
+            let showComplete = cellOverflow === true || cellOverflow === 'complete'
+            let hasEllipsis = showComplete || showTitle || showTooltip || showEllipsis
             let tfOns = {}
             // 确保任何情况下 columnIndex 都精准指向真实列索引
             let columnIndex = getColumnIndex(column)
-            if (showTitle || showTooltip) {
+            if (showTitle || showTooltip || showComplete) {
               tfOns.mouseover = evnt => {
                 if (showTitle) {
                   DomTools.updateCellTitle(evnt)
+                } else if (showComplete) {
+                  $table.triggerCompleteEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, locationType: 'footer', fixed: fixedType })
                 } else if (showTooltip) {
                   $table.triggerFooterTooltipEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType })
                 }
               }
             }
-            if (showTooltip) {
-              tfOns.mouseout = evnt => {
-                $table.clostTooltip()
+            if (showTooltip || showComplete) {
+              tfOns.mouseleave = evnt => {
+                if (showComplete) {
+                  $table.closeComplete(event)
+                } else if (showTooltip) {
+                  $table.clostTooltip()
+                }
               }
             }
             if (tableListeners['header-cell-click']) {

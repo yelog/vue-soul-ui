@@ -69,8 +69,8 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
   let showEllipsis = cellOverflow === 'ellipsis'
   let showTitle = cellOverflow === 'title'
-  let showComplete = cellOverflow === 'complete'
-  let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
+  let showComplete = cellOverflow === true || cellOverflow === 'complete'
+  let showTooltip = cellOverflow === 'tooltip'
   let hasEllipsis = showTitle || showComplete || showTooltip || showEllipsis
   let isDirty
   let tdOns = {}
@@ -90,7 +90,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
       if (isOperateMouse($table)) {
         return
       }
-      let evntParams = { $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }
+      let evntParams = { $table, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, locationType: 'body', isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget }
       if (showTitle) {
         DomTools.updateCellTitle(evnt)
       } else if (showComplete) {

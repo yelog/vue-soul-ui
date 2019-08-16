@@ -1712,8 +1712,8 @@ export default {
                 }
                 let showEllipsis = cellOverflow === 'ellipsis'
                 let showTitle = cellOverflow === 'title'
-                let showComplete = cellOverflow === 'complete'
-                let showTooltip = cellOverflow === true || cellOverflow === 'tooltip'
+                let showComplete = cellOverflow === true || cellOverflow === 'complete'
+                let showTooltip = cellOverflow === 'tooltip'
                 let hasEllipsis = showTitle || showComplete || showTooltip || showEllipsis
                 let listElem = elemStore[`${name}-${layout}-list`]
                 if (listElem && hasEllipsis) {
@@ -2251,19 +2251,17 @@ export default {
      * 触发 complete 补全事件
      */
     triggerCompleteEvent (evnt, params) {
-      let { editConfig, editStore, tooltipStore } = this
+      let { editConfig, editStore } = this
       let { actived } = editStore
-      let { row, column } = params
+      let { row, column, locationType } = params
       if (editConfig) {
         if ((editConfig.mode === 'row' && actived.row === row) || (actived.row === row && actived.column === column)) {
           return
         }
       }
-      if (tooltipStore.column !== column || tooltipStore.row !== row || !tooltipStore.visible) {
-        this.showComplete(evnt, column, row)
-      }
+      this.showComplete(evnt, column, locationType)
     },
-    showComplete (evnt, column, row) {
+    showComplete (evnt, column, locationType) {
       if (evnt.currentTarget.querySelector('.s-table-grid-down')) {
         return this.$nextTick()
       }
@@ -2284,8 +2282,10 @@ export default {
           let cellOffSet
           if (DomTools.getParents(_this.$el, '.s-table-complete-outline').length > 0) {
             cellOffSet = DomTools.getOffsetPos(cell, DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0])
-            if (!column.fixed) {
+            if (locationType === 'body') {
               cellOffSet.top -= _this.$refs.tableBody.$el.scrollTop
+            }
+            if (!column.fixed) {
               cellOffSet.left -= _this.$refs.tableBody.$el.scrollLeft
             }
           } else {

@@ -19,24 +19,25 @@
   }
   th {
     font-weight: 400;
+    position: relative;
   }
   td {
     position: relative;
-    .s-table-grid-down {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 26px;
-      height: 100%;
-      padding: 5px 0;
-      border-style: solid;
-      border-color: #e8eaec;
-      border-width: 0 0 0 1px;
-      text-align: center;
-      background-color: #fff;
-      color: #999;
-      cursor: pointer;
-    }
+  }
+  .s-table-grid-down {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 26px;
+    height: 100%;
+    padding: 5px 0;
+    border-style: solid;
+    border-color: #e8eaec;
+    border-width: 0 0 0 1px;
+    text-align: center;
+    background-color: #fff;
+    color: #999;
+    cursor: pointer;
   }
 }
 .s-table-complete-outline > * {

@@ -182,29 +182,36 @@ export default {
             let headAlign = headerAlign || align || allHeaderAlign || allAlign
             let showEllipsis = headOverflow === 'ellipsis'
             let showTitle = headOverflow === 'title'
-            let showTooltip = headOverflow === true || headOverflow === 'tooltip'
-            let hasEllipsis = showTitle || showTooltip || showEllipsis
+            let showTooltip = headOverflow === 'tooltip'
+            let showComplete = headOverflow === true || headOverflow === 'complete'
+            let hasEllipsis = showComplete || showTitle || showTooltip || showEllipsis
             let thOns = {}
             // 确保任何情况下 columnIndex 都精准指向真实列索引
             let columnIndex = getColumnIndex(column)
-            if (showTitle || showTooltip) {
+            if (showTitle || showTooltip || showComplete) {
               thOns.mouseover = evnt => {
                 if ($table._isResize) {
                   return
                 }
                 if (showTitle) {
                   DomTools.updateCellTitle(evnt)
+                } else if (showComplete) {
+                  $table.triggerCompleteEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, locationType: 'header', fixed: fixedType })
                 } else if (showTooltip) {
                   $table.triggerHeaderTooltipEvent(evnt, { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType })
                 }
               }
             }
-            if (showTooltip) {
-              thOns.mouseout = evnt => {
+            if (showTooltip || showComplete) {
+              thOns.mouseleave = evnt => {
                 if ($table._isResize) {
                   return
                 }
-                $table.clostTooltip()
+                if (showComplete) {
+                  $table.closeComplete(event)
+                } else if (showTooltip) {
+                  $table.clostTooltip()
+                }
               }
             }
             if (highlightCurrentColumn || tableListeners['header-cell-click'] || mouseConfig.checked || sortOpts.trigger === 'cell') {
