@@ -3548,7 +3548,7 @@ export default {
      * 点击筛选事件
      */
     triggerFilterEvent (evnt, column, params) {
-      let { $refs, filterStore, overflowX } = this
+      let { $refs, filterStore, overflowX, $el } = this
       if (filterStore.column === column && filterStore.visible) {
         filterStore.visible = false
       } else {
@@ -3556,6 +3556,11 @@ export default {
         let bodyElem = $refs.tableBody.$el
         let filterWrapper = $refs.filterWrapper
         let { top, left } = DomTools.getOffsetPos(targetElem)
+        if (DomTools.getParents($el, '.s-table-complete-outline').length > 0) {
+          let { top: otop, left: oleft } = DomTools.getOffsetPos(targetElem, DomTools.getParents($el, '.s-table-complete-outline')[0].children[0])
+          top = otop
+          left = oleft
+        }
         if (overflowX) {
           left -= bodyElem.scrollLeft
         }
