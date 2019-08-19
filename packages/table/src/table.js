@@ -2298,7 +2298,7 @@ export default {
 
         gridDownDiv.addEventListener('click', function () {
           complete.style.display = 'block'
-          let cellOffSet
+          let cellOffSet; let maxWidth = 10000
           if (DomTools.getParents(_this.$el, '.s-table-complete-outline').length > 0) {
             cellOffSet = DomTools.getOffsetPos(cell, DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0])
             if (locationType === 'body') {
@@ -2307,11 +2307,15 @@ export default {
             if (!column.fixed) {
               cellOffSet.left -= _this.$refs.tableBody.$el.scrollLeft
             }
+            if (cellOffSet.left + Math.min(wrapperElem.scrollWidth, 500) > DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0].scrollWidth) {
+              cellOffSet.left -= (Math.min(wrapperElem.scrollWidth, 500) - wrapperElem.clientWidth)
+            }
           } else {
             cellOffSet = DomTools.getAbsolutePos(cell)
           }
           complete.style.top = cellOffSet.top + 'px'
           complete.style.left = cellOffSet.left + 'px'
+          complete.style.maxWidth = maxWidth + 'px'
           complete.querySelector('.s-table--complete-main').innerHTML = html
         }, false)
       }
