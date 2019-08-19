@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h3>size</h3>
+    <h2>size</h2>
     <pre>
       <code class="xml">
         每个组件都有 size 属性，默认是继承父组件，所以只要给局部的父组件设置 size，所有后代组件一律继承，该功能对于很多场景中都非常有用
       </code>
     </pre>
-    <h3>Default Global Props</h3>
+    <h2>Default Global Props</h2>
     <pre>
       <code class="javascript">
         import Vue from 'vue'
@@ -45,6 +45,8 @@
             filter: 'vxe-icon--funnel',
             edit: 'vxe-icon--edit-outline',
             tree: 'vxe-icon--caret-right',
+            refresh: 'vxe-icon--refresh',
+            custom: 'vxe-icon--menu',
             jumpPrev: 'vxe-icon--d-arrow-left',
             jumpNext: 'vxe-icon--d-arrow-right',
             prevPage: 'vxe-icon--arrow-left',
@@ -54,7 +56,10 @@
             msgSuccess: 'vxe-icon--success',
             msgWarning: 'vxe-icon--warning',
             msgError: 'vxe-icon--error',
-            msgLoading: 'vxe-icon--refresh roll'
+            msgQuestion: 'vxe-icon--question',
+            msgLoading: 'vxe-icon--refresh roll',
+            caretBottom: 'vxe-icon--caret-bottom',
+            dropdownBottom: 'vxe-icon--arrow-bottom'
           },
           // 配置式表格的默认参数
           grid: {
@@ -105,17 +110,13 @@
           // 默认优化配置项
           optimization : {
             animat: true,
-            // 当表头大于 40 列时自动启用横向 X 滚动渲染
+            // 当表头大于 100 列时自动启用横向 X 滚动渲染
             scrollX: {
-              gt: 40,
-              oSize: 5,
-              rSize: 16
+              gt: 100
             },
             // 当行数据大于 500 条时自动启用纵向 Y 滚动渲染
             scrollY: {
-              gt: 200,
-              oSize: 20,
-              rSize: 80
+              gt: 500
             }
           },
           // 集成国际化（将对列头、校验提示..进行自动翻译）

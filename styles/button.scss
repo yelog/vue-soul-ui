@@ -30,20 +30,21 @@
   background-color: #fff;
   outline: 0;
   font-size: $s-font-size;
-  color: $s-font-color;
   white-space: nowrap;
   user-select: none;
   appearance: none;
-  cursor: pointer;
+  &[disabled] {
+    color: $s-disabled-color;
+    cursor: no-drop;
+  }
+  &:not([disabled]) {
+    color: $s-font-color;
+    cursor: pointer;
+  }
   &.type--text {
-    color: $s-primary-color;
     text-decoration: none;
     border: 0;
     background-color: transparent;
-    &[disabled] {
-      color: $s-disabled-color;
-      cursor: no-drop;
-    }
     &:not([disabled]) {
       &:hover {
         color: lighten($s-primary-color, 10%);
@@ -59,22 +60,26 @@
       color: #fff;
       border-color: $s-primary-color;
       background-color: $s-primary-color;
-      &:hover {
-        @extend %ButtonPrimaryHover;
-      }
-      &:active {
-        color: #fff;
-        background-color: darken($s-primary-color, 2%);
-        border-color: darken($s-primary-color, 2%);
+      &:not([disabled]) {
+        &:hover {
+          @extend %ButtonPrimaryHover;
+        }
+        &:active {
+          color: #fff;
+          background-color: darken($s-primary-color, 2%);
+          border-color: darken($s-primary-color, 2%);
+        }
       }
     }
     &:not(.theme--primary) {
-      &:hover {
-        @extend %ButtonHover;
-      }
-      &:active {
-        color: darken($s-primary-color, 2%);
-        border-color: darken($s-primary-color, 2%);
+      &:not([disabled]) {
+        &:hover {
+          @extend %ButtonHover;
+        }
+        &:active {
+          color: darken($s-primary-color, 2%);
+          border-color: darken($s-primary-color, 2%);
+        }
       }
     }
     &.size--medium {
@@ -105,21 +110,6 @@
 }
 .s-button--dropdown {
   position: relative;
-  &.size--medium {
-    .s-button--dropdown-wrapper {
-      top: 36px;
-    }
-  }
-  &.size--small {
-    .s-button--dropdown-wrapper {
-      top: 32px;
-    }
-  }
-  &.size--mini {
-    .s-button--dropdown-wrapper {
-      top: 30px;
-    }
-  }
   &+.s-button,
   &+.s-button--dropdown {
     @extend %ButtonInterval;
@@ -129,29 +119,33 @@
       &.theme--primary {
         @extend %ButtonPrimaryHover;
       }
-      &:not(.theme--primary) {
-        @extend %ButtonHover;
+      &:not([disabled]) {
+        &:not(.theme--primary) {
+          @extend %ButtonHover;
+        }
       }
     }
     .s-button--dropdown-wrapper {
       display: block;
     }
     .s-button--dropdown-arrow {
-      transform: rotate(360deg);
+      transform: rotate(315deg);
+      &.s-icon--arrow-bottom {
+        margin-top: -2px;
+      }
     }
   }
   .s-button--dropdown-arrow {
     font-size: 12px;
-    margin-top: -2px;
     margin-left: 5px;
     @include animatTransition(transform, .2s);
   }
   .s-button--dropdown-wrapper {
     display: none;
     position: absolute;
-    top: 38px;
     left: 50%;
     transform: translateX(-50%);
+    margin-top: 5px;
     z-index: 100;
     padding: 5px;
     background-color: #fff;
@@ -163,6 +157,9 @@
       display: block;
       width: 100%;
       border: 0;
+      &.type--text {
+        padding: 2px 8px;
+      }
     }
   }
 }

@@ -79,7 +79,7 @@
     "vue-loader": "^15.7.0",
     "vue-router": "^3.0.3",
     "vue-template-compiler": "^2.6.10",
-    "vxe-table-plugin-antd": "1.4.0",
+    "vxe-table-plugin-antd": "1.4.1",
     "vxe-table-plugin-element": "1.4.0",
     "vxe-table-plugin-excel": "^1.0.0",
     "vxe-table-plugin-iview": "1.4.0",
@@ -88,7 +88,7 @@
     "xe-ajax": "^3.6.0",
     "xe-ajax-mock": "^1.8.0",
     "xe-clipboard": "^1.6.0",
-    "xe-utils": "^1.9.8",
+    "xe-utils": "^2.0.2",
     "xlsx": "^0.14.3"
   },
   "peerDependencies": {

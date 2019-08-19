@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>虚拟滚动渲染，键盘移动高亮行，设置 <table-api-link prop="keyboard-config"/>={isArrow: true} 启用方向键功能</p>
+    <p class="tip">虚拟滚动渲染，键盘移动高亮行，设置 <table-api-link prop="keyboard-config"/>={isArrow: true} 启用方向键功能</p>
 
     <vxe-table
       border
@@ -10,8 +10,7 @@
       ref="xTable"
       height="300"
       :loading="loading"
-      :keyboard-config="{isArrow: true}"
-      :optimization ="{scrollY: {gt: 200, oSize: 10, rSize: 30}}">>
+      :keyboard-config="{isArrow: true}">
       <vxe-table-column type="index" width="100"></vxe-table-column>
       <vxe-table-column field="name" title="Name" sortable width="200"></vxe-table-column>
       <vxe-table-column field="age" title="Age" width="200"></vxe-table-column>
@@ -68,8 +67,7 @@ export default {
           ref="xTable"
           height="300"
           :loading="loading"
-          :keyboard-config="{isArrow: true}"
-          :optimization ="{scrollY: {gt: 200, oSize: 10, rSize: 30}}">>
+          :keyboard-config="{isArrow: true}">
           <vxe-table-column type="index" width="100"></vxe-table-column>
           <vxe-table-column field="name" title="Name" sortable width="200"></vxe-table-column>
           <vxe-table-column field="age" title="Age" width="200"></vxe-table-column>

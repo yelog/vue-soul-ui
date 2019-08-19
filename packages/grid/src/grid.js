@@ -211,6 +211,7 @@ export default {
           case 'query': {
             if (ajax.query) {
               let params = {
+                $grid: this,
                 sort: sortData,
                 filters: filterData
               }
@@ -239,6 +240,8 @@ export default {
               }).catch(e => {
                 this.tableLoading = false
               })
+            } else {
+              UtilTools.error('s.error.notQuery')
             }
             break
           }
@@ -250,7 +253,7 @@ export default {
                 let body = { removeRecords }
                 if (removeRecords.length) {
                   this.tableLoading = true
-                  return ajax.delete.apply(this, [{ body }].concat(args)).then(result => {
+                  return ajax.delete.apply(this, [{ $grid: this, body }].concat(args)).then(result => {
                     this.tableLoading = false
                   }).catch(e => {
                     this.tableLoading = false
@@ -261,6 +264,8 @@ export default {
                   }
                 }
               })
+            } else {
+              UtilTools.error('s.error.notDelete')
             }
             break
           }
@@ -283,7 +288,7 @@ export default {
                     if (body.insertRecords.length || removeRecords.length || updateRecords.length || body.pendingRecords.length) {
                       this.tableLoading = true
                       resolve(
-                        ajax.save.apply(this, [{ body }].concat(args)).then(() => {
+                        ajax.save.apply(this, [{ $grid: this, body }].concat(args)).then(() => {
                           this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.saveSuccess'), status: 'success' })
                           this.tableLoading = false
                         }).catch(e => {
@@ -306,6 +311,8 @@ export default {
                   }
                 })
               })
+            } else {
+              UtilTools.error('s.error.notSave')
             }
             break
           }
@@ -317,7 +324,11 @@ export default {
       let selectRecords = this.getSelectRecords()
       if (this.isMsg) {
         if (selectRecords.length) {
-          this.$XMsg.confirm(GlobalConfig.i18n(alertKey)).then(callback).catch(e => e)
+          this.$XMsg.confirm(GlobalConfig.i18n(alertKey)).then(type => {
+            if (type === 'confirm') {
+              callback()
+            }
+          })
         } else {
           this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
         }
@@ -365,7 +376,7 @@ export default {
       } else {
         UtilTools.emitEvent(this, 'page-size-change', [pageSize])
       }
-      UtilTools.emitEvent(this, 'page-change', [params])
+      UtilTools.emitEvent(this, 'page-change', [Object.assign({ $grid: this }, params)])
       this.commitProxy('query')
     },
     sortChangeEvent (params) {
@@ -377,7 +388,7 @@ export default {
         Object.assign(sortData, params)
         this.commitProxy('query')
       }
-      UtilTools.emitEvent(this, 'sort-change', [params])
+      UtilTools.emitEvent(this, 'sort-change', [Object.assign({ $grid: this }, params)])
     },
     filterChangeEvent (params) {
       let { remoteFilter } = this
@@ -387,7 +398,7 @@ export default {
         this.filterData = filters
         this.commitProxy('reload')
       }
-      UtilTools.emitEvent(this, 'filter-change', [params])
+      UtilTools.emitEvent(this, 'filter-change', [Object.assign({ $grid: this }, params)])
     }
   }
 }

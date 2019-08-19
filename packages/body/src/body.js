@@ -4,7 +4,7 @@ import { UtilTools, DomTools } from '../../tools'
 
 // 滚动、拖动过程中不需要触发
 function isOperateMouse ($table) {
-  return $table._isResize || ($table.lastScrollTime && Date.now() < $table.lastScrollTime + 100)
+  return $table._isResize || ($table.lastScrollTime && Date.now() < $table.lastScrollTime + 300)
 }
 
 function renderBorder (h, type) {
@@ -231,7 +231,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         class: ['s-body--row', {
           [`row--level-${rowLevel}`]: treeConfig,
           'row--new': editStore.insertList.indexOf(row) > -1
-        }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, seq, row, rowIndex }) : rowClassName : ''],
+        }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, $seq, seq, fixedType, rowLevel, row, rowIndex, $rowIndex }) : rowClassName : ''],
         attrs: {
           'data-rowid': rowid
         },
@@ -369,10 +369,7 @@ export default {
       }
     }
     return h('div', {
-      class: ['s-table--body-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper'],
-      on: {
-        mouseleave: $table.clearHoverRow
-      }
+      class: ['s-table--body-wrapper', fixedType ? `fixed-${fixedType}--wrapper` : 'body--wrapper']
     }, [
       fixedType ? _e() : h('div', {
         class: 's-body--x-space',
@@ -438,7 +435,7 @@ export default {
      */
     scrollEvent (evnt) {
       let { $parent: $table, fixedType } = this
-      let { $refs, scrollXLoad, scrollYLoad, lastScrollTop, lastScrollLeft } = $table
+      let { $refs, highlightHoverRow, scrollXLoad, scrollYLoad, lastScrollTop, lastScrollLeft } = $table
       let { tableHeader, tableBody, leftBody, rightBody } = $refs
       let headerElem = tableHeader ? tableHeader.$el : null
       let bodyElem = tableBody.$el
@@ -455,6 +452,9 @@ export default {
       $table.lastScrollTop = scrollTop
       $table.lastScrollLeft = scrollLeft
       $table.lastScrollTime = Date.now()
+      if (highlightHoverRow) {
+        $table.clearHoverRow()
+      }
       if (leftElem && fixedType === 'left') {
         scrollTop = leftElem.scrollTop
         syncBodyScroll(scrollTop, bodyElem, rightElem)

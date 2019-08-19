@@ -20,17 +20,17 @@ const GlobalConfig = {
   optimization: {
     animat: true,
     scrollX: {
-      gt: 500,
-      oSize: 6,
-      rSize: 18,
-      vSize: 0
+      gt: 100
+      // oSize: 0,
+      // rSize: 0
+      // vSize: 0
     },
     scrollY: {
-      gt: 1000,
-      oSize: 30,
-      rSize: 100,
-      vSize: 0,
-      rHeight: 0
+      gt: 500
+      // oSize: 0,
+      // rSize: 0
+      // vSize: 0,
+      // rHeight: 0
     }
   },
   icon: {
@@ -52,7 +52,8 @@ const GlobalConfig = {
     msgError: 's-icon--error',
     msgQuestion: 's-icon--question',
     msgLoading: 's-icon--refresh roll',
-    caretBottom: 's-icon--caret-bottom'
+    caretBottom: 's-icon--caret-bottom',
+    dropdownBottom: 's-icon--arrow-bottom'
   },
   loadingConfig: {
     type: 1,

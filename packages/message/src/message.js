@@ -1,6 +1,7 @@
 import GlobalConfig from '../../conf'
 import XEUtils from 'xe-utils'
 import MsgQueue from './msgQueue'
+import { UtilTools } from '../../tools'
 
 export default {
   name: 'SMessage',
@@ -85,7 +86,7 @@ export default {
         }, [
           h('span', {
             class: 's-msg--title'
-          }, title || GlobalConfig.i18n('soul.alert.title')),
+          }, title ? UtilTools.getFuncText(title) : GlobalConfig.i18n('soul.alert.title')),
           h('i', {
             class: ['s-msg--close-btn', GlobalConfig.icon.msgClose],
             on: {

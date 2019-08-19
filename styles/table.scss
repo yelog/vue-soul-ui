@@ -29,12 +29,19 @@
       border: 1px solid $s-primary-color;
     }
   }
+  .s-default-textarea {
+    resize: none;
+    vertical-align: middle;
+  }
   .s-input--wrapper {
     width: 100%;
     display: block;
     .s-input,
     .s-textarea {
       padding: 0 2px;
+    }
+    .s-textarea {
+      resize: none;
     }
   }
 }

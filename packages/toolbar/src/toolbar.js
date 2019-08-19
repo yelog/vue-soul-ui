@@ -50,7 +50,7 @@ export default {
       this.tableFullColumn = customs
     }
     if (settingOpts.storage && !id) {
-      throw new Error('[s-table] Toolbar must have a unique primary id.')
+      return UtilTools.error('s.error.toolbarId')
     }
     this.$nextTick(() => {
       this.updateConf()
@@ -348,10 +348,10 @@ export default {
       }
     },
     btnEvent (evnt, item) {
-      let { $grid } = this
+      let { $grid, $table } = this
       if (item.code && $grid) {
         $grid.commitProxy(item.code)
-        UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid }, evnt])
+        UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid, $table }, evnt])
       }
     }
   }
