@@ -24,7 +24,7 @@ export default function (compName) {
     }
   }
   return {
-    name: XEUtils.camelCase(`Vxe-${compName}`),
+    name: XEUtils.camelCase(`S-${compName}`),
     props: {
       value: [String, Number],
       name: String,
@@ -50,13 +50,13 @@ export default function (compName) {
         attrs.placeholder = UtilTools.getFuncText(placeholder)
       }
       return h('div', {
-        class: ['vxe-input--wrapper', `type--${compName}`, {
+        class: ['s-input--wrapper', `type--${compName}`, {
           [`size--${vSize}`]: vSize,
           'is--disabled': this.disabled
         }]
       }, [
         h(compName, {
-          class: `vxe-${compName}`,
+          class: `s-${compName}`,
           domProps: {
             value
           },
