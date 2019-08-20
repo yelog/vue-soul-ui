@@ -5,10 +5,13 @@
 :::demo
 ```html
 <template>
+<s-button @click="getFilterData" >获取筛选后的数据</s-button>
 <s-table
   border
   highlight-hover-row
   height="400"
+  ref="myTable"
+  @filter-change="filterChange"
   :data.sync="tableData">
   <s-table-column type="index" width="60"></s-table-column>
   <s-table-column field="name" title="Name" sortable :filters="[{label: 'id大于10', value: 10}, {label: 'id大于40', value: 40}]" :filter-method="filterNameMethod"></s-table-column>
@@ -37,6 +40,12 @@ export default {
     },
     filterAgeMethod ({ option, row }) {
       return row.age === Number(option.data)
+    },
+    getFilterData () {
+      this.$message(`当表格数据条数为：${this.$refs.myTable.tableData.length}`)
+    },
+    filterChange () {
+      this.$message('我是筛选成功后的触发方法 filter-change ！')
     }
   }
 }
