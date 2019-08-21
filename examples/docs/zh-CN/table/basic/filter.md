@@ -42,7 +42,7 @@ export default {
       return row.age === Number(option.data)
     },
     getFilterData () {
-      this.$message(`当表格数据条数为：${this.$refs.myTable.tableData.length}`)
+      this.$message(`当表格数据条数为：${this.$refs.myTable.getTableData(true).visibleData.length}`)
     },
     filterChange () {
       this.$message('我是筛选成功后的触发方法 filter-change ！')
