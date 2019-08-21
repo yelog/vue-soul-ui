@@ -403,7 +403,7 @@ export const Cell = {
    * 排序
    */
   renderSortHeader (h, params) {
-    return Cell.renderSortIcon(h, params).concat(Cell.renderFilterIcon(h, params)).concat(Cell.renderHeader(h, params))
+    return Cell.renderSortIcon(h, params).concat(Cell.renderHeader(h, params))
   },
   renderSortIcon (h, params) {
     let { icon } = GlobalConfig
@@ -448,7 +448,7 @@ export const Cell = {
     let { filterStore } = $table
     return [
       h('span', {
-        class: ['s-filter-wrapper clearfix', {
+        class: ['s-filter-wrapper', {
           'is--active': filterStore.visible && filterStore.column === column
         }]
       }, [
