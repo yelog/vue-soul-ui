@@ -6,6 +6,7 @@
 ```html
 <template>
 <s-button @click="getFilterData" >获取筛选后的数据</s-button>
+<s-button @click="changeFilter" >修改筛选条件</s-button>
 <s-table
   border
   highlight-hover-row
@@ -15,7 +16,7 @@
   :data.sync="tableData">
   <s-table-column type="index" width="60"></s-table-column>
   <s-table-column field="name" title="Name" sortable :filters="[{label: 'id大于10', value: 10}, {label: 'id大于40', value: 40}]" :filter-method="filterNameMethod"></s-table-column>
-  <s-table-column field="sex" title="Sex" sortable :filters="[{label: 'Man', value: '1'}, {label: 'Woman', value: '0'}]"></s-table-column>
+  <s-table-column field="sex" title="Sex" sortable :filters="sexFilter"></s-table-column>
   <s-table-column field="age" title="Age" :filters="[{ data: '' }]" :filter-method="filterAgeMethod">
     <template v-slot:filter="{ column, context }">
       <input type="type" v-for="(option, index) in column.filters" :key="index" v-model="option.data" @input="context.changeMultipleOption($event, !!option.data, option)">
@@ -28,7 +29,8 @@
 export default {
   data () {
     return {
-      tableData: []
+      tableData: [],
+      sexFilter: [{label: 'Man', value: '1'}, {label: 'Woman', value: '0'}]
     }
   },
   created () {
@@ -44,8 +46,13 @@ export default {
     getFilterData () {
       this.$message(`当表格数据条数为：${this.$refs.myTable.getTableData(true).visibleData.length}`)
     },
-    filterChange () {
+    filterChange ({column,property,values,datas,filters}) {
+      console.log(filters)
       this.$message('我是筛选成功后的触发方法 filter-change ！')
+    },
+    changeFilter() {
+      console.log()
+      this.sexFilter = [{label: 'Man1', value: '1'}, {label: 'Woman1', value: '0'}]
     }
   }
 }

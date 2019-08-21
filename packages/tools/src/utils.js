@@ -11,6 +11,7 @@ class ColumnConfig {
     Object.assign(this, {
       // 基本属性
       id: `col_${++columnUniqueId}`,
+      _uid: _vm._uid,
       type: _vm.type,
       prop: _vm.prop,
       property: _vm.field || _vm.prop,

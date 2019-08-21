@@ -63,6 +63,17 @@ export default {
   created () {
     this.columnConfig = this.createColumn(this.$table, this)
   },
+  watch: {
+    filters: {
+      handler: function (newValue, oldValue) {
+        this.$table.tableColumn.forEach(column => {
+          if (column._uid === this._uid) {
+            column.filters = UtilTools.getFilters(newValue)
+          }
+        })
+      }
+    }
+  },
   mounted () {
     UtilTools.assemColumn(this)
   },
