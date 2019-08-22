@@ -1,3 +1,47 @@
+### 点击触发-单元格
+:::demo 设置 edit-config={trigger: 'click', mode: 'cell'} 启用单元格点击编辑的功能，开启编辑功能，必须要有唯一行数据的 key，通过设置 row-id 或者 row-key 自定义字段名
+```html
+<template>
+<s-table
+  border
+  resizable
+  show-overflow
+  height="500"
+  row-id="id"
+  :data.sync="tableData"
+  :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
+  @edit-actived="editActivedEvent"
+  @edit-closed="editClosedEvent">
+  <s-table-column type="index" width="60"></s-table-column>
+  <s-table-column field="name" title="Name" :edit-render="{name: 'input'}"></s-table-column>
+  <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
+  <s-table-column field="date" title="Date(点击选中文字)" :edit-render="{name: 'input', autoselect: true}"></s-table-column>
+</s-table>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      tableData: []
+    }
+  },
+  created () {
+    this.tableData = window.MOCK_DATA_LIST.slice(0, 20)
+  },
+  methods: {
+    editActivedEvent ({ row, column }, event) {
+      console.log(`打开 ${column.title} 列编辑`)
+    },
+    editClosedEvent ({ row, column }, event) {
+      console.log(`关闭 ${column.title} 列编辑`)
+    }
+  }
+}
+</script>
+
+```
+:::
+
 ### 手动触发
 :::demo
 ```html
@@ -19,11 +63,11 @@
   <s-table-column title="操作">
     <template v-slot="{ row }">
       <template v-if="$refs.myTable.hasActiveRow(row)">
-        <s-button @click="saveRowEvent(row)">保存</s-button>
-        <s-button @click="cancelRowEvent(row)">取消</s-button>
+        <s-button size="small" @click="saveRowEvent(row)">保存</s-button>
+        <s-button size="small" @click="cancelRowEvent(row)">取消</s-button>
       </template>
       <template v-else>
-        <s-button @click="editRowEvent(row)">编辑</s-button>
+        <s-button size="small" @click="editRowEvent(row)">编辑</s-button>
       </template>
     </template>
   </s-table-column>
@@ -49,50 +93,6 @@ export default {
     },
     cancelRowEvent (row) {
       this.$refs.myTable.clearActived()
-    }
-  }
-}
-</script>
-
-```
-:::
-
-### 点击触发-单元格
-:::demo 设置 edit-config={trigger: 'click', mode: 'cell'} 启用单元格点击编辑的功能，开启编辑功能，必须要有唯一行数据的 key，通过设置 row-id 或者 row-key 自定义字段名
-```html
-<template>
-<s-table
-  border
-  resizable
-  show-overflow
-  height="500"
-  row-id="id"
-  :data.sync="tableData"
-  :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
-  @edit-actived="editActivedEvent"
-  @edit-closed="editClosedEvent">
-  <s-table-column type="index" width="60"></s-table-column>
-  <s-table-column field="name" title="Name" :edit-render="{name: 'input', autoselect: true}"></s-table-column>
-  <s-table-column field="sex" title="Sex" :edit-render="{name: 'input'}"></s-table-column>
-  <s-table-column field="date" title="Date" :edit-render="{name: 'input'}"></s-table-column>
-</s-table>
-</template>
-<script>
-export default {
-  data () {
-    return {
-      tableData: []
-    }
-  },
-  created () {
-    this.tableData = window.MOCK_DATA_LIST.slice(0, 20)
-  },
-  methods: {
-    editActivedEvent ({ row, column }, event) {
-      console.log(`打开 ${column.title} 列编辑`)
-    },
-    editClosedEvent ({ row, column }, event) {
-      console.log(`关闭 ${column.title} 列编辑`)
     }
   }
 }

@@ -17,6 +17,9 @@
     line-height: 28px;
     padding: 5px 0;
   }
+  .s-cell {
+    height: 28px;
+  }
   th {
     font-weight: 400;
     position: relative;
@@ -40,6 +43,7 @@
     cursor: pointer;
   }
 }
+// 单元格补全
 .s-table-complete-outline > * {
   position: relative;
 }
@@ -78,3 +82,16 @@
     }
   }
 }
+//可编辑
+.s-table.s-editable .s-body--column.col--actived .s-cell {
+  padding: 0;
+  height: 38px;
+  .s-default-input {
+    height: 38px;
+    border-radius: 0;
+    padding: 0 9px;
+    box-shadow: 0 1px 20px rgba(0,0,0,.15);
+  }
+}
+
+
