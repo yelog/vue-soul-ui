@@ -375,8 +375,7 @@ export default {
       langs: {
         'zh-CN': '中文',
         'en-US': 'English',
-        'es': 'Español',
-        'fr-FR': 'Français'
+        'es': 'Español'
       }
     }
   },

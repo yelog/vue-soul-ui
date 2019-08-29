@@ -167,8 +167,6 @@ if (userLanguage.indexOf('zh-') !== -1) {
   defaultPath = '/zh-CN'
 } else if (userLanguage.indexOf('es') !== -1) {
   defaultPath = '/es'
-} else if (userLanguage.indexOf('fr') !== -1) {
-  defaultPath = '/fr-FR'
 }
 
 route = route.concat([{
