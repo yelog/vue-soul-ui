@@ -75,7 +75,15 @@ export default {
   :data.sync="tableData">
   <s-table-column type="index" width="60"></s-table-column>
   <s-table-column field="name" title="Name" sortable :filters="nameFilter"></s-table-column>
-  <s-table-column field="sex" title="Sex" sortable ></s-table-column>
+  <s-table-column field="sex" title="Sex" sortable >
+  <template v-slot:header="{ column }">
+        <el-date-picker
+              v-model="value1"
+              type="datetime"
+              placeholder="选择日期时间">
+            </el-date-picker>
+  </template>
+</s-table-column>
   <s-table-column field="age" title="Age"></s-table-column>
   <s-table-column field="time" title="Time" sortable></s-table-column>
 </s-table>

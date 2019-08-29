@@ -137,7 +137,7 @@
         class="nav-item"
         v-for="(item, key) in data"
         :key="key">
-        <a v-if="!item.path && !item.href" @click="expandMenu">{{item.name}}</a>
+        <a v-if="!item.path && !item.href" >{{item.name}}</a>
         <a v-if="item.href" :href="item.href" target="_blank">{{item.name}}</a>
         <router-link
           v-if="item.path"
@@ -166,7 +166,7 @@
             v-for="(group, key) in item.groups"
             :key="key"
             >
-            <div class="nav-group__title" @click="expandMenu">{{group.groupName}}</div>
+            <div class="nav-group__title">{{group.groupName}}</div>
             <ul class="pure-menu-list">
               <li
                 class="nav-item"
@@ -242,7 +242,7 @@ export default {
         return
       }
       this.$nextTick(() => {
-        this.hideAllMenu()
+        // this.hideAllMenu()
         let activeAnchor = this.$el.querySelector('a.active')
         let ul = activeAnchor.parentNode
         while (ul.tagName !== 'UL') {
@@ -260,17 +260,6 @@ export default {
       [].forEach.call(this.$el.querySelectorAll('.pure-menu-list'), ul => {
         ul.style.height = 'auto'
       })
-    },
-    expandMenu (event) {
-      if (!this.isSmallScreen) return
-      let target = event.currentTarget
-      if (!target.nextElementSibling || target.nextElementSibling.tagName !== 'UL') return
-      if (event.currentTarget.nextElementSibling.style.height === 'auto') {
-        event.currentTarget.nextElementSibling.style.height = '0'
-      } else {
-        this.hideAllMenu()
-        event.currentTarget.nextElementSibling.style.height = 'auto'
-      }
     }
   },
   created () {

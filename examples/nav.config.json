@@ -70,35 +70,39 @@
             {
               "path": "/table/basic/formatter",
               "title": "格式化"
+            },
+            {
+              "path": "/table/basic/event",
+              "title": "事件绑定"
+            },
+            {
+              "path": "/table/basic/merge",
+              "title": "行/列合并"
+            },
+            {
+              "path": "/table/basic/footer",
+              "title": "表尾合计"
+            },
+            {
+              "path": "/table/basic/page",
+              "title": "分页"
+            },
+            {
+              "path": "/table/basic/edit",
+              "title": "可编辑"
             }
           ]
         },
         {
-          "groupName": "更多功能",
+          "groupName": "虚拟加载",
           "list": [
             {
-              "path": "/table/advanced/event",
-              "title": "事件绑定"
+              "path": "/table/scroll/basic",
+              "title": "基本效果"
             },
             {
-              "path": "/table/advanced/merge",
-              "title": "行/列合并"
-            },
-            {
-              "path": "/table/advanced/footer",
-              "title": "表尾合计"
-            },
-            {
-              "path": "/table/advanced/page",
-              "title": "分页"
-            },
-            {
-              "path": "/table/advanced/edit",
+              "path": "/table/scroll/edit",
               "title": "可编辑"
-            },
-            {
-              "path": "/table/advanced/scroll",
-              "title": "虚拟加载"
             }
           ]
         },
