@@ -1,0 +1,11 @@
+.s-table--loading {
+  background-color: rgba(255, 255, 255, .9);
+  .s-table--spinner {
+    &:before, &:after {
+      box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+    }
+  }
+  .s-table--jump span {
+    color: #a2a2a2;
+  }
+}

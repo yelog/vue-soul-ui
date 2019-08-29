@@ -42,6 +42,10 @@
     color: #999;
     cursor: pointer;
   }
+  .s-table--loading {
+    border-top: 1px solid #e8eaec;
+    border-bottom: 1px solid #e8eaec;
+  }
 }
 // 单元格补全
 .s-table-complete-outline > * {
