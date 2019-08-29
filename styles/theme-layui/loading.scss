@@ -2,6 +2,7 @@
   background-color: rgba(255, 255, 255, .9);
   .s-table--spinner {
     &:before, &:after {
+      background-color: #1E9FFF;
       box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
     }
   }
