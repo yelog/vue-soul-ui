@@ -394,16 +394,16 @@ export const Cell = {
    * 排序和筛选
    */
   renderSortAndFilterHeader (h, params) {
-    return Cell.renderSortIcon(h, params)
+    return Cell.renderHeader(h, params)
+      .concat(Cell.renderSortIcon(h, params))
       .concat(Cell.renderFilterIcon(h, params))
-      .concat(Cell.renderHeader(h, params))
   },
 
   /**
    * 排序
    */
   renderSortHeader (h, params) {
-    return Cell.renderSortIcon(h, params).concat(Cell.renderHeader(h, params))
+    return Cell.renderHeader(h, params).concat(Cell.renderSortIcon(h, params))
   },
   renderSortIcon (h, params) {
     let { icon } = GlobalConfig
@@ -440,7 +440,7 @@ export const Cell = {
    * 筛选
    */
   renderFilterHeader (h, params) {
-    return Cell.renderFilterIcon(h, params).concat(Cell.renderHeader(h, params))
+    return Cell.renderHeader(h, params).concat(Cell.renderFilterIcon(h, params))
   },
   renderFilterIcon (h, params) {
     let { icon } = GlobalConfig
@@ -486,9 +486,9 @@ export const Cell = {
       editConfig && editConfig.showIcon === false ? null : h('i', {
         class: `s-edit-icon ${icon.edit}`
       })
-    ].concat(sortable || remoteSort ? Cell.renderSortIcon(h, params) : [])
+    ].concat(Cell.renderHeader(h, params))
+      .concat(sortable || remoteSort ? Cell.renderSortIcon(h, params) : [])
       .concat(filters && filters.length ? Cell.renderFilterIcon(h, params) : [])
-      .concat(Cell.renderHeader(h, params))
   },
   // 行格编辑模式
   renderRowEdit (h, params) {
