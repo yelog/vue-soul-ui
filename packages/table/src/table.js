@@ -3585,7 +3585,7 @@ export default {
      * 点击筛选事件
      */
     triggerFilterEvent (evnt, column, params) {
-      let { $refs, filterStore, overflowX, $el } = this
+      let { $refs, filterStore, overflowX, $el, tableWidth } = this
       if (filterStore.column === column && filterStore.visible) {
         filterStore.visible = false
       } else {
@@ -3618,7 +3618,16 @@ export default {
         this.$nextTick(() => {
           let filterWrapperElem = filterWrapper.$el
           filterStore.style.top = `${top + targetElem.clientHeight + 6}px`
-          filterStore.style.left = `${left - filterWrapperElem.clientWidth / 2 + 10}px`
+          // 修复筛选框会超出table范围
+          const tableRight = tableWidth + evnt.path[8].getBoundingClientRect().x
+          const mouseRight = tableRight - evnt.clientX
+          if (mouseRight < (filterWrapperElem.clientWidth / 2)) {
+            filterStore.style.left = `${left - filterWrapperElem.clientWidth / 2 - ((filterWrapperElem.clientWidth / 2) - mouseRight)}px`
+          } else if ((evnt.clientX - evnt.path[8].getBoundingClientRect().x) < (filterWrapperElem.clientWidth / 2)) {
+            filterStore.style.left = `${left - (evnt.clientX - evnt.path[8].getBoundingClientRect().x) + 20}px`
+          } else {
+            filterStore.style.left = `${left - filterWrapperElem.clientWidth / 2 + 10}px`
+          }
         })
       }
     },
