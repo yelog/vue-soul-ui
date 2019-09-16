@@ -1,6 +1,8 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import Interceptor from './src/interceptor'
 import Renderer from './src/renderer'
+import Buttons from './src/buttons'
+import Menus from './src/menus'
 import Setup from './src/setup'
 
 const installedPlugins = []
@@ -22,9 +24,13 @@ export const SoulUI = {
   use,
   setup: Setup,
   interceptor: Interceptor,
-  renderer: Renderer
+  renderer: Renderer,
+  buttons: Buttons,
+  menus: Menus
 }
 
 export * from './src/interceptor'
 export * from './src/renderer'
+export * from './src/menus'
+export * from './src/buttons'
 export default SoulUI

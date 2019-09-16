@@ -93,7 +93,8 @@ export default {
   data () {
     return {
       tableData: [],
-      nameFilter: []
+      nameFilter: [],
+      value1: ''
     }
   },
   created () {

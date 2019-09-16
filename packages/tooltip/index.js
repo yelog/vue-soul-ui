@@ -1,8 +1,8 @@
 import STooltip from './src/tooltip'
-import GlobalConfig from '../conf'
+import SoulUI from '../table-core'
 
 STooltip.install = function (Vue) {
-  GlobalConfig._tip = 1
+  SoulUI._tooltip = 1
   Vue.component(STooltip.name, STooltip)
 }
 

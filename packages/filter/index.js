@@ -1,8 +1,13 @@
-import STableFilter from './src/filter'
+import Table from '../table'
+import SoulUI from '../table-core'
+import Panel from './src/panel'
+import Methods from './src/methods'
 
-STableFilter.install = function (Vue) {
-  Vue.component(STableFilter.name, STableFilter)
+Panel.install = function (Vue) {
+  SoulUI._filter = 1
+  Object.assign(Table.methods, Methods)
+  Vue.component(Panel.name, Panel)
 }
 
-export const Filter = STableFilter
-export default STableFilter
+export const Filter = Panel
+export default Panel

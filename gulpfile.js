@@ -9,6 +9,7 @@ const cleanCSS = require('gulp-clean-css')
 const prefixer = require('gulp-autoprefixer')
 
 const components = [
+  'icon',
   'table',
   'column',
   'cell',
@@ -25,11 +26,11 @@ const components = [
   'radio',
   'input',
   'button',
-  'message',
+  'modal',
   'tooltip',
 
-  'icon',
   'export',
+  'keyboard',
   'resize',
   's-table'
 ]
@@ -48,21 +49,12 @@ gulp.task('build_modules', () => {
     .pipe(gulp.dest('lib'))
 })
 
-gulp.task('build_locale', () => {
-  return gulp.src('locale/**/*.js')
-    .pipe(babel({
-      presets: ['@babel/env']
-    }))
-    .pipe(gulp.dest('lib/locale'))
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min',
-      extname: '.js'
-    }))
-    .pipe(gulp.dest('lib/locale'))
+gulp.task('copy_ts', () => {
+  return gulp.src('packages/**/*.d.ts')
+    .pipe(gulp.dest('lib'))
 })
 
-gulp.task('build_rename', () => {
+gulp.task('lib_rename', () => {
   return Promise.all([
     gulp.src('lib/index.umd.js')
       .pipe(rename({
@@ -80,7 +72,7 @@ gulp.task('build_rename', () => {
   ])
 })
 
-gulp.task('build_style', gulp.series('build_modules', 'build_locale', () => {
+gulp.task('build_style', gulp.series('build_modules', 'copy_ts', () => {
   return Promise.all(components.map(name => {
     Promise.all([
       gulp.src('styles/index.js')
@@ -117,7 +109,7 @@ gulp.task('build_style', gulp.series('build_modules', 'build_locale', () => {
   }))
 }))
 
-gulp.task('build_clean', gulp.series('build_style', 'build_rename', () => {
+gulp.task('build_clean', gulp.series('build_style', 'lib_rename', () => {
   return gulp.src([
     'lib/demo.html'
   ])

@@ -1,6 +1,3 @@
-// import XEUtils from 'xe-utils'
-// import zhCNLocat from '../lib/locale/lang/zh-CN'
-
 const GlobalConfig = {
   showOverflow: true,
   showHeaderOverflow: 'title',
@@ -45,13 +42,15 @@ const GlobalConfig = {
     jumpNext: 's-icon--d-arrow-right',
     prevPage: 's-icon--arrow-left',
     nextPage: 's-icon--arrow-right',
-    msgClose: 's-icon--close',
-    msgInfo: 's-icon--info',
-    msgSuccess: 's-icon--success',
-    msgWarning: 's-icon--warning',
-    msgError: 's-icon--error',
-    msgQuestion: 's-icon--question',
-    msgLoading: 's-icon--refresh roll',
+    zoomIn: 's-icon--zoomin',
+    zoomOut: 's-icon--zoomout',
+    modalClose: 's-icon--close',
+    modalInfo: 's-icon--info',
+    modalSuccess: 's-icon--success',
+    modalWarning: 's-icon--warning',
+    modalError: 's-icon--error',
+    modalQuestion: 's-icon--question',
+    modalLoading: 's-icon--refresh roll',
     caretBottom: 's-icon--caret-bottom',
     dropdownBottom: 's-icon--arrow-bottom'
   },
@@ -64,7 +63,6 @@ const GlobalConfig = {
   grid: {},
   menu: {},
   tooltip: {
-    // zIndex: 3000,
     trigger: 'hover',
     theme: 'dark'
   },
@@ -83,16 +81,15 @@ const GlobalConfig = {
     // },
     // buttons: []
   },
-  message: {
-    // zIndex: 999,
+  modal: {
+    zIndex: 2000,
     lockView: true,
-    lockScroll: true,
     mask: true,
     duration: 3000,
+    marginSize: 10,
     animat: true
   },
   i18n: key => key,
-  _tip: 0, // 是否按需加载了 tooltip
   _complete: 0
 }
 

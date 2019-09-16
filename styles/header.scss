@@ -15,6 +15,13 @@
   position: relative;
   &.col--title-checked {
     background-color: $s-table-column-header-checked-background-color;
+    .s-edit-icon {
+      &.s-icon--edit-outline {
+        &:before {
+          background-color: $s-table-column-header-checked-background-color;
+        }
+      }
+    }
   }
   .s-required-icon {
     display: inline-block;

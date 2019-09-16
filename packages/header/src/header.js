@@ -1,4 +1,4 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import { UtilTools, DomTools } from '../../tools'
 
 const getAllColumns = (columns) => {
@@ -351,8 +351,8 @@ export default {
         $table.analyColumnWidth()
         $table.recalculate(true)
         DomTools.removeClass($table.$el, 'c--resize')
-        if ($table._toolbar) {
-          $table._toolbar.updateResizable()
+        if ($table.$toolbar) {
+          $table.$toolbar.updateResizable()
         }
         UtilTools.emitEvent($table, 'resizable-change', [params])
       }

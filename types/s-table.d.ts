@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { Table } from './table';
+import { Icon } from './icon';
 import { Column } from './column';
 import { Header } from './header';
 import { Body } from './body';
@@ -14,8 +15,9 @@ import { Checkbox } from './checkbox';
 import { Radio } from './radio';
 import { Input } from './input';
 import { Button } from './button';
-import { Message } from './message';
+import { Modal } from './modal';
 import { Export } from './export';
+import { Keyboard } from './keyboard';
 import { Resize } from './resize';
 
 export interface VXETableOptions {
@@ -56,53 +58,78 @@ export interface Renderer {
   delete(name: object): Renderer;
 }
 
+export interface Menus {
+  mixin(map: object): Menus;
+  get(type: string): Function;
+  add(type: string, callback: Function): Menus;
+  delete(type: object): Menus;
+}
+
+export interface Buttons {
+  mixin(map: object): Menus;
+  get(type: string): Function;
+  add(type: string, callback: Function): Menus;
+  delete(type: object): Menus;
+}
+
 export interface PluginObject<T> {
-  install(xTable: typeof VXETable): any;
+  install(xTable: typeof STable): any;
 }
 
 export function install(vue: typeof Vue): void;
 export function t(obj: object, key: string): string | number;
 export function setup(options: VXETableOptions): any;
-export function use(plugin: PluginObject<any>, ...options: any[]): VXETableStatic;
+export function use(plugin: PluginObject<any>, ...options: any[]): STableStatic;
 
 export const interceptor: Interceptor;
 export const renderer: Renderer;
+export const menus: Menus;
+export const buttons: Buttons;
 
 export interface STableStatic {
   install(vue: typeof Vue): void;
   /**
-   * International translation
+   * 国际化翻译
    */
   t(obj: object, key: string): string | number;
   /**
-   * Set global parameters
-   * @param options
+   * 设置全局参数
+   * @param options 参数
    */
   setup(options: VXETableOptions): any;
   /**
-   * Installing a plug-in
-   * @param plugin
-   * @param options
+   * 安装插件
+   * @param plugin插件
+   * @param options 参数
    */
-  use(plugin: PluginObject<any>, ...options: any[]): VXETableStatic;
+  use(plugin: PluginObject<any>, ...options: any[]): STableStatic;
   /**
-   * Event collision interceptor
+   * 拦截器
    */
   interceptor: Interceptor;
   /**
-   * Renderer
+   * 渲染器
    */
   renderer: Renderer;
+  /**
+   * 全局工具栏按钮
+   */
+  buttons: Buttons;
+  /**
+   * 全局快捷菜单
+   */
+  menus: Menus;
 }
 
 /**
- * A fully functional Vue table component.
+ * 一个简单实用的 Vue 表组件
  */
 declare const STable: STableStatic;
 
 export {
   STable,
   Table,
+  Icon,
   Column,
   Header,
   Body,
@@ -117,7 +144,8 @@ export {
   Radio,
   Input,
   Button,
-  Message,
+  Modal,
   Export,
+  Keyboard,
   Resize
 }

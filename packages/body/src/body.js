@@ -1,4 +1,4 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 import { UtilTools, DomTools } from '../../tools'
 
@@ -50,6 +50,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     cellClassName,
     spanMethod,
     radioConfig = {},
+    expandConfig = {},
     selectConfig = {},
     treeConfig = {},
     mouseConfig = {},
@@ -59,11 +60,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     editStore,
     validStore
   } = $table
-  let {
-    editRender,
-    align,
-    showOverflow
-  } = column
+  let { editRender, align, showOverflow } = column
   let { actived } = editStore
   let fixedHiddenColumn = fixedType ? column.fixed !== fixedType : column.fixed && overflowX
   let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
@@ -128,6 +125,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     tableListeners['cell-click'] ||
     mouseConfig.checked ||
     (editRender && editConfig) ||
+    (expandConfig.trigger === 'row' || (expandConfig.trigger === 'cell')) ||
     (radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) ||
     (selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) ||
     (treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
@@ -266,7 +264,9 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
               }
             }, [
               h('div', {
-                class: 's-body--expanded-cell',
+                class: ['s-body--expanded-cell', {
+                  'fixed--hidden': fixedType
+                }],
                 style: cellStyle
               }, [
                 column.renderData(h, { $table, seq, row, rowIndex, column, columnIndex, fixed: fixedType, level: rowLevel })
@@ -353,6 +353,7 @@ export default {
       fixedType
     } = this
     let {
+      $scopedSlots,
       tableData,
       tableColumn,
       showOverflow: allColumnOverflow,
@@ -423,7 +424,7 @@ export default {
       }, [
         h('span', {
           class: 's-table--empty-text'
-        }, $table.$slots.empty || GlobalConfig.i18n('soul.table.emptyText'))
+        }, $scopedSlots.empty ? $scopedSlots.empty.call(this, { $table }, h) : GlobalConfig.i18n('soul.table.emptyText'))
       ]) : null
     ])
   },
@@ -436,8 +437,9 @@ export default {
     scrollEvent (evnt) {
       let { $parent: $table, fixedType } = this
       let { $refs, highlightHoverRow, scrollXLoad, scrollYLoad, lastScrollTop, lastScrollLeft } = $table
-      let { tableHeader, tableBody, leftBody, rightBody } = $refs
+      let { tableHeader, tableBody, leftBody, rightBody, tableFooter } = $refs
       let headerElem = tableHeader ? tableHeader.$el : null
+      let footerElem = tableFooter ? tableFooter.$el : null
       let bodyElem = tableBody.$el
       let leftElem = leftBody ? leftBody.$el : null
       let rightElem = rightBody ? rightBody.$el : null
@@ -462,8 +464,13 @@ export default {
         scrollTop = rightElem.scrollTop
         syncBodyScroll(scrollTop, bodyElem, leftElem)
       } else {
-        if (isX && headerElem) {
-          headerElem.scrollLeft = bodyElem.scrollLeft
+        if (isX) {
+          if (headerElem) {
+            headerElem.scrollLeft = bodyElem.scrollLeft
+          }
+          if (footerElem) {
+            footerElem.scrollLeft = bodyElem.scrollLeft
+          }
         }
         if (leftElem || rightElem) {
           $table.checkScrolling()

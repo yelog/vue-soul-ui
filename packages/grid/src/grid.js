@@ -1,12 +1,15 @@
 import Table from '../../table'
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 import { UtilTools } from '../../tools'
+import { Buttons } from '../../table-core'
 
 const methods = {}
 const propKeys = Object.keys(Table.props)
 
-Object.keys(Table.methods).forEach(name => {
+Object.keys(Table.methods).concat([
+  'exportCsv'
+]).forEach(name => {
   methods[name] = function () {
     return this.$refs.xTable[name].apply(this.$refs.xTable[name], arguments)
   }
@@ -153,6 +156,7 @@ export default {
       h('s-table', {
         props,
         on: tableOns,
+        scopedSlots: $scopedSlots,
         ref: 'xTable'
       }, $slots.default),
       pagerConfig ? h('s-pager', {
@@ -162,7 +166,8 @@ export default {
         }, pagerConfig, proxyConfig ? tablePage : {}),
         on: {
           'page-change': this.pageChangeEvent
-        }
+        },
+        ref: 'pager'
       }) : null
     ])
   },
@@ -224,6 +229,7 @@ export default {
                   tablePage.currentPage = 1
                 }
                 this.pendingRecords = []
+                this.clearAll()
               }
               return ajax.query.apply(this, [params].concat(args)).then(rest => {
                 if (rest) {
@@ -260,7 +266,7 @@ export default {
                   }).then(() => this.commitProxy('reload'))
                 } else {
                   if (isMsg && !selectRecords.length) {
-                    this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+                    this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
                   }
                 }
               })
@@ -289,7 +295,7 @@ export default {
                       this.tableLoading = true
                       resolve(
                         ajax.save.apply(this, [{ $grid: this, body }].concat(args)).then(() => {
-                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.saveSuccess'), status: 'success' })
+                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.saveSuccess'), status: 'success' })
                           this.tableLoading = false
                         }).catch(e => {
                           this.tableLoading = false
@@ -301,7 +307,7 @@ export default {
                         if (pendingRecords.length) {
                           this.remove(pendingRecords)
                         } else {
-                          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.dataUnchanged'), status: 'info' })
+                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.dataUnchanged'), status: 'info' })
                         }
                       }
                       resolve()
@@ -316,6 +322,11 @@ export default {
             }
             break
           }
+          default:
+            let btnMethod = Buttons.get(code)
+            if (btnMethod) {
+              btnMethod.apply(this, [{ code, $grid: this }].concat(args))
+            }
         }
       }
       return this.$nextTick()
@@ -324,13 +335,13 @@ export default {
       let selectRecords = this.getSelectRecords()
       if (this.isMsg) {
         if (selectRecords.length) {
-          this.$XMsg.confirm(GlobalConfig.i18n(alertKey)).then(type => {
+          this.$XModal.confirm(GlobalConfig.i18n(alertKey)).then(type => {
             if (type === 'confirm') {
               callback()
             }
           })
         } else {
-          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
         }
       } else {
         if (selectRecords.length) {
@@ -340,6 +351,11 @@ export default {
     },
     getPendingRecords () {
       return this.pendingRecords
+    },
+    triggerToolbarBtnEvent (button, evnt) {
+      let { code } = button
+      this.commitProxy(code, evnt)
+      UtilTools.emitEvent(this, 'toolbar-button-click', [{ code, button, $grid: this }, evnt])
     },
     triggerPendingEvent (code) {
       let { pendingRecords, isMsg } = this
@@ -362,7 +378,7 @@ export default {
         this.clearSelection()
       } else {
         if (isMsg) {
-          this.$XMsg.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
         }
       }
     },

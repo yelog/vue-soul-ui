@@ -2,10 +2,37 @@
 @import './helpers/mixin.scss';
 @import './base/common.scss';
 
-%textEllipsis {
+%TextEllipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+%DefaultColumnHeight {
+  height: 48px;
+}
+
+%MediumColumnHeight {
+  height: 44px;
+}
+
+%SmallColumnHeight {
+  height: 40px;
+}
+
+%MiniColumnHeight {
+  height: 36px;
+}
+
+%CellEllipsis {
+  &:not(.col--actived) {
+    .s-cell {
+      @extend %TextEllipsis;
+      & > .s-checkbox {
+        @extend %TextEllipsis;
+      }
+    }
+  }
 }
 
 .s-table-hidden-column {
@@ -133,9 +160,11 @@
   .s-header--column,
   .s-body--column,
   .s-footer--column {
-    padding: 12px 0;
     line-height: 23px;
     text-align: left;
+    &:not(.col--ellipsis) {
+      padding: 12px 0;
+    }
     &.col--current {
       background-color: $s-table-column-current-background-color;
     }
@@ -200,7 +229,9 @@
     .s-header--column,
     .s-body--column,
     .s-footer--column {
-      padding: 10px 0;
+      &:not(.col--ellipsis) {
+        padding: 10px 0;
+      }
     }
     .s-table--loading {
       .s-table--spinner {
@@ -220,7 +251,9 @@
     .s-header--column,
     .s-body--column,
     .s-footer--column {
-      padding: 8px 0;
+      &:not(.col--ellipsis) {
+        padding: 8px 0;
+      }
     }
     .s-table--loading {
       .s-table--spinner {
@@ -240,7 +273,9 @@
     .s-header--column,
     .s-body--column,
     .s-footer--column {
-      padding: 6px 0;
+      &:not(.col--ellipsis) {
+        padding: 6px 0;
+      }
     }
     .s-table--loading {
       .s-table--spinner {
@@ -267,16 +302,16 @@
   .s-body--column,
   .s-footer--column {
     &.col--ellipsis {
-      &:not(.col--actived) {
-        .s-cell {
-          @extend %textEllipsis;
-          & > .s-checkbox {
-            @extend %textEllipsis;
-          }
-        }
-      }
+      @extend %CellEllipsis;
     }
   }
+  // &.is--recalculate {
+  //   .s-header--column,
+  //   .s-body--column,
+  //   .s-footer--column {
+  //     @extend %CellEllipsis;
+  //   }
+  // }
   .fixed--hidden {
     visibility: hidden;
   }
@@ -453,26 +488,61 @@
   }
 
   /*固定列*/
-  &.fixed--left,
-  &.fixed--right,
   &.s-editable {
     .s-body--column {
-      height: 48px;
+      @extend %DefaultColumnHeight;
       line-height: inherit;
     }
     &.size--medium {
       .s-body--column {
-        height: 44px;
+        @extend %MediumColumnHeight;
       }
     }
     &.size--small {
       .s-body--column {
-        height: 40px;
+        @extend %SmallColumnHeight;
       }
     }
     &.size--mini {
       .s-body--column {
-        height: 36px;
+        @extend %MiniColumnHeight;
+      }
+    }
+  }
+
+  /*溢出列*/
+  .s-header--column,
+  .s-body--column,
+  .s-footer--column {
+    &.col--ellipsis {
+      @extend %DefaultColumnHeight;
+      line-height: inherit;
+    }
+  }
+  &.size--medium {
+    .s-header--column,
+    .s-body--column,
+    .s-footer--column {
+      &.col--ellipsis {
+        @extend %MediumColumnHeight;
+      }
+    }
+  }
+  &.size--small {
+    .s-header--column,
+    .s-body--column,
+    .s-footer--column {
+      &.col--ellipsis {
+        @extend %SmallColumnHeight;
+      }
+    }
+  }
+  &.size--mini {
+    .s-header--column,
+    .s-body--column,
+    .s-footer--column {
+      &.col--ellipsis {
+        @extend %MiniColumnHeight;
       }
     }
   }

@@ -1,6 +1,7 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
+import { Buttons } from '../../table-core'
 
 export default {
   name: 'SToolbar',
@@ -64,7 +65,7 @@ export default {
     GlobalEvent.off(this, 'blur')
   },
   render (h) {
-    let { $scopedSlots, $grid, $table, loading, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
+    let { _e, $scopedSlots, $grid, $table, loading, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
     let customBtnOns = {}
     let customWrapperOns = {}
     let $buttons = $scopedSlots.buttons
@@ -91,16 +92,22 @@ export default {
       h('div', {
         class: 's-button--wrapper'
       }, $buttons ? $buttons.call($grid || $table || this, { $grid, $table }, h) : buttons.map(item => {
-        return h('s-button', {
+        return item.visible === false ? _e() : h('s-button', {
           on: {
             click: evnt => this.btnEvent(evnt, item)
+          },
+          props: {
+            disabled: item.disabled
           },
           scopedSlots: item.dropdowns && item.dropdowns.length ? {
             default: () => UtilTools.getFuncText(item.name),
             dropdowns: () => item.dropdowns.map(child => {
-              return h('s-button', {
+              return child.visible === false ? _e() : h('s-button', {
                 on: {
                   click: evnt => this.btnEvent(evnt, child)
+                },
+                props: {
+                  disabled: child.disabled
                 }
               }, UtilTools.getFuncText(child.name))
             })
@@ -133,6 +140,9 @@ export default {
             return property && headerTitle ? h('s-checkbox', {
               props: {
                 value: visible
+              },
+              attrs: {
+                title: headerTitle
               },
               on: {
                 change: value => {
@@ -349,9 +359,18 @@ export default {
     },
     btnEvent (evnt, item) {
       let { $grid, $table } = this
-      if (item.code && $grid) {
-        $grid.commitProxy(item.code)
-        UtilTools.emitEvent($grid, 'toolbar-button-click', [{ button: item, $grid, $table }, evnt])
+      let { code } = item
+      if (code) {
+        if ($grid) {
+          $grid.triggerToolbarBtnEvent(item, evnt)
+        } else {
+          let btnMethod = Buttons.get(code)
+          let params = { code, button: item, $grid, $table }
+          if (btnMethod) {
+            btnMethod.call(this, params, evnt)
+          }
+          UtilTools.emitEvent(this, 'button-click', [params, evnt])
+        }
       }
     }
   }

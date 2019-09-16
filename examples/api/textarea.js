@@ -1,4 +1,4 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import inputAPI from './input'
 
 const apis = [
@@ -18,8 +18,8 @@ const apis = [
         list: []
       },
       {
-        name: 'resize',
-        desc: '原生 resize 属性',
+        name: 'form',
+        desc: '原生 form 属性',
         type: 'String',
         enum: '',
         defVal: '',

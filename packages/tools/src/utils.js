@@ -1,4 +1,4 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 
 var columnUniqueId = 0
@@ -23,12 +23,14 @@ class ColumnConfig {
       fixed: _vm.fixed,
       align: _vm.align,
       headerAlign: _vm.headerAlign,
+      footerAlign: _vm.footerAlign,
       showOverflow: _vm.showOverflow,
       showHeaderOverflow: _vm.showHeaderOverflow,
       indexMethod: _vm.indexMethod,
       formatter: _vm.formatter,
       sortable: _vm.sortable,
       sortBy: _vm.sortBy,
+      sortMethod: _vm.sortMethod,
       remoteSort: _vm.remoteSort,
       filters: UtilTools.getFilters(_vm.filters),
       filterMultiple: XEUtils.isBoolean(_vm.filterMultiple) ? _vm.filterMultiple : true,

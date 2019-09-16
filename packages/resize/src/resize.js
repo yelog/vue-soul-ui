@@ -1,13 +1,45 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 
 /**
- * 支持任意元素模拟 resize 事件行为，定时检测
- * 用于支持表格响应式布局，当宽度或高度发生变化时更新表格布局
+ * 监听 resize 事件
+ * 如果项目中已使用了 resize-observer-polyfill，那么只需要将方法定义全局，该组件就会自动使用
  */
+let resizeTimeout
 const eventStore = []
 const defaultInterval = 250
-var resizeTimeout = null
+
+class ResizeObserverPolyfill {
+  constructor (callback) {
+    this.tarList = []
+    this.callback = callback
+  }
+  observe (target) {
+    if (target) {
+      if (!this.tarList.includes(target)) {
+        this.tarList.push({
+          target,
+          width: target.clientWidth,
+          heighe: target.clientHeight
+        })
+      }
+      if (!eventStore.length) {
+        eventListener()
+      }
+      if (!eventStore.some(item => item === this)) {
+        eventStore.push(this)
+      }
+    }
+  }
+  unobserve (target) {
+    XEUtils.remove(eventStore, item => item.tarList.includes(target))
+  }
+  disconnect () {
+    XEUtils.remove(eventStore, item => item === this)
+  }
+}
+
+const Resize = window.ResizeObserver || ResizeObserverPolyfill
 
 function eventListener () {
   clearTimeout(resizeTimeout)
@@ -17,31 +49,21 @@ function eventListener () {
 function eventHandle () {
   if (eventStore.length) {
     eventStore.forEach(item => {
-      let { comp, target, cb, width, heighe } = item
-      let clientWidth = target.clientWidth
-      let clientHeight = target.clientHeight
-      let rWidth = clientWidth && width !== clientWidth
-      let rHeight = clientHeight && heighe !== clientHeight
-      if (rWidth || rHeight) {
-        item.width = clientWidth
-        item.heighe = clientHeight
-        cb.call(comp, { type: 'resize', target, rWidth, rHeight, currentTarget: target })
-      }
+      item.tarList.forEach(observer => {
+        const { target, width, heighe } = observer
+        const clientWidth = target.clientWidth
+        const clientHeight = target.clientHeight
+        const rWidth = clientWidth && width !== clientWidth
+        const rHeight = clientHeight && heighe !== clientHeight
+        if (rWidth || rHeight) {
+          observer.width = clientWidth
+          observer.heighe = clientHeight
+          requestAnimationFrame(item.callback)
+        }
+      })
     })
-    resizeTimeout = setTimeout(eventHandle, GlobalConfig.resizeInterval || defaultInterval)
+    eventListener()
   }
 }
 
-export default {
-  on (comp, target, cb) {
-    if (!eventStore.length) {
-      eventListener()
-    }
-    if (!eventStore.some(item => item.comp === comp && item.target === target)) {
-      eventStore.push({ comp, target, cb, width: target.clientWidth, heighe: target.clientWidth })
-    }
-  },
-  off (comp, target) {
-    XEUtils.remove(eventStore, item => item.comp === comp && item.target === target)
-  }
-}
+export default Resize

@@ -1,7 +1,7 @@
 import { SoulModule } from './module';
 
 /**
- * 高级表格
+ * 动态表格
  */
 export declare class Grid extends SoulModule {
   /**

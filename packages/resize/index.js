@@ -1,9 +1,12 @@
-import ResizeMethods from './src/resize'
-import { ResizeEvent } from '../tools'
+import Table from '../table'
+import SoulUI from '../table-core'
+import Methods from './src/methods'
 
-ResizeMethods.install = function () {
-  Object.assign(ResizeEvent, ResizeMethods)
+export const Resize = {
+  install () {
+    SoulUI._resize = 1
+    Object.assign(Table.methods, Methods)
+  }
 }
 
-export const Resize = ResizeMethods
-export default ResizeMethods
+export default Resize
