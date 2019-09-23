@@ -18,13 +18,18 @@ export default {
    * 点击筛选事件
    */
   triggerFilterEvent (evnt, column, params) {
-    let { $refs, filterStore } = this
+    let { $refs, filterStore, $el } = this
     if (filterStore.column === column && filterStore.visible) {
       filterStore.visible = false
     } else {
       let targetElem = evnt.target
       let filterWrapper = $refs.filterWrapper
       let { top, left } = DomTools.getAbsolutePos(targetElem)
+      if (DomTools.getParents($el, '.s-table-complete-outline').length > 0) {
+        let { top: otop, left: oleft } = DomTools.getOffsetPos(targetElem, DomTools.getParents($el, '.s-table-complete-outline')[0].children[0])
+        top = otop
+        left = oleft
+      }
       Object.assign(filterStore, {
         args: params,
         multiple: column.filterMultiple,
