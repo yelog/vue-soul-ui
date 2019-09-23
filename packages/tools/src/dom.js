@@ -185,7 +185,6 @@ export const DomTools = {
       }
       p = o.parentNode
     }
-    parents.push(document) // Push that parentSelector you wanted to stop at
     return parents
   }
 }

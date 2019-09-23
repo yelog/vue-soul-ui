@@ -94,6 +94,31 @@
           ]
         },
         {
+          "groupName": "配置化表格",
+          "list": [
+            {
+              "path": "/table/grid/basic",
+              "title": "基础"
+            },
+            {
+              "path": "/table/tree/radio-selection",
+              "title": "单选/多选"
+            },
+            {
+              "path": "/table/tree/edit",
+              "title": "可编辑"
+            },
+            {
+              "path": "/table/tree/fixed",
+              "title": "固定列"
+            },
+            {
+              "path": "/table/tree/insert",
+              "title": "插入数据"
+            }
+          ]
+        },
+        {
           "groupName": "虚拟加载",
           "list": [
             {
@@ -120,6 +145,14 @@
             {
               "path": "/table/tree/edit",
               "title": "可编辑"
+            },
+            {
+              "path": "/table/tree/fixed",
+              "title": "固定列"
+            },
+            {
+              "path": "/table/tree/insert",
+              "title": "插入数据"
             }
           ]
         }]

@@ -10,11 +10,15 @@ import SideNav from './components/side-nav'
 import title from './i18n/title'
 import './mockData'
 
-import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/index.css'
 import '../styles/theme-layui/index.scss'
 import './assets/styles/common.scss'
 import './assets/styles/fonts/style.css'
 import icon from './icon.json'
+
+import XEUtils from 'xe-utils'
+import VXEUtils from 'vxe-utils'
+Vue.use(VXEUtils, XEUtils)
 
 Vue.use(Element)
 Vue.use(SoulUI)

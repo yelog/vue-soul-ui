@@ -6,20 +6,6 @@
   .s-table--header-wrapper {
     background-color: #f2f2f2;
   }
-  &.fixed--left, &.fixed--right, &.s-editable {
-    .s-header--column, .s-body--column, .s-footer--column {
-      height: inherit;
-      line-height: 28px;
-      padding: 5px 0;
-    }
-  }
-  .s-header--column, .s-body--column, .s-footer--column {
-    line-height: 28px;
-    padding: 5px 0;
-  }
-  .s-cell {
-    height: 28px;
-  }
   th {
     font-weight: 400;
     position: relative;
@@ -27,13 +13,28 @@
   td {
     position: relative;
   }
+  .s-header--column {
+    &.col--ellipsis {
+      height: 38px;
+    }
+  }
+  .s-body--column {
+    &.col--ellipsis {
+      height: 38px;
+    }
+  }
+  .s-footer--column {
+    &.col--ellipsis {
+      height: 38px;
+    }
+  }
   .s-table-grid-down {
     position: absolute;
     top: 0;
     right: 0;
     width: 26px;
     height: 100%;
-    padding: 5px 0;
+    line-height: 38px;
     border-style: solid;
     border-color: #e8eaec;
     border-width: 0 0 0 1px;
@@ -62,8 +63,8 @@
       overflow-y: auto;
       background-color: #fff;
       color: #000;
-      line-height: 28px;
-      padding: 5px 10px;
+      line-height: 38px;
+      padding: 0 10px;
       font-size: 12px;
       max-height: 150px;
       max-width: 500px;
@@ -87,14 +88,17 @@
   }
 }
 //可编辑
-.s-table.s-editable .s-body--column.col--actived .s-cell {
-  padding: 0;
+.s-table.s-editable .s-body--column{
   height: 38px;
-  .s-default-input {
-    height: 38px;
-    border-radius: 0;
-    padding: 0 9px;
-    box-shadow: 0 1px 20px rgba(0,0,0,.15);
+  &.col--actived .s-cell {
+    padding: 0;
+    .s-default-input {
+      height: 37px;
+      line-height: 37px;
+      border-radius: 0;
+      padding: 0 9px;
+      box-shadow: 0 1px 20px rgba(0, 0, 0, .15);
+    }
   }
 }
 

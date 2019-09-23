@@ -1364,10 +1364,17 @@ const Methods = {
       gridDownDiv.addEventListener('click', function () {
         complete.style.display = 'block'
         let cellOffSet; let maxWidth = 10000
+        console.log(DomTools.getParents(_this.$el, '.s-table-complete-outline').length)
         if (DomTools.getParents(_this.$el, '.s-table-complete-outline').length > 0) {
           cellOffSet = DomTools.getOffsetPos(cell, DomTools.getParents(_this.$el, '.s-table-complete-outline')[0].children[0])
+          cellOffSet.left += 1
           if (locationType === 'body') {
+            if (!column.fixed) {
+              cellOffSet.top -= 1
+            }
             cellOffSet.top -= _this.$refs.tableBody.$el.scrollTop
+          } else {
+            cellOffSet.top += 1
           }
           if (!column.fixed) {
             cellOffSet.left -= _this.$refs.tableBody.$el.scrollLeft
@@ -1377,6 +1384,12 @@ const Methods = {
           }
         } else {
           cellOffSet = DomTools.getAbsolutePos(cell)
+          if (locationType === 'body' && !column.fixed) {
+            cellOffSet.top -= 1
+          }
+          if (cellOffSet.left + Math.min(wrapperElem.scrollWidth, 500) > document.body.scrollWidth) {
+            cellOffSet.left -= (Math.min(wrapperElem.scrollWidth, 500) - wrapperElem.clientWidth)
+          }
         }
         complete.style.top = cellOffSet.top + 'px'
         complete.style.left = cellOffSet.left + 'px'
