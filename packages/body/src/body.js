@@ -424,7 +424,7 @@ export default {
       }, [
         h('span', {
           class: 's-table--empty-text'
-        }, $scopedSlots.empty ? $scopedSlots.empty.call(this, { $table }, h) : GlobalConfig.i18n('soul.table.emptyText'))
+        }, $scopedSlots.empty ? $scopedSlots.empty.call(this, { $table }, h) : GlobalConfig.i18n('s.table.emptyText'))
       ]) : null
     ])
   },

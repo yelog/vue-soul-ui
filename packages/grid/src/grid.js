@@ -266,7 +266,7 @@ export default {
                   }).then(() => this.commitProxy('reload'))
                 } else {
                   if (isMsg && !selectRecords.length) {
-                    this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+                    this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.selectOneRecord'), status: 'warning' })
                   }
                 }
               })
@@ -295,7 +295,7 @@ export default {
                       this.tableLoading = true
                       resolve(
                         ajax.save.apply(this, [{ $grid: this, body }].concat(args)).then(() => {
-                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.saveSuccess'), status: 'success' })
+                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.saveSuccess'), status: 'success' })
                           this.tableLoading = false
                         }).catch(e => {
                           this.tableLoading = false
@@ -307,7 +307,7 @@ export default {
                         if (pendingRecords.length) {
                           this.remove(pendingRecords)
                         } else {
-                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.dataUnchanged'), status: 'info' })
+                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.dataUnchanged'), status: 'info' })
                         }
                       }
                       resolve()
@@ -341,7 +341,7 @@ export default {
             }
           })
         } else {
-          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.selectOneRecord'), status: 'warning' })
         }
       } else {
         if (selectRecords.length) {
@@ -378,7 +378,7 @@ export default {
         this.clearSelection()
       } else {
         if (isMsg) {
-          this.$XModal.message({ id: code, message: GlobalConfig.i18n('soul.grid.selectOneRecord'), status: 'warning' })
+          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.selectOneRecord'), status: 'warning' })
         }
       }
     },
