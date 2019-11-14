@@ -1,6 +1,6 @@
 {
   "name": "vue-soul-ui",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "A powerful table component.",
   "scripts": {
     "demo": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.demo.js",
@@ -17,7 +17,7 @@
     "packages",
     "styles"
   ],
-  "main": "lib/vxe-table.js",
+  "main": "lib/index.common.js",
   "style": "lib/index.css",
   "unpkg": "lib/index.min.js",
   "jsdelivr": "lib/index.min.js",
