@@ -1,9 +1,9 @@
 import GlobalConfig from '../../conf'
-import VXETable from '../../v-x-e-table'
+import SoulUI from '../../table-core'
 import { UtilTools } from '../../tools'
 
 export default {
-  name: 'VxeImportPanel',
+  name: 'SImportPanel',
   props: {
     defaultOptions: Object,
     storeData: Object
@@ -21,14 +21,14 @@ export default {
     parseTypeLabel () {
       const { storeData } = this
       if (storeData.type) {
-        return GlobalConfig.i18n(`vxe.types.${storeData.type}`)
+        return GlobalConfig.i18n(`s.types.${storeData.type}`)
       }
-      return `*.${(this.defaultOptions.types || VXETable.importTypes).join(', *.')}`
+      return `*.${(this.defaultOptions.types || SoulUI.importTypes).join(', *.')}`
     }
   },
   render (h) {
     const { hasFile, parseTypeLabel, defaultOptions, storeData, selectName } = this
-    return h('vxe-modal', {
+    return h('s-modal', {
       res: 'modal',
       model: {
         value: storeData.visible,
@@ -37,7 +37,7 @@ export default {
         }
       },
       props: {
-        title: GlobalConfig.i18n('vxe.toolbar.impTitle'),
+        title: GlobalConfig.i18n('s.toolbar.impTitle'),
         width: 440,
         mask: true,
         lockView: true,
@@ -46,7 +46,7 @@ export default {
       }
     }, [
       h('div', {
-        class: 'vxe-export--panel'
+        class: 's-export--panel'
       }, [
         h('table', {
           attrs: {
@@ -56,10 +56,10 @@ export default {
           }
         }, [
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.impFile')),
+            h('td', GlobalConfig.i18n('s.toolbar.impFile')),
             h('td', [
               hasFile ? h('div', {
-                class: 'vxe-import-selected--file',
+                class: 's-import-selected--file',
                 attrs: {
                   title: selectName
                 }
@@ -72,21 +72,21 @@ export default {
                   }
                 })
               ]) : h('span', {
-                class: 'vxe-import-select--file',
+                class: 's-import-select--file',
                 on: {
                   click: this.selectFileEvent
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.impSelect'))
+              }, GlobalConfig.i18n('s.toolbar.impSelect'))
             ])
           ]),
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.impType')),
+            h('td', GlobalConfig.i18n('s.toolbar.impType')),
             h('td', parseTypeLabel)
           ]),
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.impOpts')),
+            h('td', GlobalConfig.i18n('s.toolbar.impOpts')),
             h('td', [
-              h('vxe-radio', {
+              h('s-radio', {
                 props: {
                   name: 'mode',
                   label: 'covering'
@@ -97,8 +97,8 @@ export default {
                     defaultOptions.mode = value
                   }
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.impModeCovering')),
-              h('vxe-radio', {
+              }, GlobalConfig.i18n('s.toolbar.impModeCovering')),
+              h('s-radio', {
                 props: {
                   name: 'mode',
                   label: 'append'
@@ -109,14 +109,14 @@ export default {
                     defaultOptions.mode = value
                   }
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.impModeAppend'))
+              }, GlobalConfig.i18n('s.toolbar.impModeAppend'))
             ])
           ])
         ]),
         h('div', {
-          class: 'vxe-export--panel-btns'
+          class: 's-export--panel-btns'
         }, [
-          h('vxe-button', {
+          h('s-button', {
             props: {
               type: 'primary',
               disabled: !hasFile
@@ -124,7 +124,7 @@ export default {
             on: {
               click: this.importEvent
             }
-          }, GlobalConfig.i18n('vxe.toolbar.impConfirm'))
+          }, GlobalConfig.i18n('s.toolbar.impConfirm'))
         ])
       ])
     ])

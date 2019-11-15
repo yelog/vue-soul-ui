@@ -1,10 +1,10 @@
 import Table from '../table'
 import mixin from './src/mixin'
-import VXETable from '../v-x-e-table'
+import SoulUI from '../table-core'
 
 export const Edit = {
   install () {
-    VXETable.reg('edit')
+    SoulUI.reg('edit')
     Table.mixins.push(mixin)
   }
 }

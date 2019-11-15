@@ -75,13 +75,13 @@ export default {
       if (loading) {
         contents.push(
           h('i', {
-            class: ['vxe-button--loading-icon', GlobalConfig.icon.btnLoading]
+            class: ['s-button--loading-icon', GlobalConfig.icon.btnLoading]
           })
         )
       } else if (icon) {
         contents.push(
           h('i', {
-            class: ['vxe-button--icon', icon]
+            class: ['s-button--icon', icon]
           })
         )
       }

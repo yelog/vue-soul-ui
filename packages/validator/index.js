@@ -1,10 +1,10 @@
 import Table from '../table'
 import mixin from './src/mixin'
-import VXETable from '../v-x-e-table'
+import SoulUI from '../table-core'
 
 export const Validator = {
   install () {
-    VXETable.reg('valid')
+    SoulUI.reg('valid')
     Table.mixins.push(mixin)
   }
 }

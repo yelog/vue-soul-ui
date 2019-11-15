@@ -72,7 +72,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 SoulUI.install = install
 
-export * from './v-x-e-table'
+export * from './table-core'
 export * from './column'
 export * from './header'
 export * from './body'
@@ -94,5 +94,4 @@ export * from './export'
 export * from './keyboard'
 export * from './validator'
 export * from './resize'
-export * from './table-core'
 export default SoulUI

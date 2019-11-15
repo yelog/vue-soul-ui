@@ -3,7 +3,7 @@ import { UtilTools } from '../../tools'
 import XEUtils from 'xe-utils/methods/xe-utils'
 
 export default {
-  name: 'VxeExportPanel',
+  name: 'SExportPanel',
   props: {
     defaultOptions: Object,
     storeData: Object
@@ -15,11 +15,11 @@ export default {
       modeList: [
         {
           value: 'all',
-          label: 'vxe.toolbar.expAll'
+          label: 's.toolbar.expAll'
         },
         {
           value: 'selected',
-          label: 'vxe.toolbar.expSelected'
+          label: 's.toolbar.expSelected'
         }
       ]
     }
@@ -34,7 +34,7 @@ export default {
   },
   render (h) {
     const { _e, isAll, isIndeterminate, showSheet, defaultOptions, storeData, modeList } = this
-    return h('vxe-modal', {
+    return h('s-modal', {
       res: 'modal',
       model: {
         value: storeData.visible,
@@ -43,7 +43,7 @@ export default {
         }
       },
       props: {
-        title: GlobalConfig.i18n('vxe.toolbar.expTitle'),
+        title: GlobalConfig.i18n('s.toolbar.expTitle'),
         width: 660,
         mask: true,
         lockView: true,
@@ -55,7 +55,7 @@ export default {
       }
     }, [
       h('div', {
-        class: 'vxe-export--panel'
+        class: 's-export--panel'
       }, [
         h('table', {
           attrs: {
@@ -65,13 +65,13 @@ export default {
           }
         }, [
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.expName')),
+            h('td', GlobalConfig.i18n('s.toolbar.expName')),
             h('td', [
               h('input', {
                 ref: 'filename',
                 attrs: {
                   type: 'text',
-                  placeholder: GlobalConfig.i18n('vxe.toolbar.expNamePlaceholder')
+                  placeholder: GlobalConfig.i18n('s.toolbar.expNamePlaceholder')
                 },
                 domProps: {
                   value: defaultOptions.filename
@@ -85,7 +85,7 @@ export default {
             ])
           ]),
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.expType')),
+            h('td', GlobalConfig.i18n('s.toolbar.expType')),
             h('td', [
               h('select', {
                 on: {
@@ -106,12 +106,12 @@ export default {
             ])
           ]),
           showSheet ? h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.expSheetName')),
+            h('td', GlobalConfig.i18n('s.toolbar.expSheetName')),
             h('td', [
               h('input', {
                 attrs: {
                   type: 'text',
-                  placeholder: GlobalConfig.i18n('vxe.toolbar.expSheetNamePlaceholder')
+                  placeholder: GlobalConfig.i18n('s.toolbar.expSheetNamePlaceholder')
                 },
                 domProps: {
                   value: defaultOptions.sheetName
@@ -125,7 +125,7 @@ export default {
             ])
           ]) : _e(),
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.expMode')),
+            h('td', GlobalConfig.i18n('s.toolbar.expMode')),
             h('td', [
               h('select', {
                 on: {
@@ -146,12 +146,12 @@ export default {
             ])
           ]),
           h('tr', [
-            h('td', [GlobalConfig.i18n('vxe.toolbar.expColumn')]),
+            h('td', [GlobalConfig.i18n('s.toolbar.expColumn')]),
             h('td', [
               h('div', {
-                class: 'vxe-export--panel-column'
+                class: 's-export--panel-column'
               }, [
-                h('vxe-checkbox', {
+                h('s-checkbox', {
                   props: {
                     indeterminate: isIndeterminate
                   },
@@ -164,7 +164,7 @@ export default {
                   on: {
                     change: this.allColumnEvent
                   }
-                }, GlobalConfig.i18n('vxe.toolbar.expAllColumn')),
+                }, GlobalConfig.i18n('s.toolbar.expAllColumn')),
                 h('ul', storeData.columns.map(column => {
                   const { own, checked, type } = column
                   return h('li', {
@@ -177,23 +177,23 @@ export default {
                         this.checkStatus()
                       }
                     }
-                  }, UtilTools.getFuncText(own.title || own.label || (type === 'index' ? GlobalConfig.i18n('vxe.column.indexTitle') : '')))
+                  }, UtilTools.getFuncText(own.title || own.label || (type === 'index' ? GlobalConfig.i18n('s.column.indexTitle') : '')))
                 }))
               ])
             ])
           ]),
           h('tr', [
-            h('td', GlobalConfig.i18n('vxe.toolbar.expOpts')),
+            h('td', GlobalConfig.i18n('s.toolbar.expOpts')),
             h('td', [
-              h('vxe-checkbox', {
+              h('s-checkbox', {
                 model: {
                   value: defaultOptions.isHeader,
                   callback (value) {
                     defaultOptions.isHeader = value
                   }
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.expOptHeader')),
-              h('vxe-checkbox', {
+              }, GlobalConfig.i18n('s.toolbar.expOptHeader')),
+              h('s-checkbox', {
                 props: {
                   disabled: !storeData.hasFooter
                 },
@@ -203,8 +203,8 @@ export default {
                     defaultOptions.isFooter = value
                   }
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.expOptFooter')),
-              h('vxe-checkbox', {
+              }, GlobalConfig.i18n('s.toolbar.expOptFooter')),
+              h('s-checkbox', {
                 props: {
                   disabled: storeData.forceOriginal
                 },
@@ -214,26 +214,26 @@ export default {
                     defaultOptions.original = value
                   }
                 }
-              }, GlobalConfig.i18n('vxe.toolbar.expOptOriginal'))
+              }, GlobalConfig.i18n('s.toolbar.expOptOriginal'))
             ])
           ])
         ]),
         h('div', {
-          class: 'vxe-export--panel-btns'
+          class: 's-export--panel-btns'
         }, [
-          h('vxe-button', {
+          h('s-button', {
             on: {
               click: this.printEvent
             }
-          }, GlobalConfig.i18n('vxe.toolbar.expPrint')),
-          h('vxe-button', {
+          }, GlobalConfig.i18n('s.toolbar.expPrint')),
+          h('s-button', {
             props: {
               type: 'primary'
             },
             on: {
               click: this.exportEvent
             }
-          }, GlobalConfig.i18n('vxe.toolbar.expConfirm'))
+          }, GlobalConfig.i18n('s.toolbar.expConfirm'))
         ])
       ])
     ])

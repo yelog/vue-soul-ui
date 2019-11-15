@@ -90,6 +90,10 @@
             {
               "path": "/table/basic/edit",
               "title": "可编辑"
+            },
+            {
+              "path": "/table/basic/excel",
+              "title": "Excel导出"
             }
           ]
         },

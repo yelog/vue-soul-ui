@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
-import VXETable, { Renderer } from '../../v-x-e-table'
+import SoulUI, { Renderer } from '../../table-core'
 import { UtilTools, DomTools } from '../../tools'
 
 var browse = DomTools.browse
@@ -25,7 +25,7 @@ export default {
     _insertAt (records, row) {
       let { afterFullData, editStore, scrollYLoad, tableFullData, treeConfig } = this
       if (treeConfig) {
-        throw new Error(UtilTools.getLog('vxe.error.noTree', ['insert']))
+        throw new Error(UtilTools.getLog('s.error.noTree', ['insert']))
       }
       if (!XEUtils.isArray(records)) {
         records = [records]
@@ -42,7 +42,7 @@ export default {
         } else {
           let targetIndex = nowData.indexOf(row)
           if (targetIndex === -1) {
-            throw new Error(UtilTools.error('vxe.error.unableInsert'))
+            throw new Error(UtilTools.error('s.error.unableInsert'))
           }
           nowData.splice.apply(nowData, [targetIndex, 0].concat(newRecords))
           tableFullData.splice.apply(tableFullData, [tableFullData.indexOf(row), 0].concat(newRecords))
@@ -78,7 +78,7 @@ export default {
       let rest = []
       let nowData = afterFullData
       if (treeConfig) {
-        throw new Error(UtilTools.getLog('vxe.error.noTree', ['remove']))
+        throw new Error(UtilTools.getLog('s.error.noTree', ['remove']))
       }
       if (!rows) {
         rows = tableFullData
@@ -127,7 +127,7 @@ export default {
       })
     },
     _revert () {
-      UtilTools.warn('vxe.error.delFunc', ['revert', 'revertData'])
+      UtilTools.warn('s.error.delFunc', ['revert', 'revertData'])
       return this.revertData.apply(this, arguments)
     },
     /**
@@ -281,19 +281,19 @@ export default {
       actived.args = null
       actived.row = null
       actived.column = null
-      return (VXETable._valid ? this.clearValidate() : this.$nextTick()).then(this.recalculate)
+      return (SoulUI._valid ? this.clearValidate() : this.$nextTick()).then(this.recalculate)
     },
     _getActiveRow () {
       let { $el, editStore, tableData } = this
       let { args, row } = editStore.actived
-      if (args && tableData.indexOf(row) > -1 && $el.querySelectorAll('.vxe-body--column.col--actived').length) {
+      if (args && tableData.indexOf(row) > -1 && $el.querySelectorAll('.s-body--column.col--actived').length) {
         return Object.assign({}, args)
       }
       return null
     },
     // 在 v3.0 中废弃 hasActiveRow
     _hasActiveRow (row) {
-      UtilTools.warn('vxe.error.delFunc', ['hasActiveRow', 'isActiveByRow'])
+      UtilTools.warn('s.error.delFunc', ['hasActiveRow', 'isActiveByRow'])
       return this.isActiveByRow(row)
     },
     /**

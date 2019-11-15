@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
-import VXETable from '../../v-x-e-table'
+import SoulUI from '../../table-core'
 import { UtilTools, DomTools } from '../../tools'
 
 // 默认导出或打印的 HTML 样式
@@ -9,7 +9,7 @@ const defaultHtmlStyle = 'body{margin:0;font-size:14px}table{text-align:left;bor
 // 导入
 const impForm = document.createElement('form')
 const impInput = document.createElement('input')
-impForm.className = 'vxe-table--import-form'
+impForm.className = 's-table--import-form'
 impInput.name = 'file'
 impInput.type = 'file'
 impForm.appendChild(impInput)
@@ -19,7 +19,7 @@ var printFrame
 
 function createFrame () {
   const frame = document.createElement('iframe')
-  frame.className = 'vxe-table--print-frame'
+  frame.className = 's-table--print-frame'
   return frame
 }
 
@@ -264,10 +264,10 @@ function downloadFile ($table, opts, content) {
       document.body.removeChild(linkElem)
     }
     if (opts.message !== false) {
-      $table.$XModal.message({ message: GlobalConfig.i18n('vxe.table.expSuccess'), status: 'success' })
+      $table.$XModal.message({ message: GlobalConfig.i18n('s.table.expSuccess'), status: 'success' })
     }
   } else {
-    UtilTools.error('vxe.error.notExp')
+    UtilTools.error('s.error.notExp')
   }
 }
 
@@ -467,10 +467,10 @@ function handleImport ($table, content, opts) {
         }
       })
     if (opts.message !== false) {
-      $table.$XModal.message({ message: GlobalConfig.i18n('vxe.table.impSuccess'), status: 'success' })
+      $table.$XModal.message({ message: GlobalConfig.i18n('s.table.impSuccess'), status: 'success' })
     }
   } else if (opts.message !== false) {
-    $table.$XModal.message({ message: GlobalConfig.i18n('vxe.error.impFields'), status: 'error' })
+    $table.$XModal.message({ message: GlobalConfig.i18n('s.error.impFields'), status: 'error' })
   }
   if (_importResolve) {
     _importResolve(status)
@@ -482,14 +482,14 @@ export default {
   methods: {
     // 在 v3.0 中废弃 exportCsv 方法
     _exportCsv (options) {
-      UtilTools.warn('vxe.error.delFunc', ['exportCsv', 'exportData'])
+      UtilTools.warn('s.error.delFunc', ['exportCsv', 'exportData'])
       return this.exportData(options)
     },
     _openExport (options) {
       if (this.$toolbar) {
         return this.$toolbar.openExport(options)
       }
-      throw new Error(UtilTools.getLog('vxe.error.barUnableLink'))
+      throw new Error(UtilTools.getLog('s.error.barUnableLink'))
     },
     /**
      * 导出文件，支持 csv/html/xml
@@ -520,13 +520,13 @@ export default {
       if (!opts.sheetName) {
         opts.sheetName = 'Sheet1'
       }
-      if (!XEUtils.includes(VXETable.exportTypes, opts.type)) {
-        throw new Error(UtilTools.getLog('vxe.error.notType', [opts.type]))
+      if (!XEUtils.includes(SoulUI.exportTypes, opts.type)) {
+        throw new Error(UtilTools.getLog('s.error.notType', [opts.type]))
       }
       if (!opts.original) {
         if (scrollXLoad || scrollYLoad) {
           opts.original = true
-          UtilTools.warn('vxe.error.scrollOriginal')
+          UtilTools.warn('s.error.scrollOriginal')
         }
       }
       if (!options || !options.columns) {
@@ -544,18 +544,18 @@ export default {
       if (this.$toolbar) {
         return this.$toolbar.openImport(options)
       }
-      throw new Error(UtilTools.getLog('vxe.error.barUnableLink'))
+      throw new Error(UtilTools.getLog('s.error.barUnableLink'))
     },
     _importByFile (file, opts) {
       if (window.FileReader) {
         const { type, filename } = UtilTools.parseFile(file)
         const options = Object.assign({ mode: 'covering' }, opts, { type, filename })
-        const types = options.types || VXETable.importTypes
+        const types = options.types || SoulUI.importTypes
         if (XEUtils.includes(types, type)) {
           this.preventEvent(null, 'event.import', { $table: this, file, options, columns: this.tableFullColumn }, () => {
             const reader = new FileReader()
             reader.onerror = e => {
-              UtilTools.error('vxe.error.notType', [type])
+              UtilTools.error('s.error.notType', [type])
             }
             reader.onload = e => {
               handleImport(this, e.target.result.trim(), options)
@@ -563,10 +563,10 @@ export default {
             reader.readAsText(file, 'UTF-8')
           })
         } else {
-          UtilTools.error('vxe.error.notType', [type])
+          UtilTools.error('s.error.notType', [type])
         }
       } else {
-        UtilTools.error('vxe.error.notExp')
+        UtilTools.error('s.error.notExp')
       }
     },
     _importData (options) {
@@ -587,7 +587,7 @@ export default {
       if (!impForm.parentNode) {
         document.body.appendChild(impForm)
       }
-      const types = options.types || VXETable.importTypes
+      const types = options.types || SoulUI.importTypes
       impInput.accept = `.${types.join(', .')}`
       impInput.onchange = evnt => {
         const { type } = UtilTools.parseFile(evnt.target.files[0])
@@ -595,7 +595,7 @@ export default {
           this._fileResolve(evnt)
         } else {
           if (options.message !== false) {
-            this.$XModal.message({ message: XEUtils.template(GlobalConfig.i18n('vxe.error.notType'), [type]), status: 'error' })
+            this.$XModal.message({ message: XEUtils.template(GlobalConfig.i18n('s.error.notType'), [type]), status: 'error' })
           }
           this._fileReject(evnt)
         }

@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
-import VXETable from '../../table-core'
+import SoulUI from '../../table-core'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
 import methods from './methods'
 
@@ -351,7 +351,7 @@ export default {
       return this.collectColumn.some(column => UtilTools.hasChildrenList(column))
     },
     hasTip () {
-      return VXETable._tooltip
+      return SoulUI._tooltip
     },
     visibleColumn () {
       return this.tableFullColumn ? this.tableFullColumn.filter(column => column.visible) : []
@@ -517,17 +517,17 @@ export default {
       UtilTools.error('s.error.emptyProp', ['row-id'])
     }
     // if (this.selectConfig) {
-    //   UtilTools.warn('vxe.error.delProp', ['select-config', 'checkbox-config'])
+    //   UtilTools.warn('s.error.delProp', ['select-config', 'checkbox-config'])
     // }
     // 检查是否有安装需要的模块
     let errorModuleName
-    if (!VXETable._edit && this.editConfig) {
+    if (!SoulUI._edit && this.editConfig) {
       errorModuleName = 'Edit'
-    } else if (!VXETable._valid && this.editRules) {
+    } else if (!SoulUI._valid && this.editRules) {
       errorModuleName = 'Validator'
-    } else if (!VXETable._keyboard && (this.keyboardConfig || this.mouseConfig)) {
+    } else if (!SoulUI._keyboard && (this.keyboardConfig || this.mouseConfig)) {
       errorModuleName = 'Keyboard'
-    } else if (!VXETable._resize && this.autoResize) {
+    } else if (!SoulUI._resize && this.autoResize) {
       errorModuleName = 'Resize'
     }
     if (errorModuleName) {
@@ -563,7 +563,7 @@ export default {
     this.preventEvent(null, 'created', { $table: this })
   },
   mounted () {
-    if (this.autoResize && VXETable._resize) {
+    if (this.autoResize && SoulUI._resize) {
       this.bindResize()
     }
     if (DomTools.getParents(this.$el, '.s-table-complete-outline').length > 0) {
@@ -585,7 +585,7 @@ export default {
     if (tableWrapper && tableWrapper.parentNode) {
       tableWrapper.parentNode.removeChild(tableWrapper)
     }
-    if (VXETable._resize) {
+    if (SoulUI._resize) {
       this.unbindResize()
     }
     this.closeFilter()
@@ -682,7 +682,7 @@ export default {
         ref: 'hideColumn'
       }, this.$slots.default),
       h('div', {
-        class: 'vxe-table--main-wrapper'
+        class: 's-table--main-wrapper'
       }, [
         /**
          * 主头部
