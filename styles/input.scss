@@ -11,7 +11,7 @@
   .s-textarea {
     border-radius: 4px;
     outline: 0;
-    padding: 4px 8px;
+    padding: 0 8px;
     width: 100%;
     color: $s-font-color;
     border: 1px solid $s-input-border-color;
@@ -26,6 +26,16 @@
   }
   .s-input {
     height: 40px;
+    &[type="date"]::-webkit-inner-spin-button {
+      margin-top: 6px;
+    }
+    &[type="date"]::-webkit-inner-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
+      height: 24px;
+    }
+    &::placeholder {
+      color: $vxe-input-placeholder-color;
+    }
   }
   .s-textarea {
     height: 100%;
@@ -33,16 +43,25 @@
   &.size--medium {
     .s-input {
       height: 36px;
+      &[type="date"]::-webkit-inner-spin-button {
+        margin-top: 4px;
+      }
     }
   }
   &.size--small {
     .s-input {
       height: 32px;
+      &[type="date"]::-webkit-inner-spin-button {
+        margin-top: 2px;
+      }
     }
   }
   &.size--mini {
     .s-input {
       height: 28px;
+      &[type="date"]::-webkit-inner-spin-button {
+        margin-top: 0;
+      }
     }
   }
 }

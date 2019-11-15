@@ -29,30 +29,32 @@
     padding: 8px 0
   }
   &.size--medium {
-    .s-refresh--btn,
+    .s-tools--operate > .s-button,
     .s-custom--setting-btn {
       font-size: 17px;
     }
   }
   &.size--small {
-    .s-refresh--btn,
+    .s-tools--operate > .s-button,
     .s-custom--setting-btn {
       font-size: 15px;
     }
   }
   &.size--mini {
-    .s-refresh--btn,
+    .s-tools--operate > .s-button,
     .s-custom--setting-btn {
       font-size: 14px;
     }
   }
-  .s-refresh--wrapper,
-  .s-custom--wrapper {
+  .s-tools--wrapper,
+  .s-tools--operate {
     float: right;
   }
   .s-custom--wrapper {
+    display: inline-block;
     text-align: right;
     position: relative;
+    vertical-align: middle;
     &.is--active {
       .s-custom--setting-btn {
         background-color: #D9DADB;
@@ -63,12 +65,14 @@
       }
     }
   }
-  .s-refresh--btn,
+  .s-tools--operate > .s-button,
   .s-custom--setting-btn {
     font-size: 18px;
     vertical-align: middle;
-    cursor: pointer;
     user-select: none;
+    cursor: pointer;
+  }
+  .s-custom--setting-btn {
     &:hover {
       background-color: #F0F0F0;
       border-radius: 50%;
@@ -76,9 +80,6 @@
     & > i {
       display: block;
     }
-  }
-  .s-refresh--btn {
-    padding: 7px;
   }
   .s-custom--setting-btn {
     padding: 4px;
@@ -90,7 +91,7 @@
     text-align: left;
     background-color: #fff;
     z-index: 19;
-    max-height: 200px;
+    max-height: 210px;
     overflow: auto;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.2);
     .s-custom--option {
@@ -108,6 +109,140 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+    }
+  }
+}
+
+.s-export--panel {
+  & > table {
+    width: 100%;
+    border: 0;
+    table-layout: fixed;
+    tr {
+      td {
+        padding: 0 10px;
+        &:nth-child(1) {
+          text-align: right;
+          width: 30%;
+          font-weight: 700;
+          padding: 8px 10px;
+        }
+        &:nth-child(2) {
+          width: 70%;
+        }
+        & > input,
+        & > select {
+          outline: 0;
+          width: 80%;
+          padding: 5px 8px;
+          color: $s-font-color;
+          border-radius: 4px;
+          border: 1px solid $s-input-border-color;
+          &:focus {
+            border: 1px solid $s-primary-color;
+          }
+        }
+        & > input {
+          &::placeholder {
+            color: $s-input-placeholder-color;
+          }
+        }
+      }
+    }
+  }
+  .s-export--panel-column {
+    width: 80%;
+    border: 1px solid $s-input-border-color;
+    margin: 3px 0;
+    border-radius: 4px;
+    user-select: none;
+    & > .s-checkbox {
+      padding: 5px 5px 5px 10px;
+      font-weight: 700;
+      display: block;
+      background-color: #f8f8f9;
+    }
+    & > ul {
+      max-height: 208px;
+      overflow: auto;
+      margin: 0;
+      & > li {
+        position: relative;
+        padding: 4px 30px 4px 32px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.9em;
+        cursor: pointer;
+        &.active {
+          color: $s-primary-color;
+          font-weight: 700;
+          &:before {
+            content: "";
+            position: absolute;
+            height: 0.66em;
+            width: 0.34em;
+            top: 0.5em;
+            left: 15px;
+            border-width: 0.1em;
+            border-style: solid;
+            border-color: inherit;
+            border-left: 0;
+            border-top: 0;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        }
+        &:hover {
+          background-color: $s-table-row-hover-background-color;
+        }
+      }
+    }
+  }
+  .s-import-selected--file {
+    padding-right: 40px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: none;
+    & > i {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    &:hover {
+      & > i {
+        display: block;
+      }
+      color: $s-primary-color;
+    }
+  }
+  .s-import-select--file {
+    border: 1px dashed $s-input-border-color;
+    padding: 6px 34px;
+    border-radius: 4px;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+      color: $s-primary-color;
+      border-color: $s-primary-color;
+    }
+  }
+  .s-export--panel-btns {
+    text-align: right;
+    margin-top: 10px;
+  }
+}
+.s-modal--wrapper {
+  &.size--mini,
+  &.size--small {
+    .s-export--panel {
+      font-size: 12px;
     }
   }
 }

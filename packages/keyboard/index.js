@@ -1,11 +1,11 @@
 import Table from '../table'
-import Methods from './src/methods'
+import mixin from './src/mixin'
 import SoulUI from '../table-core'
 
 export const Keyboard = {
   install () {
-    SoulUI._keyboard = 1
-    Object.assign(Table.methods, Methods)
+    SoulUI.reg('keyboard')
+    Table.mixins.push(mixin)
   }
 }
 

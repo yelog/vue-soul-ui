@@ -1,5 +1,6 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
+import DomTools from '../../tools/src/dom'
 
 /**
  * 监听 resize 事件
@@ -16,7 +17,7 @@ class ResizeObserverPolyfill {
   }
   observe (target) {
     if (target) {
-      if (!this.tarList.includes(target)) {
+      if (!XEUtils.includes(this.tarList, target)) {
         this.tarList.push({
           target,
           width: target.clientWidth,
@@ -32,14 +33,14 @@ class ResizeObserverPolyfill {
     }
   }
   unobserve (target) {
-    XEUtils.remove(eventStore, item => item.tarList.includes(target))
+    XEUtils.remove(eventStore, item => XEUtils.includes(item.tarList, target))
   }
   disconnect () {
     XEUtils.remove(eventStore, item => item === this)
   }
 }
 
-const Resize = window.ResizeObserver || ResizeObserverPolyfill
+const Resize = DomTools.browse.isDoc ? (window.ResizeObserver || ResizeObserverPolyfill) : ResizeObserverPolyfill
 
 function eventListener () {
   clearTimeout(resizeTimeout)

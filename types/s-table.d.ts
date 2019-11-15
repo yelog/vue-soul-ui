@@ -16,8 +16,10 @@ import { Radio } from './radio';
 import { Input } from './input';
 import { Button } from './button';
 import { Modal } from './modal';
+import { Edit } from './edit'
 import { Export } from './export';
 import { Keyboard } from './keyboard';
+import { Validator } from './validator';
 import { Resize } from './resize';
 
 export interface VXETableOptions {
@@ -46,9 +48,10 @@ export interface VXETableOptions {
 }
 
 export interface Interceptor {
+  mixin(map: object): Interceptor;
   get(type: string): any;
-  add(type: string, callback: Function): Renderer;
-  delete(type: object): Renderer;
+  add(type: string, callback: Function): Interceptor;
+  delete(type: object): Interceptor;
 }
 
 export interface Renderer {
@@ -66,10 +69,10 @@ export interface Menus {
 }
 
 export interface Buttons {
-  mixin(map: object): Menus;
+  mixin(map: object): Buttons;
   get(type: string): Function;
-  add(type: string, callback: Function): Menus;
-  delete(type: object): Menus;
+  add(type: string, callback: Function): Buttons;
+  delete(type: object): Buttons;
 }
 
 export interface PluginObject<T> {
@@ -88,10 +91,66 @@ export const buttons: Buttons;
 
 export interface STableStatic {
   install(vue: typeof Vue): void;
+  Vue: typeof Vue;
+  Table: any;
+  Grid: any;
   /**
-   * 国际化翻译
+   * Filter 模块的安装状态
    */
-  t(obj: object, key: string): string | number;
+  _filter: number;
+  /**
+   * Menu 模块的安装状态
+   */
+  _menu: number;
+  /**
+   * Edit 模块的安装状态
+   */
+  _edit: number;
+  /**
+   * Validator 模块的安装状态
+   */
+  _valid: number;
+  /**
+   * Export 模块的安装状态
+   */
+  _export: number;
+  /**
+   * Keyboard 模块的安装状态
+   */
+  _keyboard: number;
+  /**
+   * Resize 模块的安装状态
+   */
+  _resize: number;
+  /**
+   * Modal 模块的安装状态
+   */
+  _modal: number;
+  /**
+   * Tooltip 模块的安装状态
+   */
+  _tooltip: number;
+  /**
+   * 版本号
+   */
+  v: string;
+  /**
+   * 导出/导出文件类型设置
+   * 0只支持导出 1 支持导入导出
+   */
+  types: any;
+  /**
+   * 获取导出的所有文件类型
+   */
+  exportTypes: string[];
+  /**
+   * 获取导入的所有文件类型
+   */
+  importTypes: string[];
+  /**
+   * 读取内置国际化
+   */
+  t(key: string): any;
   /**
    * 设置全局参数
    * @param options 参数
@@ -126,6 +185,12 @@ export interface STableStatic {
  */
 declare const STable: STableStatic;
 
+declare global {
+  interface Window {
+    STable: typeof STable;
+  }
+}
+
 export {
   STable,
   Table,
@@ -145,7 +210,11 @@ export {
   Input,
   Button,
   Modal,
+  Edit,
   Export,
   Keyboard,
+  Validator,
   Resize
 }
+
+export default STable

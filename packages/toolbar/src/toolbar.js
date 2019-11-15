@@ -1,7 +1,7 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
+import SoulUI, { Buttons } from '../../table-core'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
-import { Buttons } from '../../table-core'
 
 export default {
   name: 'SToolbar',
@@ -10,6 +10,8 @@ export default {
     loading: false,
     resizable: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.resizable },
     refresh: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.refresh },
+    import: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.import },
+    export: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.export },
     setting: { type: [Boolean, Object], default: () => GlobalConfig.toolbar.setting },
     buttons: { type: Array, default: () => GlobalConfig.toolbar.buttons },
     size: String,
@@ -26,6 +28,36 @@ export default {
       $table: null,
       isRefresh: false,
       tableFullColumn: [],
+      importStore: {
+        file: null,
+        type: '',
+        filename: '',
+        visible: false
+      },
+      importParams: {
+        mode: '',
+        types: null,
+        message: true
+      },
+      exportStore: {
+        name: '',
+        mode: '',
+        columns: [],
+        selectRecords: [],
+        hasFooter: false,
+        forceOriginal: false,
+        visible: false
+      },
+      exportParams: {
+        filename: '',
+        sheetName: '',
+        type: '',
+        types: [],
+        original: false,
+        message: true,
+        isHeader: false,
+        isFooter: false
+      },
       settingStore: {
         visible: false
       }
@@ -37,6 +69,12 @@ export default {
     },
     refreshOpts () {
       return Object.assign({}, GlobalConfig.toolbar.refresh, this.refresh)
+    },
+    importOpts () {
+      return Object.assign({}, GlobalConfig.toolbar.import, this.import)
+    },
+    exportOpts () {
+      return Object.assign({}, GlobalConfig.toolbar.export, this.export)
     },
     resizableOpts () {
       return Object.assign({ storageKey: 'S_TABLE_CUSTOM_COLUMN_WIDTH' }, GlobalConfig.toolbar.resizable, this.resizable)
@@ -53,6 +91,9 @@ export default {
     if (settingOpts.storage && !id) {
       return UtilTools.error('s.error.toolbarId')
     }
+    if (!SoulUI._export && (this.export || this.import)) {
+      UtilTools.error('s.error.reqModule', ['Export'])
+    }
     this.$nextTick(() => {
       this.updateConf()
       this.loadStorage()
@@ -65,10 +106,11 @@ export default {
     GlobalEvent.off(this, 'blur')
   },
   render (h) {
-    let { _e, $scopedSlots, $grid, $table, loading, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn } = this
+    let { _e, $scopedSlots, $grid, $table, loading, settingStore, refresh, setting, settingOpts, buttons = [], vSize, tableFullColumn, importStore, importParams, exportStore, exportParams } = this
     let customBtnOns = {}
     let customWrapperOns = {}
     let $buttons = $scopedSlots.buttons
+    let $tools = $scopedSlots.tools
     if (setting) {
       if (settingOpts.trigger === 'manual') {
         // 手动触发
@@ -91,7 +133,7 @@ export default {
     }, [
       h('div', {
         class: 's-button--wrapper'
-      }, $buttons ? $buttons.call($grid || $table || this, { $grid, $table }, h) : buttons.map(item => {
+      }, $buttons ? $buttons.call(this, { $grid, $table }, h) : buttons.map(item => {
         return item.visible === false ? _e() : h('s-button', {
           on: {
             click: evnt => this.btnEvent(evnt, item)
@@ -114,64 +156,106 @@ export default {
           } : null
         }, UtilTools.getFuncText(item.name))
       })),
-      setting ? h('div', {
-        class: ['s-custom--wrapper', {
-          'is--active': settingStore.visible
-        }],
-        ref: 'customWrapper'
+      h('div', {
+        class: 's-tools--operate'
       }, [
-        h('div', {
-          class: 's-custom--setting-btn',
-          on: customBtnOns
-        }, [
-          h('i', {
-            class: GlobalConfig.icon.custom
-          })
-        ]),
-        h('div', {
-          class: 's-custom--option-wrapper'
-        }, [
-          h('div', {
-            class: 's-custom--option',
-            on: customWrapperOns
-          }, tableFullColumn.map(column => {
-            let { property, visible, own } = column
-            let headerTitle = UtilTools.getFuncText(own.title || own.label)
-            return property && headerTitle ? h('s-checkbox', {
-              props: {
-                value: visible
-              },
-              attrs: {
-                title: headerTitle
-              },
-              on: {
-                change: value => {
-                  column.visible = value
-                  if (setting && settingOpts.immediate) {
-                    this.updateSetting()
-                  }
-                }
-              }
-            }, headerTitle) : null
-          }))
-        ])
-      ]) : null,
-      refresh ? h('div', {
-        class: 's-refresh--wrapper'
-      }, [
-        h('div', {
+        this.import ? h('s-button', {
+          class: 's-export--btn',
+          props: {
+            type: 'text',
+            icon: GlobalConfig.icon.import
+          },
+          on: {
+            click: this.importEvent
+          }
+        }) : null,
+        this.export ? h('s-button', {
+          class: 's-export--btn',
+          props: {
+            type: 'text',
+            icon: GlobalConfig.icon.export
+          },
+          on: {
+            click: this.exportEvent
+          }
+        }) : null,
+        refresh ? h('s-button', {
           class: 's-refresh--btn',
+          props: {
+            type: 'text',
+            icon: GlobalConfig.icon.refresh,
+            loading: this.isRefresh
+          },
           on: {
             click: this.refreshEvent
           }
+        }) : null,
+        setting ? h('div', {
+          class: ['s-custom--wrapper', {
+            'is--active': settingStore.visible
+          }],
+          ref: 'customWrapper'
         }, [
-          h('i', {
-            class: [GlobalConfig.icon.refresh, {
-              roll: this.isRefresh
-            }]
-          })
-        ])
-      ]) : null
+          h('div', {
+            class: 's-custom--setting-btn',
+            on: customBtnOns
+          }, [
+            h('i', {
+              class: GlobalConfig.icon.custom
+            })
+          ]),
+          h('div', {
+            class: 's-custom--option-wrapper'
+          }, [
+            h('div', {
+              class: 's-custom--option',
+              on: customWrapperOns
+            }, tableFullColumn.map(column => {
+              let { property, visible, own } = column
+              let headerTitle = UtilTools.getFuncText(own.title || own.label)
+              return property && headerTitle ? h('s-checkbox', {
+                props: {
+                  value: visible,
+                  disabled: settingOpts.checkMethod ? !settingOpts.checkMethod({ column }) : false
+                },
+                attrs: {
+                  title: headerTitle
+                },
+                on: {
+                  change: value => {
+                    column.visible = value
+                    if (setting && settingOpts.immediate) {
+                      this.updateSetting()
+                    }
+                  }
+                }
+              }, headerTitle) : null
+            }))
+          ])
+        ]) : null
+      ]),
+      SoulUI._export ? h('s-import-panel', {
+        props: {
+          defaultOptions: importParams,
+          storeData: importStore
+        },
+        on: {
+          import: this.confirmImportEvent
+        }
+      }) : _e(),
+      SoulUI._export ? h('s-export-panel', {
+        props: {
+          defaultOptions: exportParams,
+          storeData: exportStore
+        },
+        on: {
+          print: this.confirmPrintEvent,
+          export: this.confirmExportEvent
+        }
+      }) : _e(),
+      $tools ? h('div', {
+        class: 's-tools--wrapper'
+      }, $tools.call(this, { $grid, $table }, h)) : null
     ])
   },
   methods: {
@@ -179,7 +263,7 @@ export default {
       let { $parent, data } = this
       let { $children } = $parent
       let selfIndex = $children.indexOf(this)
-      this.$table = $children.find((comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 's-table'))
+      this.$table = XEUtils.find($children, (comp, index) => comp && comp.refreshColumn && index > selfIndex && (data ? comp.data === data : comp.$vnode.componentOptions.tag === 's-table'))
     },
     openSetting () {
       this.settingStore.visible = true
@@ -197,15 +281,17 @@ export default {
       let { $grid, $table, id, refresh, resizable, setting, refreshOpts, resizableOpts, settingOpts } = this
       if (refresh && !$grid) {
         if (!refreshOpts.query) {
-          console.warn('[s-toolbar] refresh.query function does not exist')
+          UtilTools.warn('s.error.notFunc', ['query'])
+        }
+      }
+      if ($grid || $table) {
+        ($grid || $table).connect({ toolbar: this })
+      } else {
+        if (resizable || setting) {
+          throw new Error(UtilTools.getLog('s.error.barUnableLink'))
         }
       }
       if (resizable || setting) {
-        if ($grid || $table) {
-          ($grid || $table).connect({ toolbar: this })
-        } else {
-          throw new Error('[s-toolbar] Not found s-table.')
-        }
         let customMap = {}
         if (resizableOpts.storage) {
           let columnWidthStorage = this.getStorageMap(resizableOpts.storageKey)[id]
@@ -277,12 +363,12 @@ export default {
       return this.$nextTick()
     },
     hideColumn (column) {
-      console.warn('[s-table] The function hideColumn is deprecated')
+      UtilTools.warn('s.error.delFunc', ['hideColumn', 'table.hideColumn'])
       column.visible = false
       return this.updateSetting()
     },
     showColumn (column) {
-      console.warn('[s-table] The function showColumn is deprecated')
+      UtilTools.warn('s.error.delFunc', ['showColumn', 'table.showColumn'])
       column.visible = true
       return this.updateSetting()
     },
@@ -372,6 +458,80 @@ export default {
           UtilTools.emitEvent(this, 'button-click', [params, evnt])
         }
       }
+    },
+    importEvent () {
+      this.openImport()
+    },
+    openImport (options) {
+      const { importParams, importStore, importOpts } = this
+      const defOpts = Object.assign({ mode: 'covering', message: true }, options, importOpts)
+      Object.assign(importStore, {
+        file: null,
+        type: '',
+        filename: '',
+        visible: true
+      })
+      Object.assign(importParams, defOpts)
+    },
+    confirmImportEvent (options) {
+      const { $grid, $table } = this
+      const comp = $grid || $table
+      comp.importByFile(this.importStore.file, options)
+    },
+    exportEvent () {
+      this.openExport()
+    },
+    openExport (options) {
+      const { $grid, $table, exportOpts, exportStore, exportParams } = this
+      const comp = $grid || $table
+      const { fullColumn } = comp.getTableColumn()
+      const { footerData } = comp.getTableData()
+      const selectRecords = comp.getSelectRecords()
+      const virtualScroller = comp.getVirtualScroller()
+      const exportColumns = fullColumn.filter(column => column.type === 'index' || (column.property && ['checkbox', 'selection', 'radio'].indexOf(column.type) === -1))
+      const treeStatus = comp.getTreeStatus()
+      const forceOriginal = !!treeStatus || virtualScroller.scrollX || virtualScroller.scrollY
+      const hasFooter = !!footerData.length
+      const defOpts = Object.assign({ original: true, message: true }, exportOpts, options)
+      const types = defOpts.types || SoulUI.exportTypes
+      // 处理类型
+      defOpts.types = types.map(value => {
+        return {
+          value,
+          label: `s.types.${value}`
+        }
+      })
+      // 索引列默认不选中
+      exportColumns.forEach(column => {
+        column.checked = column.type !== 'index'
+      })
+      // 更新条件
+      Object.assign(exportStore, {
+        columns: exportColumns,
+        selectRecords: selectRecords,
+        mode: selectRecords.length ? 'selected' : 'all',
+        forceOriginal: !!treeStatus || virtualScroller.scrollX || virtualScroller.scrollY,
+        hasFooter: !!footerData.length,
+        visible: true
+      })
+      // 重置参数
+      Object.assign(exportParams, {
+        filename: defOpts.filename || '',
+        sheetName: defOpts.sheetName || '',
+        type: defOpts.type || defOpts.types[0].value,
+        types: defOpts.types,
+        original: forceOriginal || defOpts.original,
+        message: defOpts.message,
+        isHeader: true,
+        isFooter: hasFooter
+      })
+      return this.$nextTick()
+    },
+    confirmPrintEvent (options) {
+      (this.$grid || this.$table).print(options)
+    },
+    confirmExportEvent (options) {
+      (this.$grid || this.$table).exportData(options)
     }
   }
 }

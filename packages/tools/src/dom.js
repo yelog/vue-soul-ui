@@ -2,8 +2,8 @@ import XEUtils from 'xe-utils'
 import UtilTools from './utils'
 
 const browse = XEUtils.browse()
-const htmlElem = document.querySelector('html')
-const bodyElem = document.body
+const htmlElem = browse.isDoc ? document.querySelector('html') : 0
+const bodyElem = browse.isDoc ? document.body : 0
 
 function getClsRE (cls) {
   if (!reClsMap[cls]) {
@@ -51,18 +51,21 @@ export const DomTools = {
       let bodySrcollTop = bodyElem.scrollTop
       let trOffsetTop = trElem.offsetTop + (trElem.offsetParent ? trElem.offsetParent.offsetTop : 0)
       let trHeight = trElem.clientHeight
+      // 检测行是否在可视区中
       if (trOffsetTop < bodySrcollTop || trOffsetTop > bodySrcollTop + bodyHeight) {
-        // 如果跨行滚动
-        bodyElem.scrollTop = trOffsetTop
+        // 向上定位
+        return $table.scrollTo(null, trOffsetTop)
       } else if (trOffsetTop + trHeight >= bodyHeight + bodySrcollTop) {
-        bodyElem.scrollTop = bodySrcollTop + trHeight
+        // 向下定位
+        return $table.scrollTo(null, bodySrcollTop + trHeight)
       }
     } else {
       // 如果是虚拟渲染跨行滚动
       if ($table.scrollYLoad) {
-        bodyElem.scrollTop = ($table.afterFullData.indexOf(row) - 1) * $table.scrollYStore.rowHeight
+        return $table.scrollTo(null, ($table.afterFullData.indexOf(row) - 1) * $table.scrollYStore.rowHeight)
       }
     }
+    return Promise.resolve()
   },
   colToVisible ($table, column) {
     let bodyElem = $table.$refs.tableBody.$el
@@ -72,11 +75,13 @@ export const DomTools = {
       let bodySrcollLeft = bodyElem.scrollLeft
       let tdOffsetLeft = tdElem.offsetLeft + (tdElem.offsetParent ? tdElem.offsetParent.offsetLeft : 0)
       let tdWidth = tdElem.clientWidth
+      // 检测行是否在可视区中
       if (tdOffsetLeft < bodySrcollLeft || tdOffsetLeft > bodySrcollLeft + bodyWidth) {
-        // 如果跨列滚动
-        bodyElem.scrollLeft = tdOffsetLeft
+        // 向左定位
+        return $table.scrollTo(tdOffsetLeft)
       } else if (tdOffsetLeft + tdWidth >= bodyWidth + bodySrcollLeft) {
-        bodyElem.scrollLeft = bodySrcollLeft + tdWidth
+        // 向右定位
+        return $table.scrollTo(bodySrcollLeft + tdWidth)
       }
     } else {
       // 如果是虚拟渲染跨行滚动
@@ -89,9 +94,10 @@ export const DomTools = {
           }
           scrollLeft += visibleColumn[index].renderWidth
         }
-        bodyElem.scrollLeft = scrollLeft
+        return $table.scrollTo(scrollLeft)
       }
     }
+    return Promise.resolve()
   },
   getDomNode () {
     let documentElement = document.documentElement
@@ -168,7 +174,19 @@ export const DomTools = {
   },
   getCell ($table, { row, column }) {
     let rowid = UtilTools.getRowid($table, row)
-    return $table.$refs.tableBody.$el.querySelector(`.s-body--row[data-rowid="${rowid}"] .${column.id}`)
+    let bodyElem = $table.$refs[`${column.fixed || 'table'}Body`]
+    return (bodyElem || $table.$refs.tableBody).$el.querySelector(`.s-body--row[data-rowid="${rowid}"] .${column.id}`)
+  },
+  toView (elem) {
+    let scrollIntoViewIfNeeded = 'scrollIntoViewIfNeeded'
+    let scrollIntoView = 'scrollIntoView'
+    if (elem) {
+      if (elem[scrollIntoViewIfNeeded]) {
+        elem[scrollIntoViewIfNeeded]()
+      } else if (elem[scrollIntoView]) {
+        elem[scrollIntoView]()
+      }
+    }
   },
   /**
    * 查询所有符合css选择器的父类元素

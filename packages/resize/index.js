@@ -1,11 +1,11 @@
 import Table from '../table'
 import SoulUI from '../table-core'
-import Methods from './src/methods'
+import mixin from './src/mixin'
 
 export const Resize = {
   install () {
-    SoulUI._resize = 1
-    Object.assign(Table.methods, Methods)
+    SoulUI.reg('resize')
+    Table.mixins.push(mixin)
   }
 }
 

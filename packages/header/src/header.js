@@ -115,6 +115,8 @@ export default {
       columnKey,
       headerRowClassName,
       headerCellClassName,
+      headerRowStyle,
+      headerCellStyle,
       showHeaderOverflow: allColumnHeaderOverflow,
       headerAlign: allHeaderAlign,
       align: allAlign,
@@ -162,7 +164,7 @@ export default {
         }).concat([
           h('col', {
             attrs: {
-              name: 'col-gutter'
+              name: 'col_gutter'
             }
           })
         ])),
@@ -173,9 +175,10 @@ export default {
           ref: 'thead'
         }, headerColumn.map((cols, $rowIndex) => {
           return h('tr', {
-            class: ['s-header--row', headerRowClassName ? XEUtils.isFunction(headerRowClassName) ? headerRowClassName({ $table, $rowIndex, fixed: fixedType }) : headerRowClassName : '']
+            class: ['s-header--row', headerRowClassName ? XEUtils.isFunction(headerRowClassName) ? headerRowClassName({ $table, $rowIndex, fixed: fixedType }) : headerRowClassName : ''],
+            style: headerRowStyle ? (XEUtils.isFunction(headerRowStyle) ? headerRowStyle({ $table, $rowIndex, fixed: fixedType }) : headerRowStyle) : null
           }, cols.map((column, $columnIndex) => {
-            let { showHeaderOverflow, headerAlign, align } = column
+            let { showHeaderOverflow, headerAlign, align, headerClassName } = column
             let isColGroup = column.children && column.children.length
             let fixedHiddenColumn = fixedType ? column.fixed !== fixedType && !isColGroup : column.fixed && overflowX
             let headOverflow = XEUtils.isUndefined(showHeaderOverflow) || XEUtils.isNull(showHeaderOverflow) ? allColumnHeaderOverflow : showHeaderOverflow
@@ -188,8 +191,9 @@ export default {
             let thOns = {}
             // 确保任何情况下 columnIndex 都精准指向真实列索引
             let columnIndex = getColumnIndex(column)
+            let params = { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }
             if (showTitle || showTooltip || showComplete) {
-              thOns.mouseover = evnt => {
+              thOns.mouseenter = evnt => {
                 if ($table._isResize) {
                   return
                 }
@@ -208,9 +212,9 @@ export default {
                   return
                 }
                 if (showComplete) {
-                  $table.closeComplete(event)
+                  $table.closeComplete(evnt)
                 } else if (showTooltip) {
-                  $table.clostTooltip()
+                  $table.handleTargetLeaveEvent(evnt)
                 }
               }
             }
@@ -235,12 +239,13 @@ export default {
                 'is--sortable': column.sortable,
                 'is--filter': column.filters.length,
                 'filter--active': column.filters.some(item => item.checked)
-              }, headerCellClassName ? XEUtils.isFunction(headerCellClassName) ? headerCellClassName({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }) : headerCellClassName : ''],
+              }, UtilTools.getClass(headerClassName, params), UtilTools.getClass(headerCellClassName, params)],
               attrs: {
                 'data-colid': column.id,
                 colspan: column.colSpan,
                 rowspan: column.rowSpan
               },
+              style: headerCellStyle ? (XEUtils.isFunction(headerCellStyle) ? headerCellStyle({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn }) : headerCellStyle) : null,
               on: thOns,
               key: columnKey || isColGroup ? column.id : columnIndex
             }, [

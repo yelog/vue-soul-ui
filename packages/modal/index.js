@@ -1,9 +1,10 @@
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import VXEModal from './src/modal'
 import queue from './src/queue'
 import SoulUI from '../table-core'
 
 var AlertController = null
+var AllActivedModal = []
 
 export function Modal (options) {
   return new Promise(resolve => {
@@ -17,6 +18,7 @@ export function Modal (options) {
             events.hide.call(this, params)
           }
           $modal.$destroy()
+          XEUtils.remove(AllActivedModal, item => item === $modal)
           resolve(params.type)
         }
       })
@@ -25,6 +27,7 @@ export function Modal (options) {
         propsData: options
       })
       setTimeout(() => $modal.open())
+      AllActivedModal.push($modal)
     }
   })
 }
@@ -33,10 +36,12 @@ export function Modal (options) {
   let defOpts = index === 2 ? {
     mask: false,
     lockView: false,
-    showHeader: false,
-    showFooter: false
-  } : {}
+    showHeader: false
+  } : {
+    showFooter: true
+  }
   defOpts.type = type
+  defOpts.dblclickZoom = false
   if (index === 1) {
     defOpts.status = 'question'
   }
@@ -52,6 +57,10 @@ export function Modal (options) {
     return Modal(Object.assign({ message: XEUtils.toString(message), type }, defOpts, opts, options))
   }
 })
+
+Modal.closeAll = function () {
+  AllActivedModal.forEach($modal => $modal.close('close'))
+}
 
 Modal.install = function (Vue) {
   SoulUI._modal = 1

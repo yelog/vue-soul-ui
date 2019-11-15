@@ -7,9 +7,7 @@ import { Buttons } from '../../table-core'
 const methods = {}
 const propKeys = Object.keys(Table.props)
 
-Object.keys(Table.methods).concat([
-  'exportCsv'
-]).forEach(name => {
+Object.keys(Table.methods).forEach(name => {
   methods[name] = function () {
     return this.$refs.xTable[name].apply(this.$refs.xTable[name], arguments)
   }
@@ -36,10 +34,7 @@ export default {
       tableCustoms: [],
       pendingRecords: [],
       filterData: [],
-      sortData: {
-        field: '',
-        order: ''
-      },
+      sortData: {},
       tablePage: {
         total: 0,
         pageSize: 10,
@@ -77,7 +72,7 @@ export default {
     }
   },
   created () {
-    let { customs, proxyOpts, pagerConfig } = this
+    let { customs, data, proxyConfig, proxyOpts, pagerConfig } = this
     let { props } = proxyOpts
     if (customs) {
       this.tableCustoms = customs
@@ -85,9 +80,12 @@ export default {
     if (pagerConfig && pagerConfig.pageSize) {
       this.tablePage.pageSize = pagerConfig.pageSize
     }
+    if (data && proxyConfig) {
+      console.warn('[s-grid] There is a conflict between the props proxy-config and data.')
+    }
     // （v3.0 中废弃 proxyConfig.props.data）
     if (props && props.data) {
-      console.warn('[s-table] The property proxyConfig.props.data is deprecated, please use proxyConfig.props.result')
+      UtilTools.warn('s.error.delProp', ['proxy-config.props.data', 'proxy-config.props.result'])
     }
   },
   mounted () {
@@ -106,6 +104,7 @@ export default {
     })
     let tableOns = Object.assign({}, $listeners)
     let $buttons = $scopedSlots.buttons
+    let $tools = $scopedSlots.tools
     if (proxyConfig) {
       Object.assign(props, {
         loading: loading || tableLoading,
@@ -125,6 +124,7 @@ export default {
     if (toolbar) {
       if (toolbar.slots) {
         $buttons = toolbar.slots.buttons || $buttons
+        $tools = toolbar.slots.tools || $tools
       }
       if (!(toolbar.setting && toolbar.setting.storage)) {
         props.customs = tableCustoms
@@ -138,6 +138,13 @@ export default {
         activeMethod: this.handleActiveMethod
       })
     }
+    let toolbarScopedSlots = {}
+    if ($buttons) {
+      toolbarScopedSlots.buttons = $buttons
+    }
+    if ($tools) {
+      toolbarScopedSlots.tools = $tools
+    }
     return h('div', {
       class: [ 's-grid', {
         [`size--${vSize}`]: vSize,
@@ -149,9 +156,7 @@ export default {
         props: Object.assign({
           loading: loading || tableLoading
         }, toolbar),
-        scopedSlots: $buttons ? {
-          buttons: $buttons
-        } : null
+        scopedSlots: toolbarScopedSlots
       }) : null,
       h('s-table', {
         props,
@@ -173,6 +178,16 @@ export default {
   },
   methods: {
     ...methods,
+    getParentHeight () {
+      return this.$el.parentNode.clientHeight - this.getExcludeHeight()
+    },
+    /**
+     * 获取需要排除的高度
+     */
+    getExcludeHeight () {
+      let { toolbar, pager } = this.$refs
+      return (toolbar && toolbar.$el ? toolbar.$el.offsetHeight : 0) + (pager && pager.$el ? pager.$el.offsetHeight : 0)
+    },
     handleRowClassName (params) {
       let rowClassName = this.rowClassName
       let clss = []
@@ -185,149 +200,171 @@ export default {
       let activeMethod = this.editConfig.activeMethod
       return this.pendingRecords.indexOf(params.row) === -1 && (!activeMethod || activeMethod(params))
     },
+    /**
+     * 提交指令，支持 code 或 button
+     * @param {String/Object} code 字符串或对象
+     */
     commitProxy (code) {
-      let { proxyOpts, tablePage, pagerConfig, sortData, filterData, isMsg } = this
-      let { ajax, props = {} } = proxyOpts
-      let args = XEUtils.slice(arguments, 1)
-      if (ajax) {
-        switch (code) {
-          case 'insert':
-            this.insert()
-            break
-          case 'insert_actived':
-            this.insert().then(({ row }) => this.setActiveRow(row))
-            break
-          case 'mark_cancel':
-            this.triggerPendingEvent(code)
-            break
-          case 'delete_selection':
-            this.handleDeleteRow(code, 's.grid.deleteSelectRecord', () => this.commitProxy.apply(this, ['delete'].concat(args)))
-            break
-          case 'remove_selection':
-            this.handleDeleteRow(code, 's.grid.removeSelectRecord', () => this.removeSelecteds())
-            break
-          case 'export':
-            this.exportCsv()
-            break
-          case 'reset_custom':
-            this.resetAll()
-            break
-          case 'reload':
-          case 'query': {
-            if (ajax.query) {
-              let params = {
-                $grid: this,
-                sort: sortData,
-                filters: filterData
-              }
-              this.tableLoading = true
+      const { toolbar, proxyOpts, tablePage, pagerConfig, sortData, filterData, isMsg } = this
+      const { ajax = {}, props = {} } = proxyOpts
+      const args = XEUtils.slice(arguments, 1)
+      let button
+      if (XEUtils.isString(code)) {
+        const matchObj = toolbar ? XEUtils.findTree(toolbar.buttons, item => item.code === code, { children: 'dropdowns' }) : null
+        button = matchObj ? matchObj.item : null
+      } else {
+        button = code
+        code = button.code
+      }
+      const btnParams = button ? button.params : null
+      switch (code) {
+        case 'insert':
+          this.insert()
+          break
+        case 'insert_actived':
+          this.insert().then(({ row }) => this.setActiveRow(row))
+          break
+        case 'mark_cancel':
+          this.triggerPendingEvent(code)
+          break
+        case 'delete_selection':
+          this.handleDeleteRow(code, 's.grid.deleteSelectRecord', () => this.commitProxy.apply(this, ['delete'].concat(args)))
+          break
+        case 'remove_selection':
+          this.handleDeleteRow(code, 's.grid.removeSelectRecord', () => this.removeSelecteds())
+          break
+        case 'import':
+          this.importData(btnParams)
+          break
+        case 'open_import':
+          this.openImport(btnParams)
+          break
+        case 'export':
+          this.exportData(btnParams)
+          break
+        case 'open_export':
+          this.openExport(btnParams)
+          break
+        case 'reset_custom':
+          this.resetAll()
+          break
+        case 'reload':
+        case 'query': {
+          if (ajax.query) {
+            let params = {
+              $grid: this,
+              sort: sortData,
+              filters: filterData
+            }
+            this.tableLoading = true
+            if (pagerConfig) {
+              params.page = tablePage
+            }
+            if (code === 'reload') {
               if (pagerConfig) {
-                params.page = tablePage
+                tablePage.currentPage = 1
               }
-              if (code === 'reload') {
+              this.sortData = params.sort = {}
+              this.filterData = params.filters = []
+              this.pendingRecords = []
+              this.clearAll()
+            }
+            return ajax.query.apply(this, [params].concat(args)).then(rest => {
+              if (rest) {
                 if (pagerConfig) {
-                  tablePage.currentPage = 1
-                }
-                this.pendingRecords = []
-                this.clearAll()
-              }
-              return ajax.query.apply(this, [params].concat(args)).then(rest => {
-                if (rest) {
-                  if (pagerConfig) {
-                    tablePage.total = XEUtils.get(rest, props.total || 'page.total') || 0
-                    this.tableData = XEUtils.get(rest, props.result || props.data || 'result') || []
-                  } else {
-                    this.tableData = (props.list ? XEUtils.get(rest, props.list) : rest) || []
-                  }
+                  tablePage.total = XEUtils.get(rest, props.total || 'page.total') || 0
+                  this.tableData = XEUtils.get(rest, props.result || props.data || 'result') || []
                 } else {
-                  this.tableData = []
+                  this.tableData = (props.list ? XEUtils.get(rest, props.list) : rest) || []
                 }
-                this.tableLoading = false
-              }).catch(e => {
-                this.tableLoading = false
-              })
-            } else {
-              UtilTools.error('s.error.notQuery')
-            }
-            break
-          }
-          case 'delete': {
-            if (ajax.delete) {
-              let selectRecords = this.getSelectRecords()
-              this.remove(selectRecords).then(() => {
-                let removeRecords = this.getRemoveRecords()
-                let body = { removeRecords }
-                if (removeRecords.length) {
-                  this.tableLoading = true
-                  return ajax.delete.apply(this, [{ $grid: this, body }].concat(args)).then(result => {
-                    this.tableLoading = false
-                  }).catch(e => {
-                    this.tableLoading = false
-                  }).then(() => this.commitProxy('reload'))
-                } else {
-                  if (isMsg && !selectRecords.length) {
-                    this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.selectOneRecord'), status: 'warning' })
-                  }
-                }
-              })
-            } else {
-              UtilTools.error('s.error.notDelete')
-            }
-            break
-          }
-          case 'save': {
-            if (ajax.save) {
-              let body = Object.assign({ pendingRecords: this.pendingRecords }, this.getRecordset())
-              let { insertRecords, removeRecords, updateRecords, pendingRecords } = body
-              // 排除掉新增且标记为删除的数据
-              if (insertRecords.length) {
-                body.pendingRecords = pendingRecords.filter(row => insertRecords.indexOf(row) === -1)
+              } else {
+                this.tableData = []
               }
-              // 排除已标记为删除的数据
-              if (pendingRecords.length) {
-                body.insertRecords = insertRecords.filter(row => pendingRecords.indexOf(row) === -1)
-              }
-              // 只校验新增和修改的数据
-              return new Promise(resolve => {
-                this.validate(body.insertRecords.concat(updateRecords), vaild => {
-                  if (vaild) {
-                    if (body.insertRecords.length || removeRecords.length || updateRecords.length || body.pendingRecords.length) {
-                      this.tableLoading = true
-                      resolve(
-                        ajax.save.apply(this, [{ $grid: this, body }].concat(args)).then(() => {
-                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.saveSuccess'), status: 'success' })
-                          this.tableLoading = false
-                        }).catch(e => {
-                          this.tableLoading = false
-                        }).then(() => this.commitProxy('reload'))
-                      )
-                    } else {
-                      if (isMsg) {
-                        // 直接移除未保存且标记为删除的数据
-                        if (pendingRecords.length) {
-                          this.remove(pendingRecords)
-                        } else {
-                          this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.dataUnchanged'), status: 'info' })
-                        }
-                      }
-                      resolve()
-                    }
-                  } else {
-                    resolve(vaild)
-                  }
-                })
-              })
-            } else {
-              UtilTools.error('s.error.notSave')
-            }
-            break
+              this.tableLoading = false
+            }).catch(e => {
+              this.tableLoading = false
+            })
+          } else {
+            UtilTools.error('s.error.notFunc', [code])
           }
-          default:
-            let btnMethod = Buttons.get(code)
-            if (btnMethod) {
-              btnMethod.apply(this, [{ code, $grid: this }].concat(args))
-            }
+          break
         }
+        case 'delete': {
+          if (ajax.delete) {
+            let selectRecords = this.getSelectRecords()
+            this.remove(selectRecords).then(() => {
+              let removeRecords = this.getRemoveRecords()
+              let body = { removeRecords }
+              if (removeRecords.length) {
+                this.tableLoading = true
+                return ajax.delete.apply(this, [{ $grid: this, body }].concat(args)).then(result => {
+                  this.tableLoading = false
+                }).catch(e => {
+                  this.tableLoading = false
+                }).then(() => this.commitProxy('reload'))
+              } else {
+                if (isMsg && !selectRecords.length) {
+                  this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.selectOneRecord'), status: 'warning' })
+                }
+              }
+            })
+          } else {
+            UtilTools.error('s.error.notFunc', [code])
+          }
+          break
+        }
+        case 'save': {
+          if (ajax.save) {
+            let body = Object.assign({ pendingRecords: this.pendingRecords }, this.getRecordset())
+            let { insertRecords, removeRecords, updateRecords, pendingRecords } = body
+            // 排除掉新增且标记为删除的数据
+            if (insertRecords.length) {
+              body.pendingRecords = pendingRecords.filter(row => insertRecords.indexOf(row) === -1)
+            }
+            // 排除已标记为删除的数据
+            if (pendingRecords.length) {
+              body.insertRecords = insertRecords.filter(row => pendingRecords.indexOf(row) === -1)
+            }
+            // 只校验新增和修改的数据
+            return new Promise(resolve => {
+              this.validate(body.insertRecords.concat(updateRecords), vaild => {
+                if (vaild) {
+                  if (body.insertRecords.length || removeRecords.length || updateRecords.length || body.pendingRecords.length) {
+                    this.tableLoading = true
+                    resolve(
+                      ajax.save.apply(this, [{ $grid: this, body }].concat(args)).then(() => {
+                        this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.saveSuccess'), status: 'success' })
+                        this.tableLoading = false
+                      }).catch(e => {
+                        this.tableLoading = false
+                      }).then(() => this.commitProxy('reload'))
+                    )
+                  } else {
+                    if (isMsg) {
+                      // 直接移除未保存且标记为删除的数据
+                      if (pendingRecords.length) {
+                        this.remove(pendingRecords)
+                      } else {
+                        this.$XModal.message({ id: code, message: GlobalConfig.i18n('s.grid.dataUnchanged'), status: 'info' })
+                      }
+                    }
+                    resolve()
+                  }
+                } else {
+                  resolve(vaild)
+                }
+              })
+            })
+          } else {
+            UtilTools.error('s.error.notFunc', [code])
+          }
+          break
+        }
+        default:
+          let btnMethod = Buttons.get(code)
+          if (btnMethod) {
+            btnMethod.apply(this, [{ code, button, $grid: this, $table: this.$refs.xTable }].concat(args))
+          }
       }
       return this.$nextTick()
     },
@@ -353,9 +390,8 @@ export default {
       return this.pendingRecords
     },
     triggerToolbarBtnEvent (button, evnt) {
-      let { code } = button
-      this.commitProxy(code, evnt)
-      UtilTools.emitEvent(this, 'toolbar-button-click', [{ code, button, $grid: this }, evnt])
+      this.commitProxy(button, evnt)
+      UtilTools.emitEvent(this, 'toolbar-button-click', [{ code: button.code, button, $grid: this }, evnt])
     },
     triggerPendingEvent (code) {
       let { pendingRecords, isMsg } = this
@@ -383,7 +419,7 @@ export default {
       }
     },
     pageChangeEvent (params) {
-      let { tablePage } = this
+      let { proxyConfig, tablePage } = this
       let { currentPage, pageSize } = params
       tablePage.currentPage = currentPage
       tablePage.pageSize = pageSize
@@ -393,16 +429,20 @@ export default {
         UtilTools.emitEvent(this, 'page-size-change', [pageSize])
       }
       UtilTools.emitEvent(this, 'page-change', [Object.assign({ $grid: this }, params)])
-      this.commitProxy('query')
+      if (proxyConfig) {
+        this.commitProxy('query')
+      }
     },
     sortChangeEvent (params) {
-      let { remoteSort, sortData } = this
+      let { proxyConfig, remoteSort } = this
       let { column } = params
       let isRemote = XEUtils.isBoolean(column.remoteSort) ? column.remoteSort : remoteSort
       // 如果是服务端排序
       if (isRemote) {
-        Object.assign(sortData, params)
-        this.commitProxy('query')
+        this.sortData = params
+        if (proxyConfig) {
+          this.commitProxy('query')
+        }
       }
       UtilTools.emitEvent(this, 'sort-change', [Object.assign({ $grid: this }, params)])
     },
@@ -412,7 +452,7 @@ export default {
       // 如果是服务端过滤
       if (remoteFilter) {
         this.filterData = filters
-        this.commitProxy('reload')
+        this.commitProxy('query')
       }
       UtilTools.emitEvent(this, 'filter-change', [Object.assign({ $grid: this }, params)])
     }

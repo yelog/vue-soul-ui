@@ -1,11 +1,11 @@
 import Table from '../table'
 import SoulUI from '../table-core'
 import Panel from './src/panel'
-import Methods from './src/methods'
+import mixin from './src/mixin'
 
 Panel.install = function (Vue) {
-  SoulUI._filter = 1
-  Object.assign(Table.methods, Methods)
+  SoulUI.reg('filter')
+  Table.mixins.push(mixin)
   Vue.component(Panel.name, Panel)
 }
 

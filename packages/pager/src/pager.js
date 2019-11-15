@@ -22,8 +22,12 @@ export default {
     pageSizes: { type: Array, default: () => GlobalConfig.pager.pageSizes || [10, 15, 20, 50, 100] },
     // 列对其方式
     align: String,
+    // 带边框
+    border: { type: Boolean, default: () => GlobalConfig.pager.border },
     // 带背景颜色
-    background: Boolean
+    background: { type: Boolean, default: () => GlobalConfig.pager.background },
+    // 默认的样式
+    perfect: { type: Boolean, default: () => GlobalConfig.pager.perfect }
   },
   inject: {
     $grid: {
@@ -33,7 +37,8 @@ export default {
   data () {
     return {
       showSizes: false,
-      panelStyle: null
+      panelStyle: null,
+      panelIndex: 0
     }
   },
   computed: {
@@ -54,24 +59,27 @@ export default {
     }
   },
   created () {
+    this.panelIndex = UtilTools.nextZIndex()
     GlobalEvent.on(this, 'mousedown', this.handleGlobalMousedownEvent)
   },
   destroyed () {
     GlobalEvent.off(this, 'mousedown')
   },
   render (h) {
-    let { layouts, loading, vSize, align, background } = this
+    let { layouts, loading, vSize, align, border, background, perfect } = this
     return h('div', {
       class: ['s-pager', {
         [`size--${vSize}`]: vSize,
         [`align--${align}`]: align,
+        'p--border': border,
         'p--background': background,
+        'p--perfect': perfect,
         'is--loading': loading
       }]
     }, layouts.map(name => this[`render${name}`](h)))
   },
   methods: {
-    // prevPage
+    // 上一页
     renderPrevPage (h) {
       let { currentPage } = this
       return h('span', {
@@ -87,16 +95,15 @@ export default {
         })
       ])
     },
-    // prevJump
+    // 向上翻页
     renderPrevJump (h, tagName) {
-      let { numList, currentPage } = this
       return h(tagName || 'span', {
         class: ['s-pager--jump-prev', {
           'is--fixed': !tagName,
-          'is--disabled': currentPage <= 1
+          'is--disabled': this.currentPage <= 1
         }],
         on: {
-          click: () => this.jumpPage(Math.max(currentPage - numList.length, 1))
+          click: this.prevJump
         }
       }, [
         tagName ? h('i', {
@@ -119,16 +126,16 @@ export default {
         class: 's-pager--btn-wrapper'
       }, this.renderPageBtn(h, true))
     },
-    // nextJump
+    // 向下翻页
     renderNextJump (h, tagName) {
-      let { numList, currentPage, pageCount } = this
+      let { currentPage, pageCount } = this
       return h(tagName || 'span', {
         class: ['s-pager--jump-next', {
           'is--fixed': !tagName,
           'is--disabled': currentPage >= pageCount
         }],
         on: {
-          click: () => this.jumpPage(Math.min(currentPage + numList.length, pageCount))
+          click: this.nextJump
         }
       }, [
         tagName ? h('i', {
@@ -139,7 +146,7 @@ export default {
         })
       ])
     },
-    // nextPage
+    // 下一页
     renderNextPage (h) {
       let { currentPage, pageCount } = this
       return h('span', {
@@ -333,6 +340,14 @@ export default {
         this.jumpPage(Math.min(currentPage + 1, pageCount))
       }
     },
+    prevJump () {
+      let { numList, currentPage } = this
+      this.jumpPage(Math.max(currentPage - numList.length, 1))
+    },
+    nextJump () {
+      let { numList, currentPage, pageCount } = this
+      this.jumpPage(Math.min(currentPage + numList.length, pageCount))
+    },
     jumpPage (currentPage) {
       let type = 'current-change'
       if (currentPage !== this.currentPage) {
@@ -356,12 +371,19 @@ export default {
     toggleSizePanel () {
       this[this.showSizes ? 'hideSizePanel' : 'showSizePanel']()
     },
+    updateZindex () {
+      if (this.panelIndex < UtilTools.getLastZIndex()) {
+        this.panelIndex = UtilTools.nextZIndex()
+      }
+    },
     showSizePanel () {
       this.showSizes = true
+      this.updateZindex()
       this.$nextTick(() => {
         let { $refs } = this
         let { sizeBtn, sizePanel } = $refs
         this.panelStyle = {
+          zIndex: this.panelIndex,
           bottom: `${sizeBtn.clientHeight + 6}px`,
           left: `-${sizePanel.clientWidth / 2 - sizeBtn.clientWidth / 2}px`
         }

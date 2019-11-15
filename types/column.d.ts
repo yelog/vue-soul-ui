@@ -1,7 +1,7 @@
 import { SoulModule } from './module';
 
 /**
- * 表格列
+ * 列
  */
 export declare class Column extends SoulModule {
   /**

@@ -273,6 +273,25 @@
     text-align: right;
     padding: 6px 16px 10px 16px;
   }
+  &.is--maximize {
+    .s-modal--box {
+      .s-modal--header {
+        cursor: default;
+      }
+    }
+    .s-modal--resize {
+      .wl-resize,
+      .wr-resize,
+      .swst-resize,
+      .sest-resize,
+      .st-resize,
+      .swlb-resize,
+      .selb-resize,
+      .sb-resize {
+        display: none;
+      }
+    }
+  }
   .s-modal--resize {
     $SpaceSize: 8;
     .wl-resize,

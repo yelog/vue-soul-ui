@@ -34,7 +34,10 @@ export default {
       $listeners: tableListeners,
       footerRowClassName,
       footerCellClassName,
+      footerRowStyle,
+      footerCellStyle,
       footerAlign: allFooterAlign,
+      footerSpanMethod,
       align: allAlign,
       scrollXLoad,
       columnKey,
@@ -83,7 +86,9 @@ export default {
           })
         }).concat([
           h('col', {
-            name: 'col--gutter'
+            attrs: {
+              name: 'col_gutter'
+            }
           })
         ])),
         /**
@@ -93,9 +98,10 @@ export default {
           ref: 'tfoot'
         }, footerData.map((list, $rowIndex) => {
           return h('tr', {
-            class: ['s-footer--row', footerRowClassName ? XEUtils.isFunction(footerRowClassName) ? footerRowClassName({ $table, $rowIndex, fixed: fixedType }) : footerRowClassName : '']
+            class: ['s-footer--row', footerRowClassName ? XEUtils.isFunction(footerRowClassName) ? footerRowClassName({ $table, $rowIndex, fixed: fixedType }) : footerRowClassName : ''],
+            style: footerRowStyle ? (XEUtils.isFunction(footerRowStyle) ? footerRowStyle({ $table, $rowIndex, fixed: fixedType }) : footerRowStyle) : null
           }, tableColumn.map((column, $columnIndex) => {
-            let { showOverflow, footerAlign, align } = column
+            let { showOverflow, footerAlign, align, footerClassName } = column
             let isColGroup = column.children && column.children.length
             let fixedHiddenColumn = fixedType ? column.fixed !== fixedType && !isColGroup : column.fixed && overflowX
             let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
@@ -105,11 +111,13 @@ export default {
             let showTooltip = cellOverflow === 'tooltip'
             let showComplete = cellOverflow === true || cellOverflow === 'complete'
             let hasEllipsis = showComplete || showTitle || showTooltip || showEllipsis
+            let attrs = { 'data-colid': column.id }
             let tfOns = {}
             // 确保任何情况下 columnIndex 都精准指向真实列索引
             let columnIndex = getColumnIndex(column)
+            let params = { $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }
             if (showTitle || showTooltip || showComplete) {
-              tfOns.mouseover = evnt => {
+              tfOns.mouseenter = evnt => {
                 if (showTitle) {
                   DomTools.updateCellTitle(evnt)
                 } else if (showComplete) {
@@ -122,9 +130,9 @@ export default {
             if (showTooltip || showComplete) {
               tfOns.mouseleave = evnt => {
                 if (showComplete) {
-                  $table.closeComplete(event)
+                  $table.closeComplete(evnt)
                 } else if (showTooltip) {
-                  $table.clostTooltip()
+                  $table.handleTargetLeaveEvent(evnt)
                 }
               }
             }
@@ -138,16 +146,24 @@ export default {
                 UtilTools.emitEvent($table, 'header-cell-dblclick', [{ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, cell: evnt.currentTarget }, evnt])
               }
             }
+            // 合并行或列
+            if (footerSpanMethod) {
+              let { rowspan = 1, colspan = 1 } = footerSpanMethod({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, data: footerData }) || {}
+              if (!rowspan || !colspan) {
+                return null
+              }
+              attrs.rowspan = rowspan
+              attrs.colspan = colspan
+            }
             return h('td', {
               class: ['s-footer--column', column.id, {
                 [`col--${footAlign}`]: footAlign,
                 'fixed--hidden': fixedHiddenColumn,
                 'col--ellipsis': hasEllipsis,
                 'filter--active': column.filters.some(item => item.checked)
-              }, footerCellClassName ? XEUtils.isFunction(footerCellClassName) ? footerCellClassName({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }) : footerCellClassName : ''],
-              attrs: {
-                'data-colid': column.id
-              },
+              }, UtilTools.getClass(footerClassName, params), UtilTools.getClass(footerCellClassName, params)],
+              attrs,
+              style: footerCellStyle ? (XEUtils.isFunction(footerCellStyle) ? footerCellStyle({ $table, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType }) : footerCellStyle) : null,
               on: tfOns,
               key: columnKey ? column.id : columnIndex
             }, [

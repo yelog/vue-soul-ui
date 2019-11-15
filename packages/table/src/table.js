@@ -6,20 +6,14 @@ import methods from './methods'
 
 /**
  * 渲染浮固定列
+ * 分别渲染左边固定列和右边固定列
+ * 如果宽度足够情况下，则不需要渲染固定列
+ * @param {Function} h 创建 VNode 函数
+ * @param {Object} $table 表格实例
+ * @param {String} fixedType 固定列类型
  */
 function renderFixed (h, $table, fixedType) {
-  let {
-    tableData,
-    tableColumn,
-    visibleColumn,
-    collectColumn,
-    isGroup,
-    vSize,
-    showHeader,
-    showFooter,
-    columnStore,
-    footerData
-  } = $table
+  let { tableData, tableColumn, visibleColumn, collectColumn, isGroup, vSize, showHeader, showFooter, columnStore, footerData } = $table
   let fixedColumn = columnStore[`${fixedType}List`]
   return h('div', {
     class: `s-table--fixed-${fixedType}-wrapper`,
@@ -127,8 +121,22 @@ export default {
     footerRowClassName: [String, Function],
     // 给表尾的单元格附加 className
     footerCellClassName: [String, Function],
+    // 给单元格附加样式
+    cellStyle: [Object, Function],
+    // 给表头单元格附加样式
+    headerCellStyle: [Object, Function],
+    // 给表尾单元格附加样式
+    footerCellStyle: [Object, Function],
+    // 给行附加样式
+    rowStyle: [Object, Function],
+    // 给表头行附加样式
+    headerRowStyle: [Object, Function],
+    // 给表尾行附加样式
+    footerRowStyle: [Object, Function],
     // 合并行或列
     spanMethod: Function,
+    // 表尾合并行或列
+    footerSpanMethod: Function,
     // 设置所有内容过长时显示为省略号
     showOverflow: { type: [Boolean, String], default: () => GlobalConfig.showOverflow },
     // 设置表头所有内容过长时显示为省略号
@@ -149,16 +157,19 @@ export default {
     columnKey: Boolean,
     rowKey: Boolean,
     rowId: { type: String, default: () => GlobalConfig.rowId },
+    zIndex: Number,
     // 是否自动监听父容器变化去更新响应式表格宽高
     autoResize: Boolean,
     // 是否自动根据状态属性去更新响应式表格宽高
     syncResize: Boolean,
     // 排序配置项
     sortConfig: Object,
-    // 单选配置
+    // 单选框配置
     radioConfig: Object,
-    // 多选配置项
+    // （v3.0 废弃）
     selectConfig: Object,
+    // 复选框配置项
+    checkboxConfig: Object,
     // tooltip 配置项
     tooltipConfig: Object,
     // 展开行配置项
@@ -192,6 +203,7 @@ export default {
       default: null
     }
   },
+  mixins: [],
   data () {
     return {
       id: XEUtils.uniqueId(),
@@ -215,15 +227,15 @@ export default {
       scrollbarWidth: 0,
       // 横向滚动条的高度
       scrollbarHeight: 0,
-      // 是否全选
+      // 复选框属性，是否全选
       isAllSelected: false,
-      // 多选属性，有选中且非全选状态
+      // 复选框属性，有选中且非全选状态
       isIndeterminate: false,
-      // 多选属性，已选中的列
+      // 复选框属性，已选中的行
       selection: [],
       // 当前行
       currentRow: null,
-      // 单选属性，选中行
+      // 单选框属性，选中行
       selectRow: null,
       // 表尾合计数据
       footerData: [],
@@ -306,7 +318,8 @@ export default {
         content: '',
         rule: null,
         isArrow: false
-      }
+      },
+      printUrl: ''
     }
   },
   computed: {
@@ -318,6 +331,14 @@ export default {
     },
     optimizeOpts () {
       return Object.assign({}, GlobalConfig.optimization, this.optimization)
+    },
+    rowHeightMaps () {
+      return Object.assign({
+        default: 48,
+        medium: 44,
+        small: 40,
+        mini: 36
+      }, this.optimizeOpts.rHeights)
     },
     vaildTipOpts () {
       return Object.assign({ isArrow: false }, this.tooltipConfig)
@@ -364,6 +385,29 @@ export default {
         })
       })
       return rest
+    },
+    /**
+     * 判断列全选的复选框是否禁用
+     */
+    isAllCheckboxDisabled () {
+      let { tableFullData, treeConfig } = this
+      // 在 v3.0 中废弃 selectConfig
+      let checkboxConfig = this.checkboxConfig || this.selectConfig || {}
+      let { strict, checkMethod } = checkboxConfig
+      if (strict) {
+        if (tableFullData.length) {
+          if (checkMethod) {
+            if (treeConfig) {
+              // 暂时不支持树形结构
+            }
+            // 如果所有行都被禁用
+            return tableFullData.every((row, rowIndex) => !checkMethod({ row, rowIndex, $rowIndex: rowIndex }))
+          }
+          return false
+        }
+        return true
+      }
+      return false
     }
   },
   watch: {
@@ -386,7 +430,11 @@ export default {
       if (this.customs) {
         this.mergeCustomColumn(this.customs)
       }
-      this.refreshColumn()
+      this.refreshColumn().then(() => {
+        if (this.scrollXLoad) {
+          this.updateVirtualScrollX(true)
+        }
+      })
       this.handleTableData(true)
       if (this.$toolbar) {
         this.$toolbar.updateColumn(tableFullColumn)
@@ -395,10 +443,10 @@ export default {
       if (tableFullColumn.length) {
         let cIndex = Math.floor((tableFullColumn.length - 1) / 2)
         if (tableFullColumn[cIndex].prop) {
-          UtilTools.warn('s.error.delProp')
+          UtilTools.warn('s.error.delProp', ['prop', 'field'])
         }
         if (tableFullColumn[cIndex].label) {
-          UtilTools.warn('s.error.delLabel')
+          UtilTools.warn('s.error.delProp', ['label', 'title'])
         }
       }
       if (this.treeConfig && tableFullColumn.some(column => column.fixed) && tableFullColumn.some(column => column.type === 'expand')) {
@@ -423,7 +471,8 @@ export default {
     }
   },
   created () {
-    let { scrollYStore, optimizeOpts, data, loading } = Object.assign(this, {
+    let { scrollXStore, scrollYStore, optimizeOpts, data, loading } = Object.assign(this, {
+      tZindex: 0,
       elemStore: {},
       // 存放横向 X 虚拟滚动相关的信息
       scrollXStore: {},
@@ -441,13 +490,15 @@ export default {
       headerHeight: 0,
       // 表尾高度
       footerHeight: 0,
-      // 单选属性，选中列
+      // 单选框属性，选中列
       // currentColumn: null,
       // 当前 hover 行
       // hoverRow: null,
       // 最后滚动位置
       lastScrollLeft: 0,
       lastScrollTop: 0,
+      // 复选框属性，已选中保留的行
+      selectReserveRowMap: {},
       // 完整数据、条件处理后
       tableFullData: [],
       afterFullData: [],
@@ -459,17 +510,28 @@ export default {
       fullColumnMap: new Map(),
       fullColumnIdData: {}
     })
-    let { scrollY } = optimizeOpts
+    let { scrollX, scrollY } = optimizeOpts
     // 是否加载过 Loading 模块
     this._isLoading = loading
     if (!UtilTools.getRowkey(this)) {
-      UtilTools.error('s.error.rowIdEmpty')
+      UtilTools.error('s.error.emptyProp', ['row-id'])
     }
-    if (!VXETable._keyboard && (this.keyboardConfig || this.mouseConfig)) {
-      throw new Error(UtilTools.error('s.error.reqKeyboard'))
+    // if (this.selectConfig) {
+    //   UtilTools.warn('vxe.error.delProp', ['select-config', 'checkbox-config'])
+    // }
+    // 检查是否有安装需要的模块
+    let errorModuleName
+    if (!VXETable._edit && this.editConfig) {
+      errorModuleName = 'Edit'
+    } else if (!VXETable._valid && this.editRules) {
+      errorModuleName = 'Validator'
+    } else if (!VXETable._keyboard && (this.keyboardConfig || this.mouseConfig)) {
+      errorModuleName = 'Keyboard'
+    } else if (!VXETable._resize && this.autoResize) {
+      errorModuleName = 'Resize'
     }
-    if (!VXETable._resize && this.autoResize) {
-      throw new Error(UtilTools.error('s.error.reqResize'))
+    if (errorModuleName) {
+      throw new Error(UtilTools.getLog('s.error.reqModule', [errorModuleName]))
     }
     if (scrollY) {
       Object.assign(scrollYStore, {
@@ -478,6 +540,14 @@ export default {
         adaptive: XEUtils.isBoolean(scrollY.adaptive) ? scrollY.adaptive : true,
         renderSize: XEUtils.toNumber(scrollY.rSize),
         offsetSize: XEUtils.toNumber(scrollY.oSize)
+      })
+    }
+    if (scrollX) {
+      Object.assign(scrollXStore, {
+        startIndex: 0,
+        visibleIndex: 0,
+        renderSize: XEUtils.toNumber(scrollX.rSize),
+        offsetSize: XEUtils.toNumber(scrollX.oSize)
       })
     }
     this.loadTableData(data, true).then(() => {
@@ -490,6 +560,7 @@ export default {
     GlobalEvent.on(this, 'keydown', this.handleGlobalKeydownEvent)
     GlobalEvent.on(this, 'resize', this.handleGlobalResizeEvent)
     GlobalEvent.on(this, 'contextmenu', this.handleGlobalContextmenuEvent)
+    this.preventEvent(null, 'created', { $table: this })
   },
   mounted () {
     if (this.autoResize && VXETable._resize) {
@@ -500,12 +571,14 @@ export default {
     } else {
       document.body.appendChild(this.$refs.tableWrapper)
     }
+    this.preventEvent(null, 'mounted', { $table: this })
   },
   activated () {
-    let { lastScrollLeft, lastScrollTop } = this
-    if (lastScrollLeft || lastScrollTop) {
-      this.clearScroll().then(this.recalculate).then(() => this.scrollTo(lastScrollLeft, lastScrollTop))
-    }
+    this.refreshScroll()
+    this.preventEvent(null, 'activated', { $table: this })
+  },
+  deactivated () {
+    this.preventEvent(null, 'deactivated', { $table: this })
   },
   beforeDestroy () {
     let tableWrapper = this.$refs.tableWrapper
@@ -517,6 +590,7 @@ export default {
     }
     this.closeFilter()
     this.closeMenu()
+    this.preventEvent(null, 'beforeDestroy', { $table: this })
   },
   destroyed () {
     GlobalEvent.off(this, 'mousedown')
@@ -525,6 +599,8 @@ export default {
     GlobalEvent.off(this, 'keydown')
     GlobalEvent.off(this, 'resize')
     GlobalEvent.off(this, 'contextmenu')
+    this.clearAll()
+    this.preventEvent(null, 'destroyed', { $table: this })
   },
   render (h) {
     let {
@@ -559,6 +635,8 @@ export default {
       footerMethod,
       overflowX,
       overflowY,
+      scrollXLoad,
+      scrollYLoad,
       scrollbarHeight,
       optimizeOpts,
       vaildTipOpts,
@@ -577,8 +655,6 @@ export default {
         's-editable': editConfig,
         'show--head': showHeader,
         'show--foot': showFooter,
-        'scroll--y': overflowY,
-        'scroll--x': overflowX,
         'fixed--left': leftList.length,
         'fixed--right': rightList.length,
         'all-overflow': showOverflow,
@@ -587,10 +663,15 @@ export default {
         't--animat': optimizeOpts.animat,
         't--stripe': stripe,
         't--border': border,
+        't--selected': mouseConfig.selected,
         't--checked': mouseConfig.checked,
-        'is--loading': loading,
         'row--highlight': highlightHoverRow,
-        'column--highlight': highlightHoverColumn
+        'column--highlight': highlightHoverColumn,
+        'is--loading': loading,
+        'scroll--y': overflowY,
+        'scroll--x': overflowX,
+        'virtual--x': scrollXLoad,
+        'virtual--y': scrollYLoad
       }
     }, [
       /**
@@ -600,47 +681,51 @@ export default {
         class: 's-table-hidden-column',
         ref: 'hideColumn'
       }, this.$slots.default),
-      /**
-       * 主头部
-       */
-      showHeader ? h('s-table-header', {
-        ref: 'tableHeader',
-        props: {
-          tableData,
-          tableColumn,
-          visibleColumn,
-          collectColumn,
-          size: vSize,
-          isGroup
-        }
-      }) : _e(),
-      /**
-       * 主内容
-       */
-      h('s-table-body', {
-        ref: 'tableBody',
-        props: {
-          tableData,
-          tableColumn,
-          visibleColumn,
-          collectColumn,
-          size: vSize,
-          isGroup
-        }
-      }),
-      /**
-       * 底部汇总
-       */
-      showFooter ? h('s-table-footer', {
-        props: {
-          footerData,
-          footerMethod,
-          tableColumn,
-          visibleColumn,
-          size: vSize
-        },
-        ref: 'tableFooter'
-      }) : _e(),
+      h('div', {
+        class: 'vxe-table--main-wrapper'
+      }, [
+        /**
+         * 主头部
+         */
+        showHeader ? h('s-table-header', {
+          ref: 'tableHeader',
+          props: {
+            tableData,
+            tableColumn,
+            visibleColumn,
+            collectColumn,
+            size: vSize,
+            isGroup
+          }
+        }) : _e(),
+        /**
+         * 主内容
+         */
+        h('s-table-body', {
+          ref: 'tableBody',
+          props: {
+            tableData,
+            tableColumn,
+            visibleColumn,
+            collectColumn,
+            size: vSize,
+            isGroup
+          }
+        }),
+        /**
+         * 底部汇总
+         */
+        showFooter ? h('s-table-footer', {
+          props: {
+            footerData,
+            footerMethod,
+            tableColumn,
+            visibleColumn,
+            size: vSize
+          },
+          ref: 'tableFooter'
+        }) : null
+      ]),
       /**
        * 左侧固定列
        */
@@ -712,14 +797,17 @@ export default {
           ])
         ]),
         /**
-         * Ellipsis tooltip
+         * 单元格内容溢出的 tooltip
          */
         hasTip ? h('s-tooltip', {
           ref: 'tooltip',
-          props: tooltipConfig
+          props: tooltipConfig,
+          on: tooltipConfig && tooltipConfig.enterable ? {
+            leave: this.handleTooltipLeaveEvent
+          } : null
         }) : _e(),
         /**
-         * valid error tooltip
+         * 校验不通过的 tooltip
          */
         hasTip && editRules && (validOpts.message === 'default' ? !height : validOpts.message === 'tooltip') ? h('s-tooltip', {
           class: 's-table--valid-error',

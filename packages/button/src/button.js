@@ -8,7 +8,9 @@ export default {
     type: String,
     size: String,
     name: [String, Number],
-    disabled: Boolean
+    icon: String,
+    disabled: Boolean,
+    loading: Boolean
   },
   computed: {
     vSize () {
@@ -16,7 +18,7 @@ export default {
     }
   },
   render (h) {
-    let { $scopedSlots, $listeners, type, vSize, name, disabled } = this
+    let { $scopedSlots, $listeners, type, vSize, name, disabled, loading } = this
     let isText = type === 'text'
     return $scopedSlots.dropdowns ? h('div', {
       class: ['s-button--dropdown', {
@@ -26,18 +28,20 @@ export default {
       h('button', {
         class: ['s-button', `type--${isText ? type : 'button'}`, {
           [`size--${vSize}`]: vSize,
-          [`theme--${type}`]: type && !isText
+          [`theme--${type}`]: type && !isText,
+          'is--disabled': disabled || loading,
+          'is--loading': loading
         }],
         attrs: {
           name,
-          disabled
+          disabled: disabled || loading
         },
         on: Object.assign({
           mouseenter: this.mouseenterEvent,
           mouseleave: this.mouseleaveEvent
         }, XEUtils.objectMap($listeners, (cb, type) => evnt => this.$emit(type, evnt)))
       }, [
-        h('span', $scopedSlots.default.call(this)),
+        h('span', $scopedSlots.default ? $scopedSlots.default.call(this) : ''),
         h('i', {
           class: `s-button--dropdown-arrow ${GlobalConfig.icon.dropdownBottom}`
         })
@@ -53,16 +57,41 @@ export default {
     ]) : h('button', {
       class: ['s-button', `type--${isText ? type : 'button'}`, {
         [`size--${vSize}`]: vSize,
-        [`theme--${type}`]: type && !isText
+        [`theme--${type}`]: type && !isText,
+        'is--disabled': disabled || loading,
+        'is--loading': loading
       }],
       attrs: {
         name,
-        disabled
+        disabled: disabled || loading
       },
       on: XEUtils.objectMap($listeners, (cb, type) => evnt => this.$emit(type, evnt))
-    }, $scopedSlots.default.call(this))
+    }, this.renderContent(h))
   },
   methods: {
+    renderContent (h) {
+      let { $scopedSlots, icon, loading } = this
+      let contents = []
+      if (loading) {
+        contents.push(
+          h('i', {
+            class: ['vxe-button--loading-icon', GlobalConfig.icon.btnLoading]
+          })
+        )
+      } else if (icon) {
+        contents.push(
+          h('i', {
+            class: ['vxe-button--icon', icon]
+          })
+        )
+      }
+      if ($scopedSlots.default) {
+        contents.push(
+          $scopedSlots.default.call(this)
+        )
+      }
+      return contents
+    },
     clickDropdownEvent (evnt) {
       let dropdownElem = evnt.currentTarget
       let wrapperElem = dropdownElem.parentNode

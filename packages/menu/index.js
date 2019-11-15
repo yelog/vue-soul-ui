@@ -1,11 +1,11 @@
 import Table from '../table'
 import SouUI from '../table-core'
 import Panel from './src/panel'
-import Methods from './src/methods'
+import mixin from './src/mixin'
 
 Panel.install = function (Vue) {
-  SouUI._menu = 1
-  Object.assign(Table.methods, Methods)
+  SouUI.reg('menu')
+  Table.mixins.push(mixin)
   Vue.component(Panel.name, Panel)
 }
 

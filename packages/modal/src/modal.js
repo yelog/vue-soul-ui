@@ -1,17 +1,10 @@
 import GlobalConfig from '../../conf'
-import XEUtils from 'xe-utils'
+import XEUtils from 'xe-utils/methods/xe-utils'
 import MsgQueue from './queue'
 import { UtilTools, DomTools, GlobalEvent } from '../../tools'
 
-let cumsumZindex = 0
-let maxZindex = 0
-function getZIndex () {
-  maxZindex = GlobalConfig.modal.zIndex + cumsumZindex++
-  return maxZindex
-}
-
 export default {
-  name: 'VxeModal',
+  name: 'SModal',
   props: {
     value: Boolean,
     id: String,
@@ -28,12 +21,17 @@ export default {
     escClosable: Boolean,
     resize: Boolean,
     showHeader: { type: Boolean, default: true },
-    showFooter: { type: Boolean, default: true },
+    showFooter: Boolean,
+    dblclickZoom: { type: Boolean, default: () => GlobalConfig.modal.dblclickZoom },
     width: [Number, String],
     height: [Number, String],
-    zIndex: [Number, String],
+    minWidth: { type: [Number, String], default: () => GlobalConfig.modal.minWidth },
+    minHeight: { type: [Number, String], default: () => GlobalConfig.modal.minHeight },
+    zIndex: Number,
     marginSize: { type: [Number, String], default: GlobalConfig.modal.marginSize },
+    fullscreen: Boolean,
     animat: { type: Boolean, default: () => GlobalConfig.modal.animat },
+    size: String,
     slots: Object,
     events: Object
   },
@@ -43,7 +41,8 @@ export default {
       contentVisible: false,
       modalTop: 0,
       modalZindex: 0,
-      zoomLocat: null
+      zoomLocat: null,
+      isFirst: true
     }
   },
   computed: {
@@ -63,10 +62,10 @@ export default {
     if (this.value) {
       this.open()
     }
-    this.modalZindex = this.zIndex || getZIndex()
+    this.modalZindex = this.zIndex || UtilTools.nextZIndex()
   },
   mounted () {
-    let { width, height } = this
+    let { $listeners, events = {}, width, height } = this
     let modalBoxElem = this.getBox()
     Object.assign(modalBoxElem.style, {
       width: width ? (isNaN(width) ? width : `${width}px`) : null,
@@ -76,6 +75,13 @@ export default {
       GlobalEvent.on(this, 'keydown', this.handleGlobalKeydownEvent)
     }
     document.body.appendChild(this.$el)
+    // 触发 inserted 事件
+    const params = { type: 'inserted', $modal: this }
+    if ($listeners.inserted) {
+      this.$emit('inserted', params)
+    } else if (events.inserted) {
+      events.inserted.call(this, params)
+    }
   },
   beforeDestroy () {
     GlobalEvent.off(this, 'keydown')
@@ -95,6 +101,7 @@ export default {
       showFooter,
       zoomLocat,
       modalTop,
+      dblclickZoom,
       contentVisible,
       visible,
       title,
@@ -106,6 +113,14 @@ export default {
     } = this
     let defaultSlot = $scopedSlots.default || slots.default
     let footerSlot = $scopedSlots.footer || slots.footer
+    let headerSlot = $scopedSlots.header || slots.header
+    let titleSlot = $scopedSlots.title || slots.title
+    let headerOns = {
+      mousedown: this.mousedownEvent
+    }
+    if (dblclickZoom && type === 'modal') {
+      headerOns.dblclick = this.toggleZoomEvent
+    }
     return h('div', {
       class: ['s-modal--wrapper', `type--${type}`, {
         [`size--${vSize}`]: vSize,
@@ -114,6 +129,7 @@ export default {
         'lock--scroll': lockScroll,
         'lock--view': lockView,
         'is--mask': mask,
+        'is--maximize': zoomLocat,
         'is--visible': contentVisible,
         active: visible
       }],
@@ -134,17 +150,15 @@ export default {
       }, [
         showHeader ? h('div', {
           class: 's-modal--header',
-          on: {
-            mousedown: this.mousedownEvent
-          }
-        }, [
-          h('span', {
+          on: headerOns
+        }, headerSlot ? headerSlot.call(this, { $modal: this }, h) : [
+          titleSlot ? titleSlot.call(this, { $modal: this }, h) : h('span', {
             class: 's-modal--title'
           }, title ? UtilTools.getFuncText(title) : GlobalConfig.i18n('s.alert.title')),
           resize ? h('i', {
             class: ['s-modal--zoom-btn', 'trigger--btn', zoomLocat ? GlobalConfig.icon.zoomOut : GlobalConfig.icon.zoomIn],
             on: {
-              click: this.zoomInEvent
+              click: this.toggleZoomEvent
             }
           }) : null,
           h('i', {
@@ -209,8 +223,8 @@ export default {
       }
     },
     updateZindex () {
-      if (this.modalZindex < maxZindex) {
-        this.modalZindex = getZIndex()
+      if (this.modalZindex < UtilTools.getLastZIndex()) {
+        this.modalZindex = UtilTools.nextZIndex()
       }
     },
     closeEvent (evnt) {
@@ -235,30 +249,34 @@ export default {
         this.visible = true
         this.contentVisible = false
         this.updateZindex()
-        if (!events.show) {
-          this.$emit('input', true)
-          this.$emit('show', params)
-        }
         setTimeout(() => {
           this.contentVisible = true
-          if (!$listeners.show && events.show) {
-            this.$nextTick(() => {
+          this.$nextTick(() => {
+            if (!events.show) {
+              this.$emit('input', true)
+              this.$emit('show', params)
+            }
+            if (!$listeners.show && events.show) {
               events.show.call(this, params)
-            })
-          }
+            }
+          })
         }, 10)
         if (isMsg) {
           this.addMsgQueue()
           setTimeout(this.close, XEUtils.toNumber(duration))
         } else {
           this.$nextTick(() => {
-            let { marginSize } = this
+            let { isFirst, marginSize, fullscreen } = this
             let modalBoxElem = this.getBox()
             let clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
             let clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
             modalBoxElem.style.left = `${clientVisibleWidth / 2 - modalBoxElem.offsetWidth / 2}px`
             if (modalBoxElem.offsetHeight + modalBoxElem.offsetTop + marginSize > clientVisibleHeight) {
               modalBoxElem.style.top = `${marginSize}px`
+            }
+            if (isFirst && fullscreen) {
+              this.isFirst = false
+              this.$nextTick(this.maximize)
             }
           })
         }
@@ -313,45 +331,57 @@ export default {
     getBox () {
       return this.$refs.modalBox
     },
-    zoomInEvent (evnt) {
-      let { $listeners, marginSize, zoomLocat, events = {} } = this
-      let { visibleHeight, visibleWidth } = DomTools.getDomNode()
-      let modalBoxElem = this.getBox()
-      let type = 'min'
-      if (zoomLocat) {
-        this.zoomLocat = null
-        Object.assign(modalBoxElem.style, {
-          top: `${zoomLocat.top}px`,
-          left: `${zoomLocat.left}px`,
-          width: `${zoomLocat.width}px`,
-          height: `${zoomLocat.height}px`
-        })
-      } else {
-        type = 'max'
-        this.zoomLocat = {
-          top: modalBoxElem.offsetTop,
-          left: modalBoxElem.offsetLeft,
-          width: modalBoxElem.clientWidth,
-          height: modalBoxElem.clientHeight
+    maximize () {
+      return this.$nextTick().then(() => {
+        if (!this.zoomLocat) {
+          let marginSize = this.marginSize
+          let modalBoxElem = this.getBox()
+          let { visibleHeight, visibleWidth } = DomTools.getDomNode()
+          this.zoomLocat = {
+            top: modalBoxElem.offsetTop,
+            left: modalBoxElem.offsetLeft,
+            width: modalBoxElem.clientWidth,
+            height: modalBoxElem.clientHeight
+          }
+          Object.assign(modalBoxElem.style, {
+            top: `${marginSize}px`,
+            left: `${marginSize}px`,
+            width: `${visibleWidth - marginSize * 2}px`,
+            height: `${visibleHeight - marginSize * 2}px`
+          })
         }
-        Object.assign(modalBoxElem.style, {
-          top: `${marginSize}px`,
-          left: `${marginSize}px`,
-          width: `${visibleWidth - marginSize * 2}px`,
-          height: `${visibleHeight - marginSize * 2}px`
-        })
-      }
-      let params = { type, $modal: this }
-      if ($listeners.zoom) {
-        this.$emit('zoom', params, evnt)
-      } else if (events.zoom) {
-        events.zoom.call(this, params, evnt)
-      }
+      })
+    },
+    revert () {
+      return this.$nextTick().then(() => {
+        let zoomLocat = this.zoomLocat
+        if (zoomLocat) {
+          let modalBoxElem = this.getBox()
+          this.zoomLocat = null
+          Object.assign(modalBoxElem.style, {
+            top: `${zoomLocat.top}px`,
+            left: `${zoomLocat.left}px`,
+            width: `${zoomLocat.width}px`,
+            height: `${zoomLocat.height}px`
+          })
+        }
+      })
+    },
+    toggleZoomEvent (evnt) {
+      let { $listeners, zoomLocat, events = {} } = this
+      let params = { type: zoomLocat ? 'min' : 'max', $modal: this }
+      return this[zoomLocat ? 'revert' : 'maximize']().then(() => {
+        if ($listeners.zoom) {
+          this.$emit('zoom', params, evnt)
+        } else if (events.zoom) {
+          events.zoom.call(this, params, evnt)
+        }
+      })
     },
     mousedownEvent (evnt) {
-      let { marginSize } = this
+      let { marginSize, zoomLocat } = this
       let modalBoxElem = this.getBox()
-      if (evnt.button === 0 && !DomTools.getEventTargetNode(evnt, modalBoxElem, 'trigger--btn').flag) {
+      if (!zoomLocat && evnt.button === 0 && !DomTools.getEventTargetNode(evnt, modalBoxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
         let demMousemove = document.onmousemove
         let demMouseup = document.onmouseup
@@ -398,9 +428,9 @@ export default {
       const { $listeners, marginSize, events = {} } = this
       const { visibleHeight, visibleWidth } = DomTools.getDomNode()
       const type = evnt.target.dataset.type
-      const minWidth = 340
+      const minWidth = XEUtils.toNumber(this.minWidth)
+      const minHeight = XEUtils.toNumber(this.minHeight)
       const maxWidth = visibleWidth - 20
-      const minHeight = 200
       const maxHeight = visibleHeight - 20
       const modalBoxElem = this.getBox()
       const demMousemove = document.onmousemove
@@ -534,6 +564,7 @@ export default {
         }
       }
       document.onmouseup = evnt => {
+        this.zoomLocat = null
         document.onmousemove = demMousemove
         document.onmouseup = demMouseup
         setTimeout(() => {

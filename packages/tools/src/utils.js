@@ -1,12 +1,17 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import GlobalConfig from '../../conf'
 
+var zindexIndex = 0
+var lastZindex = 0
 var columnUniqueId = 0
 
 class ColumnConfig {
   constructor (_vm, { renderHeader, renderCell, renderData } = {}) {
     if (_vm.cellRender && _vm.editRender) {
       UtilTools.warn('s.error.cellEditRender')
+    }
+    if (_vm.type === 'selection') {
+      UtilTools.warn('s.error.delProp', ['selection', 'checkbox'])
     }
     Object.assign(this, {
       // 基本属性
@@ -26,6 +31,9 @@ class ColumnConfig {
       footerAlign: _vm.footerAlign,
       showOverflow: _vm.showOverflow,
       showHeaderOverflow: _vm.showHeaderOverflow,
+      className: _vm.class || _vm.className,
+      headerClassName: _vm.headerClassName,
+      footerClassName: _vm.footerClassName,
       indexMethod: _vm.indexMethod,
       formatter: _vm.formatter,
       sortable: _vm.sortable,
@@ -40,6 +48,7 @@ class ColumnConfig {
       cellRender: _vm.cellRender,
       editRender: _vm.editRender,
       // 自定义参数
+      checked: false,
       params: _vm.params,
       // 渲染属性
       visible: true,
@@ -60,11 +69,21 @@ class ColumnConfig {
       own: _vm
     })
   }
+  getTitle () {
+    // 在 v3.0 中废弃 label
+    return UtilTools.getFuncText(this.own.title || this.own.label || (this.type === 'index' ? GlobalConfig.i18n('s.column.indexTitle') : ''))
+  }
+  update (name, value) {
+    // 不支持双向的属性
+    if (!['filters'].includes(name)) {
+      this[name] = value
+    }
+  }
 }
 
 function outLog (type) {
-  return function (message) {
-    let msg = `[s-table] ${GlobalConfig.i18n(message)}`
+  return function (message, params) {
+    let msg = UtilTools.getLog(message, params)
     console[type](msg)
     return msg
   }
@@ -73,11 +92,24 @@ function outLog (type) {
 export const UtilTools = {
   warn: outLog('warn'),
   error: outLog('error'),
+  getLog (message, params) {
+    return `[s-table] ${XEUtils.template(GlobalConfig.i18n(message), params)}`
+  },
   getSize ({ size, $parent }) {
     return size || ($parent && ['medium', 'small', 'mini'].indexOf($parent.size) > -1 ? $parent.size : null)
   },
   getFuncText (content) {
     return XEUtils.isFunction(content) ? content() : (GlobalConfig.translate ? GlobalConfig.translate(content) : content)
+  },
+  nextZIndex ($table) {
+    if ($table && $table.zIndex) {
+      return $table.zIndex
+    }
+    lastZindex = GlobalConfig.zIndex + zindexIndex++
+    return lastZindex
+  },
+  getLastZIndex () {
+    return lastZindex
   },
   // 行主键 key
   getRowkey ($table) {
@@ -101,6 +133,9 @@ export const UtilTools = {
       result.push.apply(result, column.children && column.children.length ? UtilTools.getColumnList(column.children) : [column])
     })
     return result
+  },
+  getClass (property, params) {
+    return property ? XEUtils.isFunction(property) ? property(params) : property : ''
   },
   getFilters (filters) {
     return (filters || []).map(({ label, value, data, checked }) => ({ label, value, data, _data: data, checked: !!checked }))
@@ -153,14 +188,14 @@ export const UtilTools = {
   },
   // 组装列配置
   assemColumn (_vm) {
-    let { $table, $parent, columnConfig } = _vm
-    let parentColumnConfig = $parent.columnConfig
+    let { $table, $column, columnConfig } = _vm
+    let groupConfig = $column ? $column.columnConfig : null
     columnConfig.slots = _vm.$scopedSlots
-    if (parentColumnConfig && $parent.$children.length > 0) {
-      if (!parentColumnConfig.children) {
-        parentColumnConfig.children = []
+    if (groupConfig && $column.$children.length > 0) {
+      if (!groupConfig.children) {
+        groupConfig.children = []
       }
-      parentColumnConfig.children.splice([].indexOf.call($parent.$el.children, _vm.$el), 0, columnConfig)
+      groupConfig.children.splice([].indexOf.call($column.$el.children, _vm.$el), 0, columnConfig)
     } else {
       $table.collectColumn.splice([].indexOf.call($table.$refs.hideColumn.children, _vm.$el), 0, columnConfig)
     }
@@ -175,6 +210,13 @@ export const UtilTools = {
   },
   hasChildrenList (item) {
     return item && item.children && item.children.length > 0
+  },
+  parseFile (file) {
+    const name = file.name
+    const tIndex = XEUtils.lastIndexOf(name, '.')
+    const type = name.substring(tIndex + 1, name.length)
+    const filename = name.substring(0, tIndex)
+    return { filename, type }
   }
 }
 

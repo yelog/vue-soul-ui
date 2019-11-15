@@ -4,7 +4,7 @@ import { UtilTools, DomTools } from '../../tools'
 
 // 滚动、拖动过程中不需要触发
 function isOperateMouse ($table) {
-  return $table._isResize || ($table.lastScrollTime && Date.now() < $table.lastScrollTime + 300)
+  return $table._isResize || ($table.lastScrollTime && Date.now() < $table.lastScrollTime + $table.optimizeOpts.delayHover)
 }
 
 function renderBorder (h, type) {
@@ -48,10 +48,10 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     showOverflow: allColumnOverflow,
     align: allAlign,
     cellClassName,
+    cellStyle,
     spanMethod,
     radioConfig = {},
     expandConfig = {},
-    selectConfig = {},
     treeConfig = {},
     mouseConfig = {},
     editConfig,
@@ -60,7 +60,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     editStore,
     validStore
   } = $table
-  let { editRender, align, showOverflow } = column
+  let { editRender, align, showOverflow, className } = column
   let { actived } = editStore
   let fixedHiddenColumn = fixedType ? column.fixed !== fixedType : column.fixed && overflowX
   let cellOverflow = (XEUtils.isUndefined(showOverflow) || XEUtils.isNull(showOverflow)) ? allColumnOverflow : showOverflow
@@ -77,9 +77,11 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   let attrs = { 'data-colid': column.id }
   let triggerDblclick = (editRender && editConfig && editConfig.trigger === 'dblclick')
   let params = { $table, $seq, seq, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, data: tableData }
+  // 在 v3.0 中废弃 selectConfig
+  let checkboxConfig = $table.checkboxConfig || $table.selectConfig || {}
   // 滚动的渲染不支持动态行高
   if ((scrollXLoad || scrollYLoad) && !hasEllipsis) {
-    showEllipsis = true
+    showEllipsis = hasEllipsis = true
   }
   // hover 进入事件
   if (showTitle || showTooltip || showComplete || tableListeners['cell-mouseenter']) {
@@ -106,7 +108,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
         return
       }
       if (showTooltip) {
-        $table.clostTooltip()
+        $table.handleTargetLeaveEvent(evnt)
       }
       if (showComplete) {
         $table.closeComplete(evnt)
@@ -127,7 +129,8 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
     (editRender && editConfig) ||
     (expandConfig.trigger === 'row' || (expandConfig.trigger === 'cell')) ||
     (radioConfig.trigger === 'row' || (column.type === 'radio' && radioConfig.trigger === 'cell')) ||
-    (selectConfig.trigger === 'row' || (column.type === 'selection' && selectConfig.trigger === 'cell')) ||
+    // 在 v3.0 中废弃 type=selection
+    (checkboxConfig.trigger === 'row' || ((column.type === 'checkbox' || column.type === 'selection') && checkboxConfig.trigger === 'cell')) ||
     (treeConfig.trigger === 'row' || (column.treeNode && treeConfig.trigger === 'cell'))) {
     tdOns.click = evnt => {
       $table.triggerCellClickEvent(evnt, { $table, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, fixed: fixedType, isHidden: fixedHiddenColumn, level: rowLevel, cell: evnt.currentTarget })
@@ -150,7 +153,7 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
   }
   // 如果显示状态
   if (!fixedHiddenColumn && editConfig && editConfig.showStatus) {
-    isDirty = $table.hasRowChange(row, column.property)
+    isDirty = $table.isUpdateByRow(row, column.property)
   }
   return h('td', {
     class: ['s-body--column', column.id, {
@@ -163,9 +166,10 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
       'col--dirty': isDirty,
       'col--actived': editConfig && editRender && (actived.row === row && (actived.column === column || editConfig.mode === 'row')),
       'col--valid-error': validError
-    }, cellClassName ? XEUtils.isFunction(cellClassName) ? cellClassName(params) : cellClassName : ''],
+    }, UtilTools.getClass(className, params), UtilTools.getClass(cellClassName, params)],
     key: columnKey ? column.id : columnIndex,
     attrs,
+    style: cellStyle ? (XEUtils.isFunction(cellStyle) ? cellStyle(params) : cellStyle) : null,
     on: tdOns
   }, allColumnOverflow && fixedHiddenColumn ? [] : [
     h('div', {
@@ -194,9 +198,11 @@ function renderColumn (h, _vm, $table, $seq, seq, fixedType, rowLevel, row, rowI
 
 function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, tableColumn) {
   let {
+    stripe,
     rowKey,
     highlightHoverRow,
     rowClassName,
+    rowStyle,
     treeConfig,
     treeExpandeds,
     scrollYLoad,
@@ -222,17 +228,25 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
         }
         $table.triggerHoverEvent(evnt, { row, rowIndex })
       }
+      trOn.mouseleave = evnt => {
+        if (isOperateMouse($table)) {
+          return
+        }
+        $table.clearHoverRow()
+      }
     }
     let rowid = UtilTools.getRowid($table, row)
     rows.push(
       h('tr', {
         class: ['s-body--row', {
+          'row--stripe': stripe && rowIndex > 0 && (rowIndex + 1) % 2 === 0,
           [`row--level-${rowLevel}`]: treeConfig,
           'row--new': editStore.insertList.indexOf(row) > -1
         }, rowClassName ? XEUtils.isFunction(rowClassName) ? rowClassName({ $table, $seq, seq, fixedType, rowLevel, row, rowIndex, $rowIndex }) : rowClassName : ''],
         attrs: {
           'data-rowid': rowid
         },
+        style: rowStyle ? (XEUtils.isFunction(rowStyle) ? rowStyle({ $table, $seq, seq, fixedType, rowLevel, row, rowIndex, $rowIndex }) : rowStyle) : null,
         key: rowKey || treeConfig ? rowid : $rowIndex,
         on: trOn
       }, tableColumn.map((column, $columnIndex) => {
@@ -242,7 +256,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
     )
     // 如果行被展开了
     if (expandeds.length && expandeds.indexOf(row) > -1) {
-      let column = tableColumn.find(column => column.type === 'expand')
+      let column = XEUtils.find(tableColumn, column => column.type === 'expand')
       let columnIndex = getColumnIndex(column)
       let cellStyle
       if (treeConfig) {
@@ -255,6 +269,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
           h('tr', {
             class: 's-body--expanded-row',
             key: `expand_${rowid}`,
+            style: rowStyle ? (XEUtils.isFunction(rowStyle) ? rowStyle({ $table, $seq, seq, fixedType, rowLevel, row, rowIndex, $rowIndex, isExpanded: true }) : rowStyle) : null,
             on: trOn
           }, [
             h('td', {
@@ -291,6 +306,7 @@ function renderRows (h, _vm, $table, $seq, rowLevel, fixedType, tableData, table
  * 同步滚动条
  * scroll 方式：可以使固定列与内容保持一致的滚动效果，处理相对麻烦
  * mousewheel 方式：对于同步滚动效果就略差了，左右滚动，内容跟随即可
+ * css3 translate 方式：可以利用硬件加速，各方面较优，失去table布局能力
  */
 var scrollProcessTimeout
 function syncBodyScroll (scrollTop, elem1, elem2) {
@@ -481,7 +497,7 @@ export default {
       }
       if (scrollXLoad && isX) {
         $table.triggerScrollXEvent(evnt)
-        if (headerElem && scrollLeft + bodyElem.clientWidth >= bodyElem.scrollWidth) {
+        if (headerElem && scrollLeft + bodyElem.clientWidth >= bodyElem.scrollWidth - 80) {
           // 修复拖动滚动条时可能存在不同步问题
           this.$nextTick(() => {
             if (bodyElem.scrollLeft !== headerElem.scrollLeft) {

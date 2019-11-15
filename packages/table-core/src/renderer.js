@@ -9,7 +9,7 @@ function getAttrs ({ name, attrs }) {
 }
 
 function isSyncCell (renderOpts, params, context) {
-  return renderOpts.type === 'visible' || context.$type === 'cell'
+  return renderOpts.immediate || renderOpts.type === 'visible' || context.$type === 'cell'
 }
 
 /**
@@ -37,7 +37,8 @@ function getEvents (renderOpts, params, context) {
   let { name, events } = renderOpts
   let { $table, row, column } = params
   let { model } = column
-  let type = name === 'select' ? 'change' : 'input'
+  let isSelect = name === 'select'
+  let type = isSelect ? 'change' : 'input'
   let on = {
     [type] (evnt) {
       let cellValue = evnt.target.value
@@ -46,14 +47,17 @@ function getEvents (renderOpts, params, context) {
       } else {
         model.update = true
         model.value = cellValue
-        $table.updateStatus(params, cellValue)
+      }
+      $table.updateStatus(params, cellValue)
+      if (events && events[type]) {
+        events[type](params, evnt)
       }
     }
   }
   if (events) {
-    XEUtils.assign(on, XEUtils.objectMap(events, cb => function () {
+    return XEUtils.assign({}, XEUtils.objectMap(events, cb => function () {
       cb.apply(null, [params].concat.apply(params, arguments))
-    }))
+    }), on)
   }
   return on
 }
@@ -77,12 +81,16 @@ function renderOptions (h, options, renderOpts, params, context) {
   let { row, column } = params
   let labelProp = optionProps.label || 'label'
   let valueProp = optionProps.value || 'value'
+  let disabledProp = optionProps.disabled || 'disabled'
   let cellValue = isSyncCell(renderOpts, params, context) ? UtilTools.getCellValue(row, column) : column.model.value
   return options.map((item, index) => {
     return h('option', {
-      domProps: {
+      attrs: {
         value: item[valueProp],
-        selected: item.value === cellValue
+        disabled: item[disabledProp]
+      },
+      domProps: {
+        selected: item[valueProp] === cellValue
       },
       key: index
     }, item[labelProp])
@@ -97,12 +105,16 @@ function getFilterEvents (item, renderOpts, params, context) {
     [type] (evnt) {
       item.data = evnt.target.value
       handleConfirmFilter(context, column, !!item.data, item)
+      if (events && events[type]) {
+        events[type](Object.assign({ context }, params), evnt)
+      }
     }
   }
   if (events) {
-    XEUtils.assign(on, XEUtils.objectMap(events, cb => function () {
+    return XEUtils.assign({}, XEUtils.objectMap(events, cb => function () {
+      params = Object.assign({ context }, params)
       cb.apply(null, [params].concat.apply(params, arguments))
-    }))
+    }), on)
   }
   return on
 }
@@ -166,25 +178,22 @@ const renderMap = {
       let { options, optionGroups, optionProps = {}, optionGroupProps = {} } = renderOpts
       let { row, column } = params
       let cellValue = XEUtils.get(row, column.property)
-      if (!(cellValue === null || cellValue === undefined || cellValue === '')) {
-        let selectItem
-        let labelProp = optionProps.label || 'label'
-        let valueProp = optionProps.value || 'value'
-        if (optionGroups) {
-          let groupOptions = optionGroupProps.options || 'options'
-          for (let index = 0; index < optionGroups.length; index++) {
-            selectItem = optionGroups[index][groupOptions].find(item => item[valueProp] === cellValue)
-            if (selectItem) {
-              break
-            }
+      let selectItem
+      let labelProp = optionProps.label || 'label'
+      let valueProp = optionProps.value || 'value'
+      if (optionGroups) {
+        let groupOptions = optionGroupProps.options || 'options'
+        for (let index = 0; index < optionGroups.length; index++) {
+          selectItem = XEUtils.find(optionGroups[index][groupOptions], item => item[valueProp] === cellValue)
+          if (selectItem) {
+            break
           }
-          return selectItem ? selectItem[labelProp] : null
-        } else {
-          selectItem = options.find(item => item[valueProp] === cellValue)
-          return selectItem ? selectItem[labelProp] : null
         }
+        return selectItem ? selectItem[labelProp] : cellValue
+      } else {
+        selectItem = XEUtils.find(options, item => item[valueProp] === cellValue)
+        return selectItem ? selectItem[labelProp] : cellValue
       }
-      return ''
     },
     renderFilter (h, renderOpts, params, context) {
       let { column } = params
@@ -195,7 +204,7 @@ const renderMap = {
           attrs,
           on: getFilterEvents(item, renderOpts, params, context)
         },
-        renderOpts.optionGroups ? renderOptgroups(h, renderOpts, params) : renderOptions(h, renderOpts.options, renderOpts, params))
+        renderOpts.optionGroups ? renderOptgroups(h, renderOpts, params) : renderOptions(h, renderOpts.options, renderOpts, params, context))
       })
     },
     filterMethod: defaultFilterMethod

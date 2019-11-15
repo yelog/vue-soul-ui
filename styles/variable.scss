@@ -2,7 +2,9 @@
 $s-font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
 $s-font-color: #606266;
 $s-font-size: 14px;
-$s-zindex: 4000;
+$s-font-size-medium: 14px;
+$s-font-size-small: 13px;
+$s-font-size-mini: 12px;
 
 /*primary color*/
 $s-primary-color: #409eff;
@@ -10,7 +12,8 @@ $s-disabled-color: #B1B1B1;
 
 /*input/radio/checkbox color*/
 $s-input-border-color: #dcdfe6;
-$s-input-disabled-color: #f3f3f3;;
+$s-input-disabled-color: #f3f3f3;
+$s-input-placeholder-color: #C0C4CC;
 
 /*popup*/
 $s-table-popup-border-color: #ebeef5;
@@ -22,6 +25,11 @@ $s-table-resizable-color: #D9DDDF;
 $s-table-background-color: #ffffff;
 
 /*table row*/
+$s-table-row-height-default: 48px;
+$s-table-row-height-medium: 44px;
+$s-table-row-height-small: 40px;
+$s-table-row-height-mini: 36px;
+$s-table-row-line-height: 23px;
 $s-table-row-striped-background-color: #fafafa;
 $s-table-row-hover-background-color: #f5f7fa;
 $s-table-row-current-background-color: #e6f7ff;
@@ -44,14 +52,6 @@ $s-table-column-checked-background-color: #e6f7ff;
 
 /*loading*/
 $s-loading-background-color: rgba(0, 0, 0, 0.2);
-
-/*excel*/
-$s-excel-font-color: #333;
-$s-excel-header-background-color: #E6E6E6;
-$s-excel-header-selected-background-color: #D2D2D2;
-$s-excel-column-border-width: 2px;
-$s-excel-column-border-color: #D4D4D4;
-$s-excel-primary-color: #217346;
 
 /*validate*/
 $s-table-validate-error-color: #f56c6c;

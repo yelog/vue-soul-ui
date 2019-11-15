@@ -18,14 +18,16 @@ import Button from './button'
 import Modal from './modal'
 import Tooltip from './tooltip'
 
+import Edit from './edit'
 import Export from './export'
 import Keyboard from './keyboard'
+import Validator from './validator'
 import Resize from './resize'
 import zhCNLocat from './locale/lang/zh-CN'
 
 // 按需加载的组件
 export const components = [
-  Table,
+  // 模块
   Column,
   Header,
   Body,
@@ -42,10 +44,13 @@ export const components = [
   Button,
   Modal,
   Tooltip,
-
+  Edit,
   Export,
   Keyboard,
-  Resize
+  Validator,
+  Resize,
+  // 核心
+  Table
 ]
 
 // 默认安装
@@ -67,7 +72,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 SoulUI.install = install
 
-export * from './table'
+export * from './v-x-e-table'
 export * from './column'
 export * from './header'
 export * from './body'
@@ -84,8 +89,10 @@ export * from './input'
 export * from './button'
 export * from './modal'
 export * from './tooltip'
+export * from './edit'
 export * from './export'
 export * from './keyboard'
+export * from './validator'
 export * from './resize'
 export * from './table-core'
 export default SoulUI

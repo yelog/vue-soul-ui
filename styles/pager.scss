@@ -28,7 +28,20 @@
       background-color: $s-loading-background-color;
     }
   }
-  &.p--background {
+  &.p--border,
+  &.p--perfect {
+    &:not(.p--background) {
+      .s-pager--prev-btn,
+      .s-pager--next-btn,
+      .s-pager--num-btn,
+      .s-pager--jump-prev,
+      .s-pager--jump-next {
+        border: 1px solid $s-input-border-color;
+      }
+    }
+  }
+  &.p--background,
+  &.p--perfect {
     .s-pager--prev-btn,
     .s-pager--next-btn {
       background-color: #f4f4f5;
@@ -46,6 +59,18 @@
         color: #fff;
         background-color: $s-primary-color;
       }
+    }
+  }
+  &.p--perfect {
+    border: 1px solid $s-table-border-color;
+    border-top-width: 0;
+    background-color: $s-table-header-background-color;
+    .s-pager--prev-btn,
+    .s-pager--next-btn,
+    .s-pager--jump-prev,
+    .s-pager--num-btn,
+    .s-pager--jump-next {
+      background-color: #fff;
     }
   }
   &.size--medium {
@@ -236,6 +261,7 @@
   .s-pager--next-btn,
   .s-pager--jump-next {
     font-size: 20px;
+    padding: 0 4px;
   }
   .s-pager--num-btn {
     min-width: 30px;
@@ -308,10 +334,10 @@
 .s-pager-size--select-wrapper {
   display: none;
   position: absolute;
-  bottom: 100%;
+  bottom: 0;
+  left: 0;
   width: 200px;
   text-align: center;
-  z-index: $s-zindex;
   pointer-events: none;
   .s-pager-size--select {
     margin: 0;
