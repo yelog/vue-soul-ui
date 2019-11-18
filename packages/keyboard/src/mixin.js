@@ -163,9 +163,9 @@ export default {
           let startCell = bodyList[0].querySelector(`.${column.id}`)
           let updateEvent = XEUtils.throttle(function (evnt) {
             evnt.preventDefault()
-            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-header--column')
+            let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-header--column')
             if (!flag) {
-              let a = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+              let a = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
               flag = a.flag
               targetElem = a.targetElem
             }
@@ -241,7 +241,7 @@ export default {
             let headStart = headerList[0].children[colIndex]
             let updateEvent = XEUtils.throttle(function (evnt) {
               evnt.preventDefault()
-              let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+              let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
               if (flag) {
                 if (isIndex) {
                   let firstCell = targetElem.parentNode.firstElementChild
@@ -269,7 +269,7 @@ export default {
               params.cell = cell.nextElementSibling
               handleSelected(params, evnt)
               handleChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell.nextElementSibling), DomTools.getCellNodeIndex(cellLastElementChild)))
-              handleHeaderChecked([headerList[0].querySelectorAll('.vxe-header--column:not(.col--index)')])
+              handleHeaderChecked([headerList[0].querySelectorAll('.s-header--column:not(.col--index)')])
               handleIndexChecked(DomTools.getRowNodes(bodyList, DomTools.getCellNodeIndex(firstCell), DomTools.getCellNodeIndex(cell)))
             } else {
               let firstCell = cell.parentNode.firstElementChild
@@ -315,7 +315,7 @@ export default {
     //       }
     //       let updateEvent = XEUtils.throttle(function (evnt) {
     //         evnt.preventDefault()
-    //         let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 'vxe-body--column')
+    //         let { flag, targetElem } = DomTools.getEventTargetNode(evnt, $el, 's-body--column')
     //         if (flag) {
     //           handleTempChecked(start, DomTools.getCellIndexs(targetElem), evnt)
     //         }

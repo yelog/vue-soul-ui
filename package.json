@@ -1,6 +1,6 @@
 {
   "name": "vue-soul-ui",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "A powerful table component.",
   "scripts": {
     "demo": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.demo.js",
@@ -132,6 +132,7 @@
     "last 2 versions"
   ],
   "directories": {
+    "doc": "docs",
     "example": "examples",
     "lib": "lib"
   }

@@ -740,14 +740,14 @@ export default {
        */
       !loading && !tableData.length ? h('div', {
         ref: 'emptyPlaceholder',
-        class: 'vxe-table--empty-placeholder',
+        class: 's-table--empty-placeholder',
         style: height ? null : {
           top: `${this.headerHeight}px`
         }
       }, [
         h('div', {
-          class: 'vxe-table--empty-content'
-        }, this.$scopedSlots.empty ? this.$scopedSlots.empty.call(this, { $table: this }, h) : GlobalConfig.i18n('vxe.table.emptyText'))
+          class: 's-table--empty-content'
+        }, this.$scopedSlots.empty ? this.$scopedSlots.empty.call(this, { $table: this }, h) : GlobalConfig.i18n('s.table.emptyText'))
       ]) : _e(),
       /**
        * 列宽线
