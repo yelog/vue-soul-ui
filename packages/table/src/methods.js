@@ -390,7 +390,7 @@ const Methods = {
   },
   // 在 v3.0 中废弃 hasRowChange
   hasRowChange (row, field) {
-    UtilTools.warn('vxe.error.delFunc', ['hasRowChange', 'isUpdateByRow'])
+    UtilTools.warn('s.error.delFunc', ['hasRowChange', 'isUpdateByRow'])
     return this.isUpdateByRow(row, field)
   },
   /**
@@ -739,7 +739,7 @@ const Methods = {
         UtilTools.warn('s.error.scrollXNotGroup')
       }
       // if (this.resizable || visibleColumn.some(column => column.resizable)) {
-      //   UtilTools.warn('vxe.error.scrollXNotResizable')
+      //   UtilTools.warn('s.error.scrollXNotResizable')
       // }
       Object.assign(scrollXStore, {
         startIndex: 0,
@@ -2010,7 +2010,7 @@ const Methods = {
     return this.$nextTick()
   },
   checkValidate (type) {
-    if (VXETable._valid) {
+    if (SoulUI._valid) {
       return this.triggerValidate(type)
     }
     return this.$nextTick()
@@ -2253,7 +2253,7 @@ const Methods = {
   },
   // 在 v3.0 中废弃 getRecords
   hasRowExpand (row) {
-    UtilTools.warn('vxe.error.delFunc', ['hasRowExpand', 'isExpandByRow'])
+    UtilTools.warn('s.error.delFunc', ['hasRowExpand', 'isExpandByRow'])
     return this.isExpandByRow(row)
   },
   /**
@@ -2403,7 +2403,7 @@ const Methods = {
   },
   // 在 v3.0 中废弃 hasTreeExpand
   hasTreeExpand (row) {
-    UtilTools.warn('vxe.error.delFunc', ['hasTreeExpand', 'isTreeExpandByRow'])
+    UtilTools.warn('s.error.delFunc', ['hasTreeExpand', 'isTreeExpandByRow'])
     return this.isTreeExpandByRow(row)
   },
   /**
