@@ -89,7 +89,6 @@ export default {
       default: null
     }
   },
-  watch,
   created () {
     this.columnConfig = this.createColumn(this.$table, this)
   },
